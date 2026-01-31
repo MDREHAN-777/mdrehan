@@ -4,129 +4,196 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MR7 - World</title>
+
 <style>
-    body {
-        text-align: center;
-        margin: 0;
-        padding: 20px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #ffffff;
-        color: #333;
-        transition: all 0.5s ease;
-    }
-    body.dark-mode { background-color: #111; color: #eee; }
-    h1, h2, h3 { letter-spacing: 3px; margin: 10px 0; }
-    .typing { border-right: 3px solid green; white-space: nowrap; overflow: hidden; display: inline-block; }
-    @keyframes blink { 0%,50%,100%{border-color:green;}25%,75%{border-color:transparent;} }
+body{
+    margin:0;
+    padding:20px;
+    text-align:center;
+    font-family:'Segoe UI',Tahoma;
+    background:#fff;
+    color:#333;
+    transition:0.5s;
+}
+body.dark-mode{background:#111;color:#eee}
 
-    .yt-button {
-        background: linear-gradient(135deg,#ff0000,#cc0000);
-        color:white; padding:16px 40px; font-size:18px; border:none; border-radius:50px; cursor:pointer; font-weight:bold;
-        box-shadow:0 0 0 rgba(255,0,0,0.7); animation:pulse 2s infinite; transition:0.3s;
-    }
-    .yt-button:hover { transform:scale(1.05); box-shadow:0 0 20px rgba(255,0,0,0.8); }
-    @keyframes pulse {0%{box-shadow:0 0 0 0 rgba(255,0,0,0.7);}70%{box-shadow:0 0 0 15px rgba(255,0,0,0);}100%{box-shadow:0 0 0 0 rgba(255,0,0,0);}}
+h1,h2,h3{letter-spacing:3px}
 
-    .contact-box {
-        background-color:#f9f9f9; padding:30px; border-radius:20px; width:90%; max-width:500px; margin:40px auto;
-        border:2px solid green; box-shadow:0 15px 35px rgba(0,0,0,0.08); transition:all 0.5s ease;
-    }
-    body.dark-mode .contact-box { background-color:#222; border-color:lime; }
-    input, textarea { width:90%; padding:12px; margin:10px 0; border-radius:8px; border:1px solid #ccc; font-size:16px; transition:0.3s; }
-    input:focus, textarea:focus { outline:none; border-color:green; box-shadow:0 0 10px rgba(0,128,0,0.3); }
-    body.dark-mode input, body.dark-mode textarea { background-color:#333; color:#eee; border-color:lime; }
+.typing{border-right:3px solid green;white-space:nowrap;overflow:hidden}
+.fade{opacity:0;transform:translateY(20px);transition:1s}
+.fade.show{opacity:1;transform:none}
 
-    .submit-btn { background:linear-gradient(135deg,green,#006400); color:white; padding:14px; border:none; border-radius:10px; cursor:pointer; font-size:18px; font-weight:bold; width:100%; transition:0.3s; }
-    .submit-btn:hover { transform:scale(1.05); }
-
-    .profile-pic { width:200px; height:200px; border-radius:50%; object-fit:cover; border:5px solid green; animation:glow 2s infinite alternate; transition:transform 0.3s; }
-    .profile-pic:hover { transform:scale(1.1); }
-    @keyframes glow { from{box-shadow:0 0 10px rgba(0,128,0,0.4);} to{box-shadow:0 0 25px rgba(0,128,0,0.8);} }
-
-    .dark-toggle { position:fixed; top:20px; right:20px; background:green; color:white; border:none; padding:10px 20px; border-radius:30px; cursor:pointer; font-weight:bold; transition:0.3s; }
-    .dark-toggle:hover { background:limegreen; }
-
-    #popup { position:fixed; bottom:30px; right:30px; background-color:green; color:white; padding:15px 25px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.3); opacity:0; transform:translateY(50px); transition:all 0.5s ease; font-weight:bold; }
-    #popup.show { opacity:1; transform:translateY(0); }
-
-    .fade-section { opacity:0; transform:translateY(20px); transition:all 1s ease; }
-    .fade-section.visible { opacity:1; transform:translateY(0); }
-</style>
-</head>
-<body>
-
-<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-
-<hr>
-<h1 class="fade-section"><span class="typing">- MR7 WORLD -</span></h1>
-<hr style="width:50%; border:1px solid #eee;" class="fade-section">
-<h2 class="fade-section"><span class="typing">- MD -</span></h2>
-<h3 class="fade-section"><span class="typing">- REHAN -</span></h3>
-
-<div style="margin:40px 0;" class="fade-section">
-    <p style="font-weight:bold; color:#555;">VISIT MY CHANNEL 👇</p>
-    <a href="http://www.youtube.com/@MR7OFFICIAL777" target="_blank">
-        <button class="yt-button">SUBSCRIBE TO MY YOUTUBE CHANNEL</button>
-    </a>
-</div>
-
-☝🏻 CLICK HERE 👆🏻
-
-<hr>
-<hr style="width:80%; border:0.5px solid #eee;" class="fade-section">
-
-<div class="contact-box fade-section">
-    <h2 style="color:green;">Contact Me</h2>
-    <form>
-        <label><b>NAME</b></label><br>
-        <input type="text" placeholder="Enter Your Name" required>
-
-        <label><b>MOBILE</b></label><br>
-        <input type="tel" placeholder="Enter Mobile Number" required>
-
-        <label><b>MESSAGE</b></label><br>
-        <textarea placeholder="Hello World..." required></textarea>
-
-        <button type="submit" class="submit-btn">Send Message</button>
-    </form>
-</div>
-
-<hr>
-
-<center>
-    <img src="rehan.png" class="profile-pic fade-section">
-</center>
-
-<div id="popup">
-    Welcome to MR7 WORLD! 👋 Don't forget to subscribe! 🔥
-    <span style="cursor:pointer; margin-left:10px; font-weight:bold;" onclick="closePopup()">✖</span>
-</div>
-
-<script>
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const btn = document.querySelector('.dark-toggle');
-    btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+/* PROFILE */
+.profile-pic{
+    width:200px;height:200px;border-radius:50%;
+    border:5px solid green;
+    animation:glow 2s infinite alternate;
+}
+@keyframes glow{
+    from{box-shadow:0 0 10px green}
+    to{box-shadow:0 0 25px lime}
 }
 
-const faders = document.querySelectorAll('.fade-section');
-window.addEventListener('scroll', ()=>{
-    faders.forEach(f=>{ const top=f.getBoundingClientRect().top; if(top<window.innerHeight-50) f.classList.add('visible'); });
+/* YOUTUBE */
+.yt-button{
+    background:red;color:white;
+    padding:15px 40px;
+    border:none;border-radius:50px;
+    font-size:18px;font-weight:bold;
+    cursor:pointer;
+}
+
+/* DARK MODE */
+.dark-toggle{
+    position:fixed;top:20px;right:20px;
+    background:green;color:white;
+    border:none;padding:10px 20px;
+    border-radius:30px;cursor:pointer;
+}
+
+/* 3 DOT MENU */
+.menu{
+    position:fixed;top:20px;left:20px;
+    font-size:28px;cursor:pointer;
+}
+.menu-box{
+    position:fixed;top:60px;left:20px;
+    background:#222;color:white;
+    padding:15px;border-radius:10px;
+    display:none;
+}
+.menu-box button{
+    width:100%;margin:5px 0;
+    padding:8px;border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+/* SECTIONS */
+.section{display:none}
+.section.active{display:block}
+
+/* CONTACT */
+.contact-box{
+    max-width:400px;margin:40px auto;
+    padding:20px;border-radius:20px;
+    border:2px solid green;
+}
+input,textarea{
+    width:90%;padding:10px;margin:8px 0;
+}
+.submit-btn{
+    background:green;color:white;
+    padding:12px;width:100%;
+    border:none;border-radius:10px;
+}
+
+/* BACK */
+.back-btn{
+    margin-top:20px;
+    padding:10px 25px;
+    background:gray;color:white;
+    border:none;border-radius:20px;
+    cursor:pointer;
+}
+
+/* POPUP */
+#popup{
+    position:fixed;bottom:20px;right:20px;
+    background:green;color:white;
+    padding:15px 25px;
+    border-radius:15px;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 3 DOT -->
+<div class="menu" onclick="toggleMenu()">⋮</div>
+<div class="menu-box" id="menuBox">
+    <button onclick="openContact()">📞 Contact</button>
+</div>
+
+<button class="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
+
+<!-- MAIN PAGE -->
+<div id="home" class="section active">
+
+<h1 class="typing fade">- MR7 WORLD -</h1>
+<h2 class="typing fade">- MD -</h2>
+<h3 class="typing fade">- REHAN -</h3>
+
+<br>
+<a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
+<button class="yt-button">SUBSCRIBE</button>
+</a>
+
+<br><br>
+<img src="rehan.png" class="profile-pic fade">
+
+</div>
+
+<!-- CONTACT PAGE -->
+<div id="contact" class="section">
+
+<div class="contact-box">
+<h2>Contact Me</h2>
+<input placeholder="Name">
+<input placeholder="Mobile">
+<textarea placeholder="Message"></textarea>
+<button class="submit-btn">Send</button>
+</div>
+
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<div id="popup">Welcome to MR7 WORLD 🔥</div>
+
+<script>
+/* DARK */
+function toggleDark(){
+ document.body.classList.toggle('dark-mode');
+}
+
+/* MENU */
+function toggleMenu(){
+ document.getElementById("menuBox").style.display=
+ document.getElementById("menuBox").style.display=="block"?"none":"block";
+}
+
+/* PAGE SWITCH */
+function openContact(){
+ document.getElementById("home").classList.remove("active");
+ document.getElementById("contact").classList.add("active");
+ document.getElementById("menuBox").style.display="none";
+}
+function goBack(){
+ document.getElementById("contact").classList.remove("active");
+ document.getElementById("home").classList.add("active");
+}
+
+/* POPUP */
+setTimeout(()=>{
+ document.getElementById("popup").style.display="block";
+ setTimeout(()=>popup.style.display="none",4000);
+},1000);
+
+/* FADE */
+document.querySelectorAll(".fade").forEach((e,i)=>{
+ setTimeout(()=>e.classList.add("show"),500*i);
 });
 
-window.addEventListener('load', ()=>{
-    const popup = document.getElementById('popup');
-    popup.classList.add('show');
-    setTimeout(()=>popup.classList.remove('show'),5000);
-});
-function closePopup(){ document.getElementById('popup').classList.remove('show'); }
-
-const typings=document.querySelectorAll('.typing');
-typings.forEach(el=>{
-    let text=el.textContent; el.textContent=''; let i=0;
-    function type(){ if(i<text.length){ el.textContent+=text[i]; i++; setTimeout(type,100); } else { setTimeout(()=>{ el.textContent=''; i=0; type(); },2000); } }
-    type();
+/* TYPING */
+document.querySelectorAll(".typing").forEach(el=>{
+ let t=el.innerText;el.innerText="";
+ let i=0;
+ (function type(){
+  if(i<t.length){el.innerText+=t[i++];setTimeout(type,100);}
+ })();
 });
 </script>
+
 </body>
 </html>
