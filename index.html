@@ -2,260 +2,176 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>MR7 WORLD</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MR7 - World</title>
+
 <style>
-    /* ===== Base Styles ===== */
-    body {
-        text-align: center;
-        margin: 0;
-        padding: 20px;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #ffffff;
-        color: #333;
-        transition: all 0.5s ease;
-    }
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    text-align:center;
+    background:#fff;
+}
+h1{letter-spacing:4px}
 
-    /* ===== Dark Mode ===== */
-    body.dark-mode {
-        background-color: #111;
-        color: #eee;
-    }
+/* 3 Dot Menu */
+.menu{
+    position:fixed;
+    top:15px;
+    right:20px;
+    font-size:28px;
+    cursor:pointer;
+}
+.menu-box{
+    display:none;
+    position:fixed;
+    top:50px;
+    right:20px;
+    background:#111;
+    color:#fff;
+    border-radius:10px;
+    padding:10px;
+}
+.menu-box a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:8px 15px;
+}
+.menu-box a:hover{background:green}
 
-    /* ===== Headings ===== */
-    h1, h2, h3 {
-        letter-spacing: 3px;
-        margin: 10px 0;
-    }
+/* YouTube Button */
+.yt-button{
+    background:red;
+    color:white;
+    padding:15px 30px;
+    border:none;
+    border-radius:40px;
+    font-size:18px;
+    cursor:pointer;
+}
 
-    /* Typing Animation */
-    .typing {
-        border-right: 3px solid green;
-        white-space: nowrap;
-        overflow: hidden;
-        display: inline-block;
-        animation: blink 0.7s infinite, typing 2s steps(20) forwards;
-    }
+/* ===== Contact Section ===== */
+#contactSection{
+    display:none;
+    background:#f4f4f4;
+    padding:30px;
+}
+.contact-box{
+    background:#fff;
+    padding:20px;
+    border-radius:15px;
+    max-width:500px;
+    margin:auto;
+}
+input, textarea{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+}
+button{
+    background:green;
+    color:white;
+    border:none;
+    padding:12px;
+    width:100%;
+    cursor:pointer;
+}
 
-    @keyframes typing { from { width: 0; } to { width: 100%; } }
-    @keyframes blink { 0%, 50%, 100% { border-color: green; } 25%, 75% { border-color: transparent; } }
-
-    /* ===== YouTube Button ===== */
-    .yt-button {
-        background: linear-gradient(135deg, #ff0000, #cc0000);
-        color: white;
-        padding: 16px 40px;
-        font-size: 18px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        font-weight: bold;
-        box-shadow: 0 0 0 rgba(255,0,0,0.7);
-        animation: pulse 2s infinite;
-        transition: 0.3s;
-    }
-
-    .yt-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(255,0,0,0.8);
-    }
-
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); }
-        70% { box-shadow: 0 0 0 15px rgba(255,0,0,0); }
-        100% { box-shadow: 0 0 0 0 rgba(255,0,0,0); }
-    }
-
-    /* ===== Contact Box ===== */
-    .contact-box {
-        background-color: #f9f9f9;
-        padding: 30px;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 500px;
-        margin: 40px auto;
-        border: 2px solid green;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-        transition: all 0.5s ease;
-    }
-    body.dark-mode .contact-box {
-        background-color: #222;
-        border-color: lime;
-    }
-
-    input, textarea {
-        width: 90%;
-        padding: 12px;
-        margin: 10px 0;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-        transition: 0.3s;
-    }
-    input:focus, textarea:focus {
-        outline: none;
-        border-color: green;
-        box-shadow: 0 0 10px rgba(0,128,0,0.3);
-    }
-    body.dark-mode input, body.dark-mode textarea {
-        background-color: #333;
-        color: #eee;
-        border-color: lime;
-    }
-
-    .submit-btn {
-        background: linear-gradient(135deg, green, #006400);
-        color: white;
-        padding: 14px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-        width: 100%;
-        transition: 0.3s;
-    }
-    .submit-btn:hover {
-        transform: scale(1.05);
-    }
-
-    /* ===== Profile Image ===== */
-    .profile-pic {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 5px solid green;
-        animation: glow 2s infinite alternate;
-        transition: transform 0.3s;
-    }
-    .profile-pic:hover {
-        transform: scale(1.1);
-    }
-    @keyframes glow {
-        from { box-shadow: 0 0 10px rgba(0,128,0,0.4); }
-        to { box-shadow: 0 0 25px rgba(0,128,0,0.8); }
-    }
-
-    /* ===== Dark Mode Button ===== */
-    .dark-toggle {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: green;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 30px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-    .dark-toggle:hover { background: limegreen; }
-
-    /* ===== Floating Popup ===== */
-    #popup {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: green;
-        color: white;
-        padding: 15px 25px;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.5s ease;
-        font-weight: bold;
-    }
-    #popup.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* ===== Fade-in Sections ===== */
-    .fade-section {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 1s ease;
-    }
-    .fade-section.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
+/* AI Chat */
+.chat-box{
+    margin-top:20px;
+    background:#111;
+    color:white;
+    padding:15px;
+    border-radius:15px;
+}
+.chat{
+    height:200px;
+    overflow-y:auto;
+    background:#222;
+    padding:10px;
+    margin-bottom:10px;
+}
+.user{color:lime}
+.ai{color:cyan}
 </style>
 </head>
+
 <body>
 
-<!-- Dark Mode Toggle -->
-<button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-
-<hr>
-<h1 class="fade-section"><span class="typing">- MR7 WORLD -</span></h1>
-<hr style="width: 50%; border: 1px solid #eee;" class="fade-section">
-<h2 class="fade-section"><span class="typing">- MD -</span></h2>
-<h3 class="fade-section"><span class="typing">- REHAN -</span></h3>
-
-<div style="margin: 40px 0;" class="fade-section">
-    <p style="font-weight: bold; color: #555;">VISIT MY CHANNEL 👇</p>
-    <a href="http://www.youtube.com/@MR7OFFICIAL777" target="_blank">
-        <button class="yt-button">SUBSCRIBE TO MY YOUTUBE CHANNEL</button>
-    </a>
+<!-- 3 Dot Menu -->
+<div class="menu" onclick="toggleMenu()">⋮</div>
+<div class="menu-box" id="menuBox">
+    <a href="#" onclick="openContact()">📞 Contact</a>
 </div>
 
-☝🏻 CLICK HERE 👆🏻
+<!-- Main Page -->
+<div id="mainContent">
+<h1>MR7 WORLD</h1>
+<h2>REHAN</h2>
 
-<hr>
-<hr style="width: 80%; border: 0.5px solid #eee;" class="fade-section">
-
-<div class="contact-box fade-section">
-    <h2 style="color: green;">Contact Me</h2>
-    <form>
-        <label><b>NAME</b></label><br>
-        <input type="text" placeholder="Enter Your Name">
-
-        <label><b>MOBILE</b></label><br>
-        <input type="tel" placeholder="Enter Mobile Number">
-
-        <label><b>MESSAGE</b></label><br>
-        <textarea placeholder="Hello World..."></textarea>
-
-        <button type="submit" class="submit-btn">Send Message</button>
-    </form>
+<br><br>
+<a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
+<button class="yt-button">SUBSCRIBE</button>
+</a>
 </div>
 
-<hr>
+<!-- Contact Section -->
+<div id="contactSection">
+<div class="contact-box">
+<h2>📞 Contact MR7</h2>
 
-<center>
-    <img src="rehan.png" class="profile-pic fade-section">
-</center>
+<input type="text" placeholder="Your Name">
+<input type="tel" placeholder="Mobile">
+<textarea placeholder="Message"></textarea>
+<button>Send</button>
 
-<!-- Floating Popup -->
-<div id="popup">Welcome to MR7 WORLD! 👋 Don't forget to subscribe! 🔥</div>
+<!-- AI -->
+<div class="chat-box">
+<h3>🤖 MR7 AI</h3>
+<div class="chat" id="chat"></div>
+<input type="text" id="userInput" placeholder="Ask something..." onkeydown="if(event.key==='Enter')sendMsg()">
+<button onclick="sendMsg()">Send</button>
+</div>
+</div>
+</div>
 
 <script>
-    // ===== Dark Mode =====
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-    }
+/* Toggle Menu */
+function toggleMenu(){
+    let box=document.getElementById("menuBox");
+    box.style.display = box.style.display==="block"?"none":"block";
+}
 
-    // ===== Fade-in on Scroll =====
-    const faders = document.querySelectorAll('.fade-section');
-    window.addEventListener('scroll', () => {
-        faders.forEach(fader => {
-            const top = fader.getBoundingClientRect().top;
-            const screenHeight = window.innerHeight;
-            if(top < screenHeight - 50) fader.classList.add('visible');
-        });
-    });
+/* Open Contact Section */
+function openContact(){
+    document.getElementById("mainContent").style.display="none";
+    document.getElementById("contactSection").style.display="block";
+}
 
-    // ===== Show Popup =====
-    window.addEventListener('load', () => {
-        const popup = document.getElementById('popup');
-        popup.classList.add('show');
-        setTimeout(() => popup.classList.remove('show'), 5000);
-    });
+/* MR7 AI Chat */
+function sendMsg(){
+    let input=document.getElementById("userInput");
+    let chat=document.getElementById("chat");
+    let msg=input.value.trim();
+    if(msg==="")return;
+
+    chat.innerHTML += `<div class="user">You: ${msg}</div>`;
+
+    let reply="I am MR7 AI 🤖";
+    if(msg.toLowerCase().includes("hello")) reply="Hello! Kaise ho 😎";
+    else if(msg.toLowerCase().includes("name")) reply="Mera naam MR7 AI hai";
+    else if(msg.toLowerCase().includes("youtube")) reply="MR7 WORLD YouTube channel dekho 🔥";
+    else reply="Samajh gaya 👍 thoda aur clear bolo";
+
+    setTimeout(()=>{
+        chat.innerHTML += `<div class="ai">MR7 AI: ${reply}</div>`;
+        chat.scrollTop=chat.scrollHeight;
+    },500);
+
+    input.value="";
+}
 </script>
 
 </body>
