@@ -7,12 +7,19 @@
 
 <style>
 body{
-    margin:0;padding:20px;text-align:center;
+    margin:0;
+    padding:20px;
+    text-align:center;
     font-family:'Segoe UI',Tahoma;
-    background:#fff;color:#333;transition:0.5s;
+    background:#fff;
+    color:#333;
+    transition:0.5s;
 }
 body.dark-mode{background:#111;color:#eee}
+
 h1,h2,h3{letter-spacing:3px}
+
+/* EFFECTS */
 .typing{border-right:3px solid green;white-space:nowrap;overflow:hidden}
 .fade{opacity:0;transform:translateY(20px);transition:1s}
 .fade.show{opacity:1;transform:none}
@@ -23,22 +30,46 @@ h1,h2,h3{letter-spacing:3px}
     border:5px solid green;
     animation:glow 2s infinite alternate;
 }
-@keyframes glow{from{box-shadow:0 0 10px green}to{box-shadow:0 0 25px lime}}
+@keyframes glow{
+    from{box-shadow:0 0 10px green}
+    to{box-shadow:0 0 25px lime}
+}
 
-/* BUTTONS */
-.yt-button{background:red;color:white;padding:15px 40px;border:none;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer}
-.dark-toggle{position:fixed;top:20px;right:20px;background:green;color:white;border:none;padding:10px 20px;border-radius:30px;cursor:pointer}
+/* YOUTUBE */
+.yt-button{
+    background:red;color:white;
+    padding:15px 40px;
+    border:none;border-radius:50px;
+    font-size:18px;font-weight:bold;
+    cursor:pointer;
+}
 
-/* MENU */
-.menu{position:fixed;top:20px;left:20px;font-size:28px;cursor:pointer}
+/* DARK MODE */
+.dark-toggle{
+    position:fixed;top:20px;right:20px;
+    background:green;color:white;
+    border:none;padding:10px 20px;
+    border-radius:30px;cursor:pointer;
+}
+
+/* 3 DOT MENU */
+.menu{
+    position:fixed;top:20px;left:20px;
+    font-size:28px;cursor:pointer;
+    z-index:1000;
+}
 .menu-box{
- position:fixed;top:60px;left:20px;
- background:#222;color:white;
- padding:15px;border-radius:10px;display:none
+    position:fixed;top:60px;left:20px;
+    background:#222;color:white;
+    padding:15px;border-radius:10px;
+    display:none;
+    z-index:1000;
 }
 .menu-box button{
- width:100%;margin:5px 0;padding:8px;
- border:none;border-radius:5px;cursor:pointer
+    width:100%;margin:5px 0;
+    padding:8px;border:none;
+    border-radius:5px;
+    cursor:pointer;
 }
 
 /* SECTIONS */
@@ -47,40 +78,65 @@ h1,h2,h3{letter-spacing:3px}
 
 /* CONTACT */
 .contact-box{
- max-width:400px;margin:40px auto;padding:20px;
- border-radius:20px;border:2px solid green
+    max-width:400px;margin:40px auto;
+    padding:20px;border-radius:20px;
+    border:2px solid green;
 }
-input,textarea{width:90%;padding:10px;margin:8px 0}
-.submit-btn{background:green;color:white;padding:12px;width:100%;border:none;border-radius:10px;cursor:pointer}
-.back-btn{margin-top:20px;padding:10px 25px;background:gray;color:white;border:none;border-radius:20px;cursor:pointer}
+input,textarea{
+    width:90%;padding:10px;margin:8px 0;
+}
+.submit-btn{
+    background:green;color:white;
+    padding:12px;width:100%;
+    border:none;border-radius:10px;
+    cursor:pointer;
+}
 
-/* AI CHAT */
-.chat-box{
- max-width:500px;margin:30px auto;
- background:#f4f4f4;border-radius:15px;padding:15px;
+/* BACK */
+.back-btn{
+    margin-top:20px;
+    padding:10px 25px;
+    background:gray;color:white;
+    border:none;border-radius:20px;
+    cursor:pointer;
 }
-body.dark-mode .chat-box{background:#222}
-.chat-log{
- height:250px;overflow-y:auto;
- text-align:left;padding:10px
+
+/* AI */
+.ai-box{
+    max-width:500px;
+    margin:40px auto;
+    border:2px solid green;
+    padding:20px;
+    border-radius:20px;
 }
-.msg-user{color:#00a}
-.msg-ai{color:green;margin-bottom:10px}
-.chat-input{width:80%;padding:10px}
-.chat-send{padding:10px 15px;background:green;color:white;border:none;border-radius:8px}
+.ai-messages{
+    height:200px;
+    overflow:auto;
+    text-align:left;
+    margin-bottom:10px;
+}
+.ai-user{color:cyan}
+.ai-bot{color:lime}
 
 /* POPUP */
-#popup{position:fixed;bottom:20px;right:20px;background:green;color:white;padding:15px 25px;border-radius:15px;display:none}
+#popup{
+    position:fixed;bottom:20px;right:20px;
+    background:green;color:white;
+    padding:15px 25px;
+    border-radius:15px;
+    display:none;
+}
 </style>
 </head>
 
 <body>
 
-<!-- MENU -->
+<!-- 3 DOT -->
 <div class="menu" onclick="toggleMenu()">⋮</div>
 <div class="menu-box" id="menuBox">
- <button onclick="openContact()">📞 Contact</button>
- <button onclick="openAI()">🤖 MR7 AI</button>
+    <button onclick="openHome()">🏠 Home</button>
+    <button onclick="openContact()">📞 Contact</button>
+    <button onclick="openAI()">🤖 MR7 AI</button>
 </div>
 
 <button class="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
@@ -90,9 +146,12 @@ body.dark-mode .chat-box{background:#222}
 <h1 class="typing fade">- MR7 WORLD -</h1>
 <h2 class="typing fade">- MD -</h2>
 <h3 class="typing fade">- REHAN -</h3>
+
 <br>
 <a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
-<button class="yt-button">SUBSCRIBE</button></a>
+<button class="yt-button">SUBSCRIBE</button>
+</a>
+
 <br><br>
 <img src="rehan.png" class="profile-pic fade">
 </div>
@@ -106,72 +165,93 @@ body.dark-mode .chat-box{background:#222}
 <textarea id="message" placeholder="Message"></textarea>
 <button class="submit-btn" onclick="sendMail()">Send</button>
 </div>
-<button class="back-btn" onclick="goBack()">⬅ Back</button>
+<button class="back-btn" onclick="openHome()">⬅ Back</button>
 </div>
 
 <!-- AI -->
 <div id="ai" class="section">
+<div class="ai-box">
 <h2>🤖 MR7 AI</h2>
-<div class="chat-box">
- <div class="chat-log" id="chatLog"></div>
- <input class="chat-input" id="userInput" placeholder="Ask something...">
- <button class="chat-send" onclick="askAI()">Send</button>
+<div class="ai-messages" id="aiMessages"></div>
+<input id="aiInput" placeholder="Ask anything...">
+<button class="submit-btn" onclick="askAI()">Ask</button>
 </div>
-<button class="back-btn" onclick="goBack()">⬅ Back</button>
+<button class="back-btn" onclick="openHome()">⬅ Back</button>
 </div>
 
 <div id="popup">Welcome to MR7 WORLD 🔥</div>
 
 <script>
-const home=home,contact=contact,ai=document.getElementById("ai"),menuBox=menuBox,popup=popup;
+/* ELEMENTS */
+const home=document.getElementById("home");
+const contact=document.getElementById("contact");
+const ai=document.getElementById("ai");
+const menuBox=document.getElementById("menuBox");
+const popup=document.getElementById("popup");
 
 /* DARK MODE SAVE */
-if(localStorage.theme==="dark"){document.body.classList.add("dark-mode")}
+if(localStorage.getItem("dark")==="on"){
+ document.body.classList.add("dark-mode");
+}
 function toggleDark(){
  document.body.classList.toggle("dark-mode");
- localStorage.theme=document.body.classList.contains("dark-mode")?"dark":"light";
+ localStorage.setItem("dark",
+  document.body.classList.contains("dark-mode")?"on":"off");
 }
 
 /* MENU */
-function toggleMenu(){menuBox.style.display=menuBox.style.display==="block"?"none":"block"}
+function toggleMenu(){
+ menuBox.style.display=menuBox.style.display==="block"?"none":"block";
+}
+document.addEventListener("click",e=>{
+ if(!menuBox.contains(e.target)&&!e.target.classList.contains("menu")){
+  menuBox.style.display="none";
+ }
+});
 
 /* NAV */
-function openContact(){home.classList.remove("active");contact.classList.add("active");menuBox.style.display="none"}
-function openAI(){home.classList.remove("active");ai.classList.add("active");menuBox.style.display="none"}
-function goBack(){contact.classList.remove("active");ai.classList.remove("active");home.classList.add("active")}
+function hideAll(){
+ home.classList.remove("active");
+ contact.classList.remove("active");
+ ai.classList.remove("active");
+}
+function openHome(){hideAll();home.classList.add("active")}
+function openContact(){hideAll();contact.classList.add("active")}
+function openAI(){hideAll();ai.classList.add("active")}
 
-/* MAIL */
+/* CONTACT MAIL */
 function sendMail(){
- if(!name.value||!mobile.value||!message.value){alert("Fill all fields");return}
- let body=`Name:${name.value}%0AMobile:${mobile.value}%0AMessage:${message.value}`;
- location.href=`mailto:mrrehanofficial.1777@gmail.com?subject=Website Contact&body=${body}`;
+ let n=name.value,m=mobile.value,msg=message.value;
+ if(!n||!m||!msg){alert("Fill all");return;}
+ window.location.href=
+ `mailto:mrrehanofficial.1777@gmail.com?subject=Website Contact&body=Name:${n}%0AMobile:${m}%0AMessage:${msg}`;
 }
 
-/* AI LOGIC */
+/* AI */
 function askAI(){
- let q=userInput.value.toLowerCase();
- let log=document.getElementById("chatLog");
- log.innerHTML+=`<div class="msg-user">You: ${q}</div>`;
- let a="I am MR7 AI 🤖, ask me anything!";
- if(q.includes("name")) a="My name is MR7 AI.";
- else if(q.includes("owner")||q.includes("rehan")) a="This website is owned by Rehan (MR7).";
- else if(q.includes("youtube")) a="MR7 YouTube channel: MR7OFFICIAL777 🔥";
- else if(q.includes("hello")||q.includes("hi")) a="Hello 👋 how can I help you?";
- else if(q.includes("help")) a="I can tell you about MR7, YouTube, contact & more.";
- log.innerHTML+=`<div class="msg-ai">AI: ${a}</div>`;
- log.scrollTop=log.scrollHeight;
- userInput.value="";
+ let q=aiInput.value;
+ if(!q)return;
+ aiMessages.innerHTML+=`<div class="ai-user">You: ${q}</div>`;
+ let r="Main MR7 AI hoon 🤖 — ye ek demo AI hai.";
+ aiMessages.innerHTML+=`<div class="ai-bot">MR7: ${r}</div>`;
+ aiInput.value="";
 }
 
 /* POPUP */
-setTimeout(()=>{popup.style.display="block";setTimeout(()=>popup.style.display="none",4000)},1000);
+setTimeout(()=>{
+ popup.style.display="block";
+ setTimeout(()=>popup.style.display="none",4000);
+},1000);
 
-/* EFFECTS */
-document.querySelectorAll(".fade").forEach((e,i)=>setTimeout(()=>e.classList.add("show"),400*i));
+/* ANIMATION */
+document.querySelectorAll(".fade").forEach((e,i)=>{
+ setTimeout(()=>e.classList.add("show"),500*i);
+});
 document.querySelectorAll(".typing").forEach(el=>{
  let t=el.innerText;el.innerText="";let i=0;
- (function type(){if(i<t.length){el.innerText+=t[i++];setTimeout(type,100)}})();
+ (function type(){if(i<t.length){el.innerText+=t[i++];setTimeout(type,100);}})();
 });
 </script>
+
 </body>
 </html>
