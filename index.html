@@ -7,166 +7,158 @@
 
 <style>
 :root{
- --bg:#ffffff;
- --text:#000000;
- --card:#f0f0f0;
+  --bg:#ffffff;
+  --text:#000000;
+  --menu:#f1f1f1;
 }
 body.dark{
- --bg:#0f0f0f;
- --text:#ffffff;
- --card:#1f1f1f;
+  --bg:#0b0b0b;
+  --text:#ffffff;
+  --menu:#1c1c1c;
 }
 
+*{box-sizing:border-box}
+
 body{
- margin:0;
- font-family:Arial, sans-serif;
- background:var(--bg);
- color:var(--text);
- transition:0.4s;
- overflow-x:hidden;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, sans-serif;
+  transition:.3s;
+}
+
+/* TOP BAR */
+#top{
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:50px;
+  display:flex;
+  align-items:center;
+  padding:0 15px;
+  z-index:1000;
 }
 
 /* 3 DOT */
 #dots{
- position:fixed;
- top:15px;
- left:15px;
- font-size:26px;
- cursor:pointer;
- z-index:1000;
+  font-size:26px;
+  cursor:pointer;
+  color:#fff;
 }
 
 /* MENU */
 #menu{
- position:fixed;
- top:0;
- left:-220px;
- width:200px;
- height:100%;
- background:var(--card);
- padding:20px;
- transition:0.4s;
- z-index:999;
+  position:fixed;
+  top:0;
+  left:-220px;
+  width:200px;
+  height:100%;
+  background:var(--menu);
+  padding:60px 15px;
+  transition:.3s;
+  z-index:999;
 }
 #menu a{
- display:block;
- margin:15px 0;
- cursor:pointer;
+  display:block;
+  margin:15px 0;
+  cursor:pointer;
 }
 
-/* SECTIONS */
+/* CONTENT */
 .section{
- display:none;
- padding:80px 20px;
- animation:fade 0.4s;
+  display:none;
+  padding:80px 20px;
 }
-.section.active{display:block;}
-
-@keyframes fade{
- from{opacity:0; transform:translateY(10px);}
- to{opacity:1; transform:none;}
-}
+.section.active{display:block}
 
 /* AI */
 #aiBox{
- background:var(--card);
- padding:10px;
- border-radius:10px;
- max-width:400px;
-}
-#aiMessages div{
- margin:5px 0;
+  max-width:400px;
+  background:var(--menu);
+  padding:10px;
+  border-radius:8px;
 }
 input,button{
- padding:8px;
- margin-top:5px;
- width:100%;
+  width:100%;
+  padding:8px;
+  margin-top:5px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 3 DOT -->
-<div id="dots">⋮</div>
+<div id="top">
+  <div id="dots">⋮</div>
+</div>
 
-<!-- MENU -->
 <div id="menu">
- <a onclick="show('home')">Home</a>
- <a onclick="show('contact')">Contact</a>
- <a onclick="show('ai')">MR7 AI</a>
- <a onclick="toggleMode()">Dark / Light</a>
+  <a onclick="openPage('home')">Home</a>
+  <a onclick="openPage('contact')">Contact</a>
+  <a onclick="openPage('ai')">MR7 AI</a>
+  <a onclick="toggleMode()">Dark / Light</a>
 </div>
 
-<!-- HOME -->
 <div id="home" class="section active">
- <h1>Welcome to MD Rehan Official</h1>
- <p>This is home page</p>
+  <h1>Welcome to MD Rehan Official</h1>
+  <p>This is home page</p>
 </div>
 
-<!-- CONTACT -->
 <div id="contact" class="section">
- <h2>Contact</h2>
- <p>Name: __________</p>
- <p>Number: __________</p>
- <p>Message: __________</p>
+  <h2>Contact</h2>
+  <p>Email: example@gmail.com</p>
+  <p>Phone: 0000000000</p>
 </div>
 
-<!-- AI -->
 <div id="ai" class="section">
- <h2>MR7 AI 🤖</h2>
- <div id="aiBox">
-  <div id="aiMessages"></div>
-  <input id="aiInput" placeholder="Ask anything...">
-  <button onclick="askAI()">Send</button>
- </div>
+  <h2>MR7 AI 🤖</h2>
+  <div id="aiBox">
+    <div id="msgs"></div>
+    <input id="q" placeholder="Ask anything...">
+    <button onclick="ask()">Send</button>
+  </div>
 </div>
 
 <script>
-/* SAFE SELECT */
-function $(id){return document.getElementById(id);}
+const menu=document.getElementById("menu");
+const dots=document.getElementById("dots");
 
-/* MENU */
-const menu=$("menu");
-$("dots").onclick=()=>{
- menu.style.left = menu.style.left=="0px" ? "-220px":"0px";
+dots.onclick=()=>{
+  menu.style.left = menu.style.left==="0px" ? "-220px" : "0px";
 };
 
-/* AUTO CLOSE + NAV */
-function show(id){
- document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
- $(id).classList.add("active");
- menu.style.left="-220px";
+function openPage(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  menu.style.left="-220px";
 }
 
-/* DARK MODE REMEMBER */
 if(localStorage.theme==="dark"){
- document.body.classList.add("dark");
+  document.body.classList.add("dark");
 }
+
 function toggleMode(){
- document.body.classList.toggle("dark");
- localStorage.theme = document.body.classList.contains("dark")?"dark":"light";
+  document.body.classList.toggle("dark");
+  localStorage.theme = document.body.classList.contains("dark")?"dark":"light";
 }
 
 /* MR7 AI */
-function askAI(){
- const inp=$("aiInput");
- const msg=$("aiMessages");
- if(!inp.value.trim())return;
+function ask(){
+  const q=document.getElementById("q");
+  const msgs=document.getElementById("msgs");
+  if(!q.value.trim())return;
 
- let q=inp.value;
- msg.innerHTML+=`<div><b>You:</b> ${q}</div>`;
+  let ans="Mujhe thoda simple bolo 🙂";
 
- let ans="Main samajhne ki koshish kar raha hoon 🙂";
- try{
-  if(/^[0-9+\-*/ ().]+$/.test(q)){
-   ans=eval(q);
-  }
- }catch(e){}
+  try{
+    if(/^[0-9+\-*/ ().]+$/.test(q.value)){
+      ans=eval(q.value);
+    }
+  }catch{}
 
- msg.innerHTML+=`<div><b>MR7:</b> ${ans}</div>`;
- inp.value="";
- msg.scrollTop=msg.scrollHeight;
+  msgs.innerHTML+=`<div><b>You:</b> ${q.value}</div>`;
+  msgs.innerHTML+=`<div><b>MR7:</b> ${ans}</div>`;
+  q.value="";
 }
 </script>
 
