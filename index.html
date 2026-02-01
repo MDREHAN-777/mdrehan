@@ -76,15 +76,10 @@ body.dark-mode{background:#111;color:#eee}
 
 /* SECTIONS */
 .section{
- display:none;
- opacity:0;
- transform: translateY(20px);
- transition: opacity .5s, transform .5s;
+ display:none; /* hide by default */
 }
 .section.active{
- display:block;
- opacity:1;
- transform: translateY(0);
+ display:block; /* only active shows */
 }
 
 /* CONTACT */
