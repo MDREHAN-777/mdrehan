@@ -11,13 +11,13 @@ body{
  margin:0;
  font-family:Segoe UI,Arial;
  text-align:center;
+ background:#0b0b0b;
+ color:#eee;
+ transition:.4s;
+}
+body.light{
  background:#ffffff;
  color:#111;
- transition:.4s ease;
-}
-body.dark{
- background:#0d0d0d;
- color:#eee;
 }
 
 /* ===== TOP BAR ===== */
@@ -28,16 +28,15 @@ body.dark{
  display:flex;
  justify-content:space-between;
  align-items:center;
- padding:15px 20px;
+ padding:14px 20px;
  z-index:1000;
- background:transparent;
 }
 .menu{
- font-size:28px;
+ font-size:30px;
  cursor:pointer;
 }
-.dark-btn{
- background:green;
+.mode-btn{
+ background:#00c853;
  color:#fff;
  border:none;
  padding:8px 18px;
@@ -45,114 +44,119 @@ body.dark{
  cursor:pointer;
 }
 
-/* ===== MENU BOX ===== */
+/* ===== MENU ===== */
 .menu-box{
  position:fixed;
  top:60px;left:15px;
- background:#222;
- color:#fff;
- border-radius:12px;
- padding:10px;
+ background:#1f1f1f;
+ padding:12px;
+ border-radius:14px;
  display:none;
- box-shadow:0 10px 25px rgba(0,0,0,.4);
+ box-shadow:0 10px 30px rgba(0,0,0,.6);
 }
 .menu-box button{
- width:150px;
+ width:160px;
  margin:6px 0;
  padding:10px;
  border:none;
- border-radius:8px;
+ border-radius:10px;
  background:#333;
  color:#fff;
  cursor:pointer;
+ font-size:15px;
 }
 .menu-box button:hover{
- background:lime;
+ background:#00e676;
  color:#000;
 }
 
 /* ===== SECTIONS ===== */
 .section{
  display:none;
- padding-top:100px;
+ padding-top:110px;
+ animation:fade .4s ease;
 }
 .section.active{display:block}
+@keyframes fade{
+ from{opacity:0;transform:translateY(10px)}
+ to{opacity:1;transform:none}
+}
 
 /* ===== HOME ===== */
-.profile{
- width:180px;
+.logo{
+ width:190px;
  border-radius:50%;
- border:4px solid lime;
- box-shadow:0 0 25px lime;
+ box-shadow:0 0 35px #00ff5a;
  transition:.4s;
 }
-.profile:hover{transform:scale(1.08)}
+.logo:hover{transform:scale(1.07)}
 
-.yt{
+.subscribe{
  margin-top:20px;
- padding:14px 40px;
- background:red;
- color:white;
+ padding:14px 45px;
+ background:#ff0000;
+ color:#fff;
  border:none;
  border-radius:40px;
  font-size:18px;
  cursor:pointer;
+ box-shadow:0 8px 25px rgba(255,0,0,.5);
 }
 
 /* ===== GALLERY ===== */
 .gallery{
  display:flex;
  justify-content:center;
- gap:20px;
+ gap:18px;
  flex-wrap:wrap;
- margin:40px 0;
+ margin:45px 0;
 }
 .gallery img{
  width:150px;
- border-radius:18px;
- box-shadow:0 8px 20px rgba(0,0,0,.35);
+ border-radius:20px;
+ box-shadow:0 10px 25px rgba(0,0,0,.5);
  transition:.4s;
 }
 .gallery img:hover{
- transform:translateY(-8px) scale(1.06);
- box-shadow:0 0 25px lime;
+ transform:translateY(-10px) scale(1.07);
+ box-shadow:0 0 30px #00ff5a;
 }
 
 /* ===== BOX ===== */
 .box{
  max-width:420px;
  margin:30px auto;
- padding:20px;
- border-radius:18px;
- border:2px solid lime;
+ padding:22px;
+ border-radius:20px;
+ border:2px solid #00ff5a;
 }
 input,textarea{
- width:90%;
+ width:92%;
  padding:10px;
  margin:8px 0;
  border-radius:8px;
  border:1px solid #aaa;
 }
 .send{
- background:green;
- color:white;
+ background:#00c853;
+ color:#fff;
  border:none;
  padding:12px;
  width:100%;
- border-radius:10px;
+ border-radius:12px;
  cursor:pointer;
 }
 .back{
  margin-top:15px;
- padding:8px 22px;
+ padding:8px 24px;
  border:none;
  border-radius:20px;
- background:#666;
+ background:#555;
  color:#fff;
  cursor:pointer;
 }
 
-/* ===== AI OUTPUT ===== */
+/* AI */
 #aiOutput{
  margin-top:15px;
  font-weight:bold;
@@ -162,13 +166,11 @@ input,textarea{
 
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
  <div class="menu" onclick="toggleMenu()">⋮</div>
- <button class="dark-btn" onclick="toggleDark()">🌙</button>
+ <button class="mode-btn" onclick="toggleMode()">🌙</button>
 </div>
 
-<!-- MENU -->
 <div class="menu-box" id="menuBox">
  <button onclick="openSection('contact')">📞 Contact</button>
  <button onclick="openSection('ai')">🤖 MR7 AI</button>
@@ -179,10 +181,10 @@ input,textarea{
  <h1>MR7 WORLD</h1>
  <h3>MD REHAN</h3>
 
- <img src="rehan.png" class="profile"><br>
+ <img src="rehan.png" class="logo"><br>
 
  <a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
-  <button class="yt">SUBSCRIBE</button>
+  <button class="subscribe">SUBSCRIBE</button>
  </a>
 
  <div class="gallery">
@@ -219,25 +221,25 @@ input,textarea{
 const menuBox=document.getElementById("menuBox");
 const sections=document.querySelectorAll(".section");
 
-/* DARK MODE SAVE */
-if(localStorage.getItem("theme")==="dark"){
- document.body.classList.add("dark");
+/* THEME SAVE */
+if(localStorage.getItem("theme")==="light"){
+ document.body.classList.add("light");
 }
-function toggleDark(){
- document.body.classList.toggle("dark");
+function toggleMode(){
+ document.body.classList.toggle("light");
  localStorage.setItem(
   "theme",
-  document.body.classList.contains("dark")?"dark":"light"
+  document.body.classList.contains("light")?"light":"dark"
  );
 }
 
 /* MENU */
 function toggleMenu(){
- menuBox.style.display =
+ menuBox.style.display=
  menuBox.style.display==="block"?"none":"block";
 }
 
-/* SECTION SWITCH */
+/* SECTION CONTROL */
 function openSection(id){
  sections.forEach(s=>s.classList.remove("active"));
  document.getElementById(id).classList.add("active");
@@ -248,28 +250,28 @@ function goHome(){
  home.classList.add("active");
 }
 
-/* CONTACT EMAIL (same as old, SAFE) */
+/* CONTACT EMAIL */
 function sendMail(){
  location.href="mailto:mrrehanofficial.1777@gmail.com";
 }
 
-/* AI SMART */
+/* SMART AI */
 function askAI(){
  let q=aiInput.value.toLowerCase();
- let a="🤖 I am learning…";
+ let r="🤖 Samajh nahi aaya…";
 
  if(q.includes("joke"))
-  a="😂 Programmer ne kaha: life = try { success } catch { chai }";
+  r="😂 Coding is easy… until it works!";
  else if(q.match(/^\d+[\+\-\*\/]\d+$/))
-  a="Result: "+eval(q);
+  r="Answer: "+eval(q);
  else if(q.includes("name"))
-  a="Mera naam MR7 AI hai 🔥";
+  r="Mera naam MR7 AI hai 🔥";
  else if(q.includes("hello")||q.includes("hi"))
-  a="Hello 👋 MD Rehan!";
+  r="Hello MD Rehan 👋";
  else if(q)
-  a="Smart AI upgrade coming soon 🚀";
+  r="Smart upgrade coming soon 🚀";
 
- aiOutput.innerText=a;
+ aiOutput.innerText=r;
  aiInput.value="";
 }
 </script>
