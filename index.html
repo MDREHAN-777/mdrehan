@@ -2,173 +2,227 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MR7 WORLD | MD REHAN</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MR7 - OFFICIAL</title>
 
 <style>
-:root{
-  --bg:#000;
-  --card:rgba(255,255,255,0.08);
-  --neon:#00ff88;
-  --text:#fff;
-}
-
 body{
-  margin:0;
-  font-family:Segoe UI, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  overflow-x:hidden;
+ margin:0;padding:20px;text-align:center;
+ font-family:Segoe UI;
+ background:#fff;color:#333;
+ transition:.5s;
+ overflow-x:hidden;
 }
+body.dark-mode{background:#111;color:#eee}
 
-/* LOCK DARK MODE */
-html{color-scheme: dark;}
-
-header{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  padding:15px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:10;
+.profile-pic{
+ width:200px;height:200px;border-radius:50%;
+ border:5px solid green;
+ box-shadow:0 0 20px green;
+ transition:.4s;
 }
+.profile-pic:hover{transform:scale(1.1)}
 
-.menu-btn{
-  font-size:26px;
-  cursor:pointer;
+.yt-button{
+ background:red;color:#fff;
+ padding:15px 40px;border:none;
+ border-radius:50px;font-size:18px;
+ cursor:pointer;
+}
+.submit-btn,.back-btn{
+ padding:12px 25px;border:none;
+ border-radius:20px;cursor:pointer;
+}
+.submit-btn{background:green;color:white;width:100%}
+.back-btn{background:gray;color:white;margin-top:20px}
+
+.dark-toggle{
+ position:fixed;top:20px;right:20px;
+ background:green;color:white;
+ border:none;padding:10px 20px;
+ border-radius:30px;cursor:pointer;
 }
 
 .menu{
-  position:fixed;
-  top:0;
-  left:-260px;
-  width:250px;
-  height:100%;
-  background:#050505;
-  padding:20px;
-  transition:.3s;
-  box-shadow:0 0 20px #000;
+ position:fixed;top:20px;left:20px;
+ font-size:30px;cursor:pointer;
+ z-index:1000;
+}
+.menu-box{
+ position:fixed;top:60px;left:20px;
+ background:#222;color:white;
+ padding:10px;border-radius:10px;
+ display:none;
+}
+.menu-box button{
+ width:130px;margin:5px 0;
+ padding:8px;border:none;
+ border-radius:5px;cursor:pointer;
 }
 
-.menu a{
-  display:block;
-  color:white;
-  text-decoration:none;
-  margin:15px 0;
-  font-size:18px;
+.section{display:none}
+.section.active{display:block}
+
+.contact-box,.ai-box{
+ max-width:400px;margin:40px auto;
+ padding:20px;border-radius:20px;
+ border:2px solid green;
 }
 
-.menu.show{left:0;}
-
-.main{
-  padding-top:120px;
-  text-align:center;
+input,textarea{
+ width:90%;padding:10px;margin:8px 0;
+ border-radius:8px;border:1px solid #aaa;
 }
 
-.logo{
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  margin:auto;
-  box-shadow:0 0 40px var(--neon);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:40px;
-  font-weight:bold;
+.image-gallery{
+ display:flex;justify-content:center;
+ gap:20px;flex-wrap:wrap;margin:40px 0;
 }
-
-.btn{
-  margin-top:30px;
-  padding:15px 40px;
-  background:red;
-  border:none;
-  border-radius:40px;
-  color:white;
-  font-size:18px;
-  cursor:pointer;
-  box-shadow:0 0 20px red;
+.image-gallery img{
+ width:160px;border-radius:18px;
+ box-shadow:0 5px 20px rgba(0,0,0,.3);
+ transition:.4s;
 }
+.image-gallery img:hover{transform:scale(1.08)}
 
-.section{
-  margin:60px auto;
-  max-width:900px;
-  background:var(--card);
-  border-radius:20px;
-  padding:25px;
-  backdrop-filter:blur(10px);
+.floating-img{
+ position:fixed;right:15px;bottom:70px;
+ width:90px;border-radius:16px;
+ animation:float 4s infinite;
 }
-
-input{
-  width:80%;
-  padding:12px;
-  border-radius:25px;
-  border:none;
-  outline:none;
-  font-size:16px;
-}
-
-.ai-box{
-  margin-top:20px;
-  font-size:16px;
-  opacity:.9;
+@keyframes float{
+ 0%{transform:translateY(0)}
+ 50%{transform:translateY(-12px)}
+ 100%{transform:translateY(0)}
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="menu-btn" onclick="toggleMenu()">⋮</div>
-  <div>MR7 WORLD</div>
-</header>
-
-<div class="menu" id="menu">
-  <a href="#home">🏠 Home</a>
-  <a href="#ai">🤖 AI</a>
-  <a href="#contact">📞 Contact</a>
+<div class="menu" onclick="toggleMenu()">⋮</div>
+<div class="menu-box" id="menuBox">
+ <button onclick="openContact()">📞 Contact</button>
+ <button onclick="openAI()">🤖 MR7 AI</button>
 </div>
 
-<div class="main" id="home">
-  <div class="logo">RA</div>
-  <h1>MD REHAN</h1>
-  <button class="btn">SUBSCRIBE</button>
+<button class="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
+
+<!-- HOME -->
+<div id="home" class="section active">
+<h1>- MR7 WORLD -</h1>
+<h2>- MD -</h2>
+<h3>- REHAN -</h3>
+
+<a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
+<button class="yt-button">SUBSCRIBE</button>
+</a>
+
+<br><br>
+<img src="rehan.png" class="profile-pic">
+
+<div class="image-gallery">
+ <img src="animi 1.jpeg">
+ <img src="animi 2 .jpeg">
+ <img src="animi 3.jpeg">
+</div>
 </div>
 
-<div class="section" id="ai">
-  <h2>🤖 MR7 AI</h2>
-  <input id="aiInput" placeholder="Type something..." />
-  <div class="ai-box" id="aiReply"></div>
+<!-- CONTACT -->
+<div id="contact" class="section">
+<div class="contact-box">
+<h2>Contact Me</h2>
+<input id="name" placeholder="Name">
+<input id="mobile" placeholder="Mobile">
+<textarea id="message" placeholder="Message"></textarea>
+<button class="submit-btn" onclick="sendMail()">Send</button>
+</div>
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
-<div class="section" id="contact">
-  <h2>📞 Contact</h2>
-  <p>Email: mdrehanofficial@gmail.com</p>
-  <p>Instagram: @mr7world</p>
+<!-- AI -->
+<div id="ai" class="section">
+<div class="ai-box">
+<h2>🤖 MR7 AI</h2>
+<input id="aiInput" placeholder="Ask anything">
+<button onclick="askAI()">Ask</button>
+<div id="aiOutput" style="margin-top:10px;font-weight:bold;"></div>
 </div>
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<img src="animi 1.jpeg" class="floating-img">
 
 <script>
-function toggleMenu(){
-  document.getElementById("menu").classList.toggle("show");
+/* DARK MODE REMEMBER */
+if(localStorage.getItem("dark")==="on"){
+ document.body.classList.add("dark-mode");
+}
+function toggleDark(){
+ document.body.classList.toggle("dark-mode");
+ localStorage.setItem("dark",
+ document.body.classList.contains("dark-mode")?"on":"off");
 }
 
-/* SIMPLE AI */
-document.getElementById("aiInput").addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    let v=e.target.value.toLowerCase();
-    let r="I am learning...";
+/* MENU */
+function toggleMenu(){
+ let m=document.getElementById("menuBox");
+ m.style.display=m.style.display==="block"?"none":"block";
+}
 
-    if(v.includes("hello")) r="Hello Rehan 👋";
-    if(v.includes("joke")) r="Why JavaScript broke up with HTML? Too many tags 😄";
-    if(v.includes("who are you")) r="I am MR7 AI 🤖";
+/* PAGE */
+function openContact(){
+ home.classList.remove("active");
+ ai.classList.remove("active");
+ contact.classList.add("active");
+ menuBox.style.display="none";
+}
+function openAI(){
+ home.classList.remove("active");
+ contact.classList.remove("active");
+ ai.classList.add("active");
+ menuBox.style.display="none";
+}
+function goBack(){
+ contact.classList.remove("active");
+ ai.classList.remove("active");
+ home.classList.add("active");
+}
 
-    document.getElementById("aiReply").innerText=r;
-    e.target.value="";
-  }
-});
+/* MAIL */
+function sendMail(){
+ let n=name.value,m=mobile.value,msg=message.value;
+ if(!n||!m||!msg){alert("Fill all");return;}
+ location.href=
+ `mailto:mrrehanofficial.1777@gmail.com?subject=Website Contact&body=Name:${n}%0AMobile:${m}%0AMessage:${msg}`;
+}
+
+/* AI */
+function askAI(){
+ let q=aiInput.value.toLowerCase().trim();
+ let r="🤖 MR7 AI: samajh nahi aaya 😅";
+
+ if(q.match(/^[0-9+\-*/. ]+$/)){
+  try{r=eval(q)}catch{r="Error ❌"}
+ }
+ else if(q.includes("hello")||q.includes("hi")){
+  r="Hello 👋 main MR7 AI hoon";
+ }
+ else if(q.includes("joke")){
+  let j=[
+   "Teacher: homework? Student: net nahi tha 😂",
+   "Phone gir gaya 😱 screen safe 😌",
+   "Life jab charger 1% ho 🔋😭"
+  ];
+  r=j[Math.floor(Math.random()*j.length)];
+ }
+ else if(q.includes("your name")){
+  r="Mera naam MR7 AI 🤖";
+ }
+
+ aiOutput.innerHTML=r;
+ aiInput.value="";
+}
 </script>
 
 </body>
