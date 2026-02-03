@@ -11,12 +11,12 @@ body{
  margin:0;
  font-family:Segoe UI,Arial;
  text-align:center;
- background:#fff;
+ background:#ffffff;
  color:#111;
- transition:.4s;
+ transition:.4s ease;
 }
 body.dark{
- background:#0f0f0f;
+ background:#0d0d0d;
  color:#eee;
 }
 
@@ -27,19 +27,21 @@ body.dark{
  width:100%;
  display:flex;
  justify-content:space-between;
+ align-items:center;
  padding:15px 20px;
- z-index:999;
+ z-index:1000;
+ background:transparent;
 }
 .menu{
  font-size:28px;
  cursor:pointer;
 }
 .dark-btn{
+ background:green;
+ color:#fff;
  border:none;
  padding:8px 18px;
  border-radius:20px;
- background:green;
- color:#fff;
  cursor:pointer;
 }
 
@@ -52,7 +54,7 @@ body.dark{
  border-radius:12px;
  padding:10px;
  display:none;
- animation:pop .3s ease;
+ box-shadow:0 10px 25px rgba(0,0,0,.4);
 }
 .menu-box button{
  width:150px;
@@ -64,13 +66,16 @@ body.dark{
  color:#fff;
  cursor:pointer;
 }
-@keyframes pop{
- from{transform:scale(.7);opacity:0}
- to{transform:scale(1);opacity:1}
+.menu-box button:hover{
+ background:lime;
+ color:#000;
 }
 
 /* ===== SECTIONS ===== */
-.section{display:none;padding-top:90px}
+.section{
+ display:none;
+ padding-top:100px;
+}
 .section.active{display:block}
 
 /* ===== HOME ===== */
@@ -82,6 +87,7 @@ body.dark{
  transition:.4s;
 }
 .profile:hover{transform:scale(1.08)}
+
 .yt{
  margin-top:20px;
  padding:14px 40px;
@@ -96,22 +102,23 @@ body.dark{
 /* ===== GALLERY ===== */
 .gallery{
  display:flex;
- gap:20px;
  justify-content:center;
+ gap:20px;
  flex-wrap:wrap;
  margin:40px 0;
 }
 .gallery img{
  width:150px;
  border-radius:18px;
+ box-shadow:0 8px 20px rgba(0,0,0,.35);
  transition:.4s;
- box-shadow:0 10px 20px rgba(0,0,0,.4);
 }
 .gallery img:hover{
- transform:translateY(-8px) scale(1.05);
+ transform:translateY(-8px) scale(1.06);
+ box-shadow:0 0 25px lime;
 }
 
-/* ===== CONTACT / AI ===== */
+/* ===== BOX ===== */
 .box{
  max-width:420px;
  margin:30px auto;
@@ -145,12 +152,11 @@ input,textarea{
  cursor:pointer;
 }
 
-/* ===== AI ===== */
+/* ===== AI OUTPUT ===== */
 #aiOutput{
  margin-top:15px;
  font-weight:bold;
 }
-
 </style>
 </head>
 
@@ -219,17 +225,19 @@ if(localStorage.getItem("theme")==="dark"){
 }
 function toggleDark(){
  document.body.classList.toggle("dark");
- localStorage.setItem("theme",
- document.body.classList.contains("dark")?"dark":"light");
+ localStorage.setItem(
+  "theme",
+  document.body.classList.contains("dark")?"dark":"light"
+ );
 }
 
 /* MENU */
 function toggleMenu(){
- menuBox.style.display=
- menuBox.style.display=="block"?"none":"block";
+ menuBox.style.display =
+ menuBox.style.display==="block"?"none":"block";
 }
 
-/* SECTION OPEN */
+/* SECTION SWITCH */
 function openSection(id){
  sections.forEach(s=>s.classList.remove("active"));
  document.getElementById(id).classList.add("active");
@@ -240,7 +248,7 @@ function goHome(){
  home.classList.add("active");
 }
 
-/* CONTACT */
+/* CONTACT EMAIL (same as old, SAFE) */
 function sendMail(){
  location.href="mailto:mrrehanofficial.1777@gmail.com";
 }
@@ -250,12 +258,19 @@ function askAI(){
  let q=aiInput.value.toLowerCase();
  let a="🤖 I am learning…";
 
- if(q.includes("10+10")) a="10 + 10 = 20 😄";
- else if(q.includes("joke")) a="😂 Programmer ka favourite place? CTRL + C!";
- else if(q.includes("name")) a="Mera naam MR7 AI hai 🔥";
- else if(q) a="Smart AI coming very soon 🚀";
+ if(q.includes("joke"))
+  a="😂 Programmer ne kaha: life = try { success } catch { chai }";
+ else if(q.match(/^\d+[\+\-\*\/]\d+$/))
+  a="Result: "+eval(q);
+ else if(q.includes("name"))
+  a="Mera naam MR7 AI hai 🔥";
+ else if(q.includes("hello")||q.includes("hi"))
+  a="Hello 👋 MD Rehan!";
+ else if(q)
+  a="Smart AI upgrade coming soon 🚀";
 
  aiOutput.innerText=a;
+ aiInput.value="";
 }
 </script>
 
