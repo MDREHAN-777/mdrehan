@@ -32,24 +32,19 @@ body.dark-mode{background:#111;color:#eee}
  background:red;color:#fff;
  padding:15px 40px;border:none;
  border-radius:50px;font-size:18px;
- cursor:pointer;transition:.3s;
+ cursor:pointer;
 }
-.yt-button:hover{
- transform:scale(1.1);
- box-shadow:0 5px 15px rgba(0,0,0,.3);
-}
+.yt-button:hover{transform:scale(1.1)}
 
 .submit-btn{
  background:green;color:white;
  padding:12px;width:100%;
  border:none;border-radius:10px;
- cursor:pointer;
 }
 .back-btn{
  margin-top:20px;padding:10px 25px;
  background:gray;color:white;
  border:none;border-radius:20px;
- cursor:pointer;
 }
 
 /* DARK */
@@ -57,13 +52,13 @@ body.dark-mode{background:#111;color:#eee}
  position:fixed;top:20px;right:20px;
  background:green;color:white;
  border:none;padding:10px 20px;
- border-radius:30px;cursor:pointer;
+ border-radius:30px;
 }
 
 /* MENU */
 .menu{
  position:fixed;top:20px;left:20px;
- font-size:30px;cursor:pointer;z-index:1000;
+ font-size:30px;cursor:pointer;
 }
 .menu-box{
  position:fixed;top:60px;left:20px;
@@ -73,22 +68,19 @@ body.dark-mode{background:#111;color:#eee}
 }
 .menu-box button{
  width:130px;margin:5px 0;
- padding:8px;border:none;
- border-radius:6px;cursor:pointer;
+ padding:8px;border:none;border-radius:6px;
 }
 
 /* SECTION */
 .section{display:none}
 .section.active{display:block}
 
-/* BOX */
-.contact-box,.ai-box{
+/* CONTACT */
+.contact-box{
  max-width:420px;margin:40px auto;
  padding:20px;border-radius:20px;
  border:2px solid green;
 }
-
-/* INPUT */
 input,textarea{
  width:90%;padding:10px;margin:8px 0;
  border-radius:8px;border:1px solid #aaa;
@@ -101,25 +93,78 @@ input,textarea{
 }
 .image-gallery img{
  width:160px;border-radius:18px;
- box-shadow:0 5px 20px rgba(0,0,0,.3);
  transition:.4s;
 }
 .image-gallery img:hover{
- transform:translateY(-10px) scale(1.08);
+ transform:scale(1.08);
  box-shadow:0 0 30px lime;
 }
 
-/* FLOAT IMAGE */
+/* FLOAT */
 .floating-img{
  position:fixed;right:15px;bottom:70px;
  width:100px;border-radius:16px;
- box-shadow:0 0 25px rgba(0,255,0,.6);
  animation:float 4s ease-in-out infinite;
 }
 @keyframes float{
  0%{transform:translateY(0)}
  50%{transform:translateY(-12px)}
  100%{transform:translateY(0)}
+}
+
+/* ===== WHATSAPP AI UI ===== */
+.ai-box{
+ max-width:420px;margin:30px auto;
+ border-radius:15px;
+ border:2px solid green;
+ overflow:hidden;
+}
+.ai-header{
+ background:#075e54;
+ color:white;padding:10px;
+ display:flex;align-items:center;
+ justify-content:space-between;
+}
+.status{
+ font-size:12px;
+}
+.chat-body{
+ background:#ece5dd;
+ height:300px;
+ overflow-y:auto;
+ padding:10px;
+ text-align:left;
+}
+.msg{
+ max-width:75%;
+ padding:8px 12px;
+ margin:6px 0;
+ border-radius:10px;
+ font-size:14px;
+}
+.user{
+ background:#dcf8c6;
+ margin-left:auto;
+}
+.bot{
+ background:white;
+}
+.chat-input{
+ display:flex;
+ border-top:1px solid #ccc;
+}
+.chat-input input{
+ flex:1;border:none;
+ padding:10px;
+}
+.chat-input button{
+ border:none;background:#25d366;
+ color:white;padding:10px 15px;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+ .chat-body{height:260px}
 }
 </style>
 </head>
@@ -143,7 +188,6 @@ input,textarea{
 <a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
 <button class="yt-button">SUBSCRIBE</button>
 </a>
-<p>👆🏻 CLICK HERE ☝🏻</p>
 
 <img src="rehan.png" class="profile-pic">
 
@@ -158,9 +202,9 @@ input,textarea{
 <div id="contact" class="section">
 <div class="contact-box">
 <h2>Contact Me</h2>
-<input id="name" placeholder="Name">
-<input id="mobile" placeholder="Mobile">
-<textarea id="message" placeholder="Message"></textarea>
+<input placeholder="Name">
+<input placeholder="Mobile">
+<textarea placeholder="Message"></textarea>
 <button class="submit-btn" onclick="sendMail()">Send</button>
 </div>
 <button class="back-btn" onclick="goBack()">⬅ Back</button>
@@ -169,10 +213,17 @@ input,textarea{
 <!-- AI -->
 <div id="ai" class="section">
 <div class="ai-box">
-<h2>🤖 MR7 AI</h2>
-<input id="aiInput" placeholder="Type: joke / hello / kaise ho">
-<button onclick="askAI()">Ask</button>
-<div id="aiOutput" style="margin-top:10px;text-align:left"></div>
+ <div class="ai-header">
+   <div>🤖 MR7 AI</div>
+   <div class="status" id="status">🟢 Online</div>
+ </div>
+
+ <div class="chat-body" id="chat"></div>
+
+ <div class="chat-input">
+  <input id="msgInput" placeholder="Type a message…">
+  <button onclick="sendMsg()">➤</button>
+ </div>
 </div>
 <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
@@ -195,8 +246,6 @@ function toggleMenu(){
  menuBox.style.display=
  menuBox.style.display=="block"?"none":"block";
 }
-
-/* PAGE */
 function openContact(){
  home.classList.remove("active");
  ai.classList.remove("active");
@@ -214,61 +263,55 @@ function goBack(){
  ai.classList.remove("active");
  home.classList.add("active");
 }
-
-/* MAIL */
 function sendMail(){
  location.href="mailto:mrrehanofficial.1777@gmail.com";
 }
 
-/* ===== SMART AI ===== */
+/* ===== AI CHAT ===== */
 const jokes=[
- "Teacher: Homework? Student: Sir net slow tha 😂",
- "Life bina mobile = phone bina battery 😄",
- "Gym join kiya… sirf form bharne gaya 🤣",
- "WiFi gaya to lagta duniya ruk gayi 😭",
+ "Teacher: Homework? Student: Net slow tha 😂",
  "Phone girte hi dil bhi gir jata 💔📱",
- "Zindagi ho ya code, error to aate hi hain 😅",
- "Aaj ka mood: 99% lazy 1% battery 🔋"
+ "Zindagi ho ya code, error aate rehte 😅",
+ "Aaj ka mood: 1% energy 99% sleep 😴",
+ "Gym join kiya… bas form bharne 🤣"
 ];
-let history=[];
 
-function typeText(el,text){
- let i=0;
- let t=setInterval(()=>{
- el.innerHTML+=text.charAt(i);
- i++;
- if(i>=text.length) clearInterval(t);
- },25);
+function addMsg(text,type){
+ let d=document.createElement("div");
+ d.className="msg "+type;
+ d.innerText=text;
+ chat.appendChild(d);
+ chat.scrollTop=chat.scrollHeight;
 }
 
-function askAI(){
- const q=aiInput.value.toLowerCase();
+function sendMsg(){
+ let q=msgInput.value.trim();
  if(!q) return;
+ addMsg(q,"user");
+ msgInput.value="";
 
- let reply="Main MR7 AI hoon 🤖";
-
- if(q.includes("joke")){
- reply=jokes[Math.floor(Math.random()*jokes.length)];
- }
- else if(q.includes("hello")||q.includes("hi")){
- reply="Hello Rehan 👋 kaise ho?";
- }
- else if(q.includes("kaise")){
- reply="Main mast hoon 😎 tum batao!";
- }
- else{
- reply="Samjha nahi 🤔 thoda simple bolo ya 'joke' likho";
- }
-
- history.push("You: "+q,"AI: "+reply);
- aiOutput.innerHTML="";
- history.slice(-6).forEach(h=>{
- let p=document.createElement("p");
- typeText(p,h);
- aiOutput.appendChild(p);
- });
- aiInput.value="";
+ setTimeout(()=>{
+  let r="Samjha nahi 🤔";
+  if(q.toLowerCase().includes("joke")){
+   r=jokes[Math.floor(Math.random()*jokes.length)];
+  }
+  else if(q.toLowerCase().includes("hello")){
+   r="Hello Rehan 👋 kaise ho?";
+  }
+  else if(q.toLowerCase().includes("kaise")){
+   r="Main bilkul mast 😎";
+  }
+  addMsg(r,"bot");
+ },700);
 }
+
+/* ONLINE / OFFLINE */
+window.addEventListener("offline",()=>{
+ status.innerText="🔴 Offline";
+});
+window.addEventListener("online",()=>{
+ status.innerText="🟢 Online";
+});
 </script>
 
 </body>
