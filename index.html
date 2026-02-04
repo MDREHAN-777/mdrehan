@@ -7,110 +7,172 @@
 
 <style>
 body{
- margin:0;padding:20px;text-align:center;
- font-family:Segoe UI,Arial;
+ margin:0;padding:20px;
+ text-align:center;
+ font-family:'Segoe UI',Arial,sans-serif;
  background:#fff;color:#333;
  transition:.4s;
  overflow-x:hidden;
 }
-body.dark-mode{background:#111;color:#eee}
+body.dark-mode{background:#0f0f0f;color:#eee}
+
+/* ===== HEADINGS ===== */
+h1,h2,h3{
+ letter-spacing:2px;
+ margin:6px 0;
+}
+h1{
+ text-shadow:0 0 12px rgba(0,255,0,.35);
+}
 
 /* ===== MENU ===== */
 .menu{
  position:fixed;top:20px;left:20px;
- font-size:30px;cursor:pointer;z-index:1000;
+ font-size:30px;cursor:pointer;
+ z-index:1000;
 }
 .menu-box{
  position:fixed;top:65px;left:20px;
  background:#222;color:white;
- padding:10px;border-radius:12px;
+ padding:12px;
+ border-radius:14px;
  display:none;
- animation:slide .3s ease;
+ box-shadow:0 10px 30px rgba(0,0,0,.4);
+ animation:fade .25s ease;
 }
-@keyframes slide{
- from{opacity:0;transform:translateY(-10px)}
+@keyframes fade{
+ from{opacity:0;transform:translateY(-8px)}
  to{opacity:1;transform:none}
 }
 .menu-box button{
- width:140px;margin:6px 0;padding:8px;
- border:none;border-radius:8px;
+ width:150px;
+ margin:6px 0;
+ padding:9px;
+ border:none;
+ border-radius:10px;
  cursor:pointer;
+ background:#333;
+ color:white;
+}
+.menu-box button:hover{
+ background:limegreen;
+ color:black;
 }
 
 /* ===== DARK MODE ===== */
 .dark-toggle{
  position:fixed;top:20px;right:20px;
  background:green;color:white;
- border:none;padding:10px 18px;
- border-radius:30px;cursor:pointer;
+ border:none;
+ padding:10px 18px;
+ border-radius:30px;
+ cursor:pointer;
 }
 
 /* ===== PROFILE ===== */
 .profile-pic{
- width:200px;height:200px;border-radius:50%;
+ width:200px;height:200px;
+ border-radius:50%;
  border:5px solid green;
- box-shadow:0 0 20px green;
+ box-shadow:0 0 22px green;
  transition:.4s;
+ margin-top:20px;
 }
 .profile-pic:hover{
- transform:scale(1.08) rotate(4deg);
- box-shadow:0 0 35px lime;
+ transform:scale(1.06) rotate(3deg);
+ box-shadow:0 0 38px lime;
 }
 
 /* ===== BUTTON ===== */
 .yt-button{
  background:red;color:#fff;
- padding:15px 40px;border:none;
- border-radius:50px;font-size:18px;
+ padding:14px 42px;
+ border:none;border-radius:50px;
+ font-size:17px;
  cursor:pointer;
  transition:.3s;
 }
-.yt-button:hover{transform:scale(1.1)}
-
-.submit-btn,.back-btn{
- padding:12px;width:100%;
- border:none;border-radius:12px;
- cursor:pointer;
+.yt-button:hover{
+ transform:scale(1.08);
+ box-shadow:0 8px 20px rgba(0,0,0,.35);
 }
-.back-btn{background:gray;color:white;margin-top:20px}
 
 /* ===== SECTIONS ===== */
 .section{display:none}
 .section.active{display:block}
 
-/* ===== BOX ===== */
-.contact-box,.ai-box{
- max-width:420px;margin:40px auto;
- padding:20px;border-radius:20px;
+/* ===== CARD BOX ===== */
+.card{
+ max-width:430px;
+ margin:40px auto;
+ padding:22px;
+ border-radius:22px;
+ background:rgba(255,255,255,.9);
  border:2px solid green;
+ box-shadow:0 12px 35px rgba(0,0,0,.15);
+}
+body.dark-mode .card{
+ background:#161616;
 }
 
 /* ===== INPUT ===== */
 input,textarea{
- width:90%;padding:10px;margin:8px 0;
- border-radius:8px;border:1px solid #aaa;
+ width:92%;
+ padding:11px;
+ margin:9px 0;
+ border-radius:10px;
+ border:1px solid #aaa;
+ font-size:15px;
+}
+input:focus,textarea:focus{
+ outline:none;
+ border-color:green;
 }
 
-/* ===== IMAGES ===== */
+/* ===== ACTION BUTTON ===== */
+.action-btn{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:14px;
+ cursor:pointer;
+ background:green;
+ color:white;
+ font-size:15px;
+}
+.back-btn{
+ margin-top:18px;
+ background:#555;
+}
+
+/* ===== GALLERY ===== */
 .image-gallery{
- display:flex;justify-content:center;
- gap:20px;flex-wrap:wrap;margin-top:30px;
+ display:flex;
+ justify-content:center;
+ gap:22px;
+ flex-wrap:wrap;
+ margin-top:35px;
 }
 .image-gallery img{
- width:160px;border-radius:18px;
- box-shadow:0 5px 20px rgba(0,0,0,.3);
- transition:.4s;
+ width:155px;
+ border-radius:20px;
+ box-shadow:0 8px 22px rgba(0,0,0,.35);
+ transition:.35s;
 }
 .image-gallery img:hover{
- transform:translateY(-8px) scale(1.08);
+ transform:translateY(-8px) scale(1.06);
  box-shadow:0 0 30px lime;
 }
 
 /* ===== FLOAT IMAGE ===== */
 .floating-img{
- position:fixed;right:15px;bottom:70px;
- width:90px;border-radius:14px;
+ position:fixed;
+ right:15px;
+ bottom:70px;
+ width:90px;
+ border-radius:16px;
  animation:float 4s infinite;
+ box-shadow:0 0 22px rgba(0,255,0,.5);
 }
 @keyframes float{
  0%{transform:translateY(0)}
@@ -136,11 +198,11 @@ input,textarea{
 <h2>- MD -</h2>
 <h3>- REHAN -</h3>
 
+<br>
 <a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
 <button class="yt-button">SUBSCRIBE</button>
 </a>
 
-<br><br>
 <img src="rehan.png" class="profile-pic">
 
 <div class="image-gallery">
@@ -152,32 +214,32 @@ input,textarea{
 
 <!-- CONTACT -->
 <div id="contact" class="section">
-<div class="contact-box">
+<div class="card">
 <h2>Contact Me</h2>
 <input id="name" placeholder="Name">
 <input id="mobile" placeholder="Mobile">
 <textarea id="message" placeholder="Message"></textarea>
-<button class="submit-btn" onclick="sendMail()">Send</button>
+<button class="action-btn" onclick="sendMail()">Send</button>
 </div>
-<button class="back-btn" onclick="goBack()">⬅ Back</button>
+<button class="action-btn back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
 <!-- AI -->
 <div id="ai" class="section">
-<div class="ai-box">
+<div class="card">
 <h2>🤖 MR7 AI</h2>
 <input id="aiInput" placeholder="Ask anything">
-<button class="submit-btn" onclick="askAI()">Ask</button>
-<div id="aiOutput" style="margin-top:10px;font-weight:bold;"></div>
+<button class="action-btn" onclick="askAI()">Ask</button>
+<div id="aiOutput" style="margin-top:12px;font-weight:bold;"></div>
 </div>
-<button class="back-btn" onclick="goBack()">⬅ Back</button>
+<button class="action-btn back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
 <img src="animi 1.jpeg" class="floating-img">
 
 <script>
-/* DARK MODE SAVE */
-if(localStorage.getItem("dark")=="on"){
+/* DARK MODE */
+if(localStorage.getItem("dark")==="on"){
  document.body.classList.add("dark-mode");
 }
 function toggleDark(){
@@ -189,7 +251,7 @@ function toggleDark(){
 /* MENU */
 function toggleMenu(){
  const m=document.getElementById("menuBox");
- m.style.display=m.style.display=="block"?"none":"block";
+ m.style.display=m.style.display==="block"?"none":"block";
 }
 
 /* NAV */
@@ -213,9 +275,10 @@ function goBack(){
 
 /* MAIL */
 function sendMail(){
- let n=name.value,m=mobile.value,msg=message.value;
- if(!n||!m||!msg){alert("Fill all fields");return;}
- location.href=`mailto:mrrehanofficial.1777@gmail.com?subject=Contact&body=${msg}`;
+ if(!name.value||!mobile.value||!message.value){
+  alert("Fill all fields");return;
+ }
+ location.href=`mailto:mrrehanofficial.1777@gmail.com?subject=Contact&body=${message.value}`;
 }
 
 /* SMART AI */
@@ -223,13 +286,13 @@ function askAI(){
  let q=aiInput.value.toLowerCase();
  let a="🤖 I'm learning…";
 
- if(q.match(/^[0-9\+\-\*\/\.\s]+$/)){
-  try{a=eval(q);}catch{a="Math error";}
+ if(/^[0-9+\-*/.\s]+$/.test(q)){
+  try{a=eval(q)}catch{a="Math error"}
  }
  else if(q.includes("joke")){
-  a="😂 Programming ka favourite place? Function hall!";
+  a="😂 Computer thak gaya tha… isliye crash ho gaya!";
  }
- else if(q.includes("hello")||q.includes("hi")){
+ else if(q.includes("hi")||q.includes("hello")){
   a="Hello 👋 I am MR7 AI";
  }
  else if(q.includes("time")){
