@@ -14,33 +14,47 @@ body{
 }
 body.dark-mode{background:#111;color:#eee}
 
-/* LOGIN */
 .section{display:none}
 .section.active{display:block}
 
-.submit-btn{
- background:green;color:white;padding:12px;
- width:100%;border:none;border-radius:10px;cursor:pointer;
+/* LOGIN */
+.login-box{
+ max-width:350px;margin:80px auto;
+ padding:25px;border-radius:20px;
+ border:2px solid green;
+ box-shadow:0 0 25px rgba(0,255,0,.3);
 }
 
+/* BUTTON */
+.btn{
+ background:green;color:white;
+ padding:12px 25px;
+ border:none;border-radius:10px;
+ cursor:pointer;
+}
+.btn.red{background:red}
+.btn.gray{background:gray}
+
 /* MENU */
-.menu{position:fixed;top:20px;left:20px;font-size:28px;cursor:pointer;z-index:1000}
+.menu{position:fixed;top:20px;left:20px;font-size:28px;cursor:pointer}
 .menu-box{
  position:fixed;top:60px;left:20px;
- background:#222;color:white;padding:10px;
- border-radius:10px;display:none;
+ background:#222;color:white;
+ padding:10px;border-radius:10px;
+ display:none;
 }
 .menu-box button{
- width:140px;margin:5px 0;padding:8px;
- border:none;border-radius:6px;cursor:pointer;
+ width:160px;margin:5px 0;
+ padding:8px;border:none;
+ border-radius:6px;cursor:pointer;
 }
 
 /* DARK */
 .dark-toggle{
  position:fixed;top:20px;right:20px;
- background:green;color:white;border:none;
- padding:10px 20px;border-radius:30px;
- cursor:pointer;
+ background:green;color:white;
+ border:none;padding:10px 20px;
+ border-radius:30px;cursor:pointer;
 }
 
 /* PROFILE */
@@ -48,62 +62,24 @@ body.dark-mode{background:#111;color:#eee}
  width:200px;height:200px;border-radius:50%;
  border:5px solid green;
  box-shadow:0 0 20px green;
- transition:.5s;
-}
-.profile-pic:hover{transform:scale(1.1)}
-
-/* BUTTON */
-.yt-button{
- background:red;color:#fff;
- padding:15px 40px;border:none;
- border-radius:50px;font-size:18px;
- cursor:pointer;
 }
 
-/* CONTACT + AI */
-.contact-box,.ai-box{
- max-width:400px;margin:40px auto;
- padding:20px;border-radius:20px;
- border:2px solid green;
+/* CHAT */
+.chat{
+ background:#0b141a;
+ color:white;
+ padding:10px;border-radius:10px;
+ max-height:280px;
+ overflow-y:auto;text-align:left;
 }
+.msg-user{background:#005c4b;padding:8px;margin:6px;border-radius:8px}
+.msg-ai{background:#202c33;padding:8px;margin:6px;border-radius:8px}
 
 /* INPUT */
 input,textarea{
  width:90%;padding:10px;margin:8px 0;
  border-radius:8px;border:1px solid #aaa;
 }
-
-/* CHAT UI */
-.chat{
- background:#0b141a;
- color:white;
- padding:10px;
- border-radius:10px;
- max-height:300px;
- overflow-y:auto;
- text-align:left;
-}
-.msg-user{
- background:#005c4b;
- padding:8px;
- margin:5px;
- border-radius:8px;
- align-self:flex-end;
-}
-.msg-ai{
- background:#202c33;
- padding:8px;
- margin:5px;
- border-radius:8px;
-}
-
-/* STATUS */
-.status{
- font-size:14px;
- margin-bottom:5px;
-}
-.online{color:lime}
-.offline{color:red}
 
 /* GALLERY */
 .image-gallery{
@@ -119,24 +95,25 @@ input,textarea{
 
 <body>
 
-<!-- MENU -->
 <div class="menu" onclick="toggleMenu()">⋮</div>
 <div class="menu-box" id="menuBox">
  <button onclick="openHome()">🏠 Home</button>
  <button onclick="openContact()">📞 Contact</button>
  <button onclick="openAI()">🤖 MR7 AI</button>
- <button onclick="logout()">🚪 Logout</button>
+ <button onclick="openPass()">🔐 Change Password</button>
+ <button onclick="logout()" class="red">🚪 Logout</button>
 </div>
 
 <button class="dark-toggle" onclick="toggleDark()">🌙</button>
 
 <!-- LOGIN -->
 <div id="login" class="section active">
- <h2>🔐 Login to MR7 World</h2>
- <input id="lu" placeholder="Username">
- <input id="lp" type="password" placeholder="Password">
- <button class="submit-btn" onclick="login()">Login</button>
- <p>admin / 1234</p>
+ <div class="login-box">
+  <h2>🔐 Login</h2>
+  <input id="lu" placeholder="Username">
+  <input id="lp" type="password" placeholder="Password">
+  <button class="btn" onclick="login()">Login</button>
+ </div>
 </div>
 
 <!-- HOME -->
@@ -146,7 +123,7 @@ input,textarea{
  <h3>- REHAN -</h3>
 
  <a href="https://www.youtube.com/@MR7OFFICIAL777" target="_blank">
- <button class="yt-button">SUBSCRIBE</button></a>
+ <button class="btn red">SUBSCRIBE</button></a>
 
  <br><br>
  <img src="rehan.png" class="profile-pic">
@@ -160,26 +137,30 @@ input,textarea{
 
 <!-- CONTACT -->
 <div id="contact" class="section">
- <div class="contact-box">
  <h2>Contact Me</h2>
  <input id="name" placeholder="Name">
  <input id="mobile" placeholder="Mobile">
  <textarea id="message" placeholder="Message"></textarea>
- <button class="submit-btn" onclick="sendMail()">Send</button>
- </div>
+ <button class="btn" onclick="sendMail()">Send</button>
 </div>
 
 <!-- AI -->
 <div id="ai" class="section">
- <div class="ai-box">
- <div class="status">
-  MR7 AI <span id="st" class="online">● Online</span>
- </div>
+ <h2>🤖 MR7 AI</h2>
  <div class="chat" id="chat"></div>
  <input id="aiInput" placeholder="Type message">
- <button onclick="askAI()">Send</button>
- </div>
+ <button class="btn" onclick="askAI()">Send</button>
+ <button class="btn gray" onclick="clearChat()">Clear Chat</button>
 </div>
+
+<!-- CHANGE PASSWORD -->
+<div id="pass" class="section">
+ <h2>🔐 Change Password</h2>
+ <input id="newPass" type="password" placeholder="New password">
+ <button class="btn" onclick="changePass()">Save</button>
+</div>
+
+<audio id="ping" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
 
 <script>
 /* DARK */
@@ -194,34 +175,35 @@ function toggleMenu(){
  menuBox.style.display=menuBox.style.display=="block"?"none":"block";
 }
 
-/* LOGIN */
-function checkLogin(){
- if(localStorage.login=="yes"){
-  login.classList.remove("active");
-  home.classList.add("active");
- }
-}
-checkLogin();
+/* LOGIN SYSTEM */
+if(!localStorage.pass)localStorage.pass="1234";
+if(localStorage.login=="yes"){login.classList.remove("active");home.classList.add("active");}
+
 function login(){
- if(lu.value=="admin"&&lp.value=="1234"){
-  localStorage.login="yes";checkLogin();
+ if(lu.value=="admin" && lp.value==localStorage.pass){
+  localStorage.login="yes";location.reload();
  }else alert("Wrong login");
 }
-function logout(){
- localStorage.removeItem("login");
- location.reload();
+function logout(){localStorage.clear();location.reload();}
+
+function changePass(){
+ if(newPass.value.length<4)return alert("Min 4 chars");
+ localStorage.pass=newPass.value;
+ alert("Password changed");
 }
 
 /* NAV */
-function openHome(){hideAll();home.classList.add("active")}
-function openContact(){hideAll();contact.classList.add("active")}
-function openAI(){hideAll();ai.classList.add("active")}
 function hideAll(){
  home.classList.remove("active");
  contact.classList.remove("active");
  ai.classList.remove("active");
+ pass.classList.remove("active");
  menuBox.style.display="none";
 }
+function openHome(){hideAll();home.classList.add("active")}
+function openContact(){hideAll();contact.classList.add("active")}
+function openAI(){hideAll();ai.classList.add("active")}
+function openPass(){hideAll();pass.classList.add("active")}
 
 /* MAIL */
 function sendMail(){
@@ -229,24 +211,39 @@ function sendMail(){
 }
 
 /* AI */
+let chatBox=document.getElementById("chat");
+chatBox.innerHTML=localStorage.chat||"";
+
+function speak(t){
+ let u=new SpeechSynthesisUtterance(t);
+ u.lang="en-IN";speechSynthesis.speak(u);
+}
+
 const jokes=[
- "Life without WiFi is possible… but why risk it 😂",
- "Phone girte hi dil bhi gir jata hai 📱💔",
- "Padhai ka plan strong tha, neend aur strong nikli 😴",
- "Mobile silent pe ho to mummy loud ho jati hai 😄"
+ "Life without phone is possible… but risky 😂",
+ "Phone silent ho aur mummy call kare 😭",
+ "Expectation: early sleep, Reality: reels till 3AM 😴",
+ "Battery 1% pe bhi phone chalate rehte hain 😄"
 ];
 
 function askAI(){
- let q=aiInput.value.toLowerCase();
+ let q=aiInput.value.trim();
  if(!q)return;
  addMsg(q,"user");
+
  let r="Samjha nahi 🤔 thoda simple bolo";
- if(q.includes("hi")||q.includes("hello"))r="Hello 👋 kaise ho?";
- else if(q.includes("joke"))r=jokes[Math.floor(Math.random()*jokes.length)];
- else if(q.match(/[\d\+\-\*\/]+/)){
-  try{r=eval(q)}catch{r="Calculation error"}
- }
- setTimeout(()=>addMsg(r,"ai"),500);
+ let l=q.toLowerCase();
+
+ if(l=="hi"||l=="hello")r="Hello 👋 kaise ho?";
+ else if(l.includes("joke"))r=jokes[Math.floor(Math.random()*jokes.length)];
+ else if(l.match(/^[0-9+\-*/ ]+$/)){try{r=eval(l)}catch{}}
+
+ setTimeout(()=>{
+  addMsg(r,"ai");
+  document.getElementById("ping").play();
+  speak(r);
+ },500);
+
  aiInput.value="";
 }
 
@@ -254,8 +251,13 @@ function addMsg(t,w){
  let d=document.createElement("div");
  d.className=w=="user"?"msg-user":"msg-ai";
  d.innerText=t;
- chat.appendChild(d);
- chat.scrollTop=chat.scrollHeight;
+ chatBox.appendChild(d);
+ chatBox.scrollTop=chatBox.scrollHeight;
+ localStorage.chat=chatBox.innerHTML;
+}
+function clearChat(){
+ chatBox.innerHTML="";
+ localStorage.chat="";
 }
 </script>
 
