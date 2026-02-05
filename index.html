@@ -231,8 +231,10 @@ let jokes=[
 "Why computer is cold? Because it forgot to close windows 😂"
 ];
 
+// Load previous chat
 chat.innerHTML=localStorage.chat||"";
 
+// Function to type text with effect
 function typeText(text,cls){
  let i=0;
  let div=document.createElement("div");
@@ -243,9 +245,10 @@ function typeText(text,cls){
   i++;
   chat.scrollTop=chat.scrollHeight;
   if(i>=text.length)clearInterval(t);
- },30);
+ },20);
 }
 
+// Function to process AI response
 function askAI(){
  let q=aiInput.value.trim();
  if(!q)return;
@@ -253,10 +256,29 @@ function askAI(){
  aiInput.value="";
  let reply="";
 
- if(q.toLowerCase().includes("joke")){
+ // Convert to lower case for comparison
+ let text=q.toLowerCase();
+
+ // Simple keyword responses
+ if(text.includes("joke")){
    reply=jokes[Math.floor(Math.random()*jokes.length)];
- }else if(q.toLowerCase().includes("hello")){
-   reply="Hello 😄 kaise ho?";
+ }else if(text.includes("hello") || text.includes("hi")){
+   reply="Hello 😄! Kaise ho?";
+ }else if(text.includes("how are you")){
+   reply="Main theek hoon 🤖, aap kaise ho?";
+ }else if(text.includes("your name")){
+   reply="Mera naam MR7 AI hai 🤖";
+ }else if(text.includes("time")){
+   let now=new Date();
+   reply="Abhi ka time: "+now.toLocaleTimeString();
+ }else if(text.match(/what is \d+ [\+\-\*\/] \d+/)){
+   // Simple math
+   try{
+     let expr=text.replace(/[^0-9\+\-\*\/\.]/g,'');
+     reply="Answer: "+eval(expr);
+   }catch{
+     reply="Math calculation mein error 🤖";
+   }
  }else{
    reply="Main MR7 AI hoon 🤖, thoda aur clear bolo 😌";
  }
@@ -271,4 +293,3 @@ function askAI(){
 
 </body>
 </html>
-
