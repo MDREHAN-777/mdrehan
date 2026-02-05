@@ -189,10 +189,7 @@ input,textarea{
 <script>
 // DARK MODE
 if(localStorage.dark=="on"){ document.body.classList.add("dark-mode"); }
-function toggleDark(){ 
- document.body.classList.toggle("dark-mode"); 
- localStorage.dark=document.body.classList.contains("dark-mode")?"on":"off";
-}
+function toggleDark(){ document.body.classList.toggle("dark-mode"); localStorage.dark=document.body.classList.contains("dark-mode")?"on":"off"; }
 
 // MENU
 function toggleMenu(){ menuBox.style.display=menuBox.style.display=="block"?"none":"block"; }
@@ -206,10 +203,14 @@ function sendMail(){ location.href="mailto:mrrehanofficial.1777@gmail.com"; }
 // AI DATA
 let jokes=["Teacher: Homework done? Student: Yes sir, but at home 😄","Why phone went to school? To improve its *cell* 😆","Life is short, smile while you still have teeth 😁","Why computer is cold? Because it forgot to close windows 😂"];
 let facts=["Honey never spoils 🍯","Bananas are berries, strawberries are not 🍌","Octopuses have three hearts 🐙","Sharks existed before trees 🌲"];
-
-// Load previous chat
-chat.innerHTML=localStorage.chat||"";
+let quiz=[ {q:"Capital of India?",a:"new delhi"}, {q:"5+7=?",a:"12"}, {q:"Color of sky?",a:"blue"} ];
+let currentQuiz=null;
+let currentGame=null;
 let userName="";
+let chatMemory=localStorage.chat||"";
+
+// Load chat memory
+chat.innerHTML=chatMemory;
 
 // Typing effect
 function typeText(text,cls){
@@ -223,32 +224,25 @@ function typeText(text,cls){
 // Math
 function calculateMath(text){ try{ let expr=text.replace(/[^0-9\+\-\*\/\.\(\) ]/g,''); if(expr.length>0 && expr.match(/[0-9]/)){ return eval(expr); } }catch{} return null; }
 
-// Translator (English ↔ Hindi)
-function translate(text){
+// Translator
+function translate(text){ 
  let enToHi={"hello":"नमस्ते","hi":"हाय","how are you":"कैसे हो","joke":"मजाक","time":"समय","date":"तारीख"};
  let hiToEn={"नमस्ते":"hello","हाय":"hi","कैसे हो":"how are you","मजाक":"joke","समय":"time","तारीख":"date"};
- if(enToHi[text]) return enToHi[text];
- if(hiToEn[text]) return hiToEn[text];
- return "Translation not found";
+ if(enToHi[text]) return enToHi[text]; 
+ if(hiToEn[text]) return hiToEn[text]; 
+ return "Translation not found"; 
 }
 
-// Weather fetch (free API)
+// Weather fetch
 async function getWeather(city){
- try{
-   let url=`https://wttr.in/${city}?format=3`;
-   let res=await fetch(url);
-   let text=await res.text();
-   return text;
- }catch{ return "Weather not available 😅"; }
+ try{ let res=await fetch(`https://wttr.in/${city}?format=3`); return await res.text(); }catch{ return "Weather not available 😅"; }
 }
 
-// Mini Quiz
-let quiz=[
- {q:"Capital of India?",a:"new delhi"},
- {q:"5+7=?",a:"12"},
- {q:"Color of sky?",a:"blue"}
-];
-let currentQuiz=null;
+// Mini number guessing game
+function startNumberGame(){
+ currentGame=Math.floor(Math.random()*20)+1;
+ return "Number Guessing Game started! Guess a number between 1 and 20.";
+}
 
 async function askAI(){
  let q=aiInput.value.trim();
@@ -258,77 +252,59 @@ async function askAI(){
  let reply="";
  let text=q.toLowerCase();
 
- // Name memory
+ // Name
  if(text.includes("mera name") || text.includes("my name is")){
    let parts=q.split("hai");
-   if(parts[1]) userName=parts[0].split("name")[1].trim();
-   else userName=text.split("name")[1].trim();
+   userName=(parts[1]?parts[1].trim():text.split("name")[1].trim());
    reply="Nice to meet you "+userName+"! 😄";
  }
  // Greetings
- else if(/hello|hi|hey|namaste/i.test(text)){
-   reply="Hello "+(userName?userName:"") + "! 😄 Kaise ho?";
- }
+ else if(/hello|hi|hey|namaste/i.test(text)){ reply="Hello "+(userName?userName:"") + "! 😄 Kaise ho?"; }
  // How are you
- else if(text.includes("how are you") || text.includes("kaise ho")){
-   reply="Main theek hoon 🤖, aap kaise ho?";
- }
+ else if(text.includes("how are you") || text.includes("kaise ho")){ reply="Main theek hoon 🤖, aap kaise ho?"; }
  // AI name
- else if(text.includes("your name") || text.includes("tumhara name")){
-   reply="Mera naam MR7 AI hai 🤖";
- }
+ else if(text.includes("your name") || text.includes("tumhara name")){ reply="Mera naam MR7 AI hai 🤖"; }
  // Time
- else if(text.includes("time") || text.includes("samay")){
-   let now=new Date();
-   reply="Abhi ka time: "+now.toLocaleTimeString();
- }
+ else if(text.includes("time") || text.includes("samay")){ let now=new Date(); reply="Abhi ka time: "+now.toLocaleTimeString(); }
  // Date
- else if(text.includes("date") || text.includes("aaj ki date")){
-   let now=new Date();
-   reply="Aaj ki date: "+now.toLocaleDateString();
- }
+ else if(text.includes("date") || text.includes("aaj ki date")){ let now=new Date(); reply="Aaj ki date: "+now.toLocaleDateString(); }
  // Joke
- else if(text.includes("joke") || text.includes("mazak")){
-   reply=jokes[Math.floor(Math.random()*jokes.length)];
- }
+ else if(text.includes("joke") || text.includes("mazak")){ reply=jokes[Math.floor(Math.random()*jokes.length)]; }
  // Fact
- else if(text.includes("fact") || text.includes("interesting")){
-   reply=facts[Math.floor(Math.random()*facts.length)];
- }
+ else if(text.includes("fact") || text.includes("interesting")){ reply=facts[Math.floor(Math.random()*facts.length)]; }
  // Math
- else if(calculateMath(text)!==null){
-   reply="Answer: "+calculateMath(text);
- }
+ else if(calculateMath(text)!==null){ reply="Answer: "+calculateMath(text); }
  // Translator
- else if(text.includes("translate")){
-   let words=q.split("translate")[1].trim();
-   reply=translate(words);
- }
+ else if(text.includes("translate")){ let words=q.split("translate")[1].trim(); reply=translate(words); }
  // Weather
- else if(text.includes("weather") || text.includes("mausam")){
-   let city=q.split("in")[1] || q.split("mein")[1] || "Delhi";
-   city=city.trim();
-   reply="Fetching weather for "+city+"...";
-   typeText("AI: "+reply,"bot");
-   let w=await getWeather(city);
-   reply=w;
+ else if(text.includes("weather") || text.includes("mausam")){ 
+   let city=q.split("in")[1] || q.split("mein")[1] || "Delhi"; 
+   city=city.trim(); 
+   reply="Fetching weather for "+city+"..."; 
+   typeText("AI: "+reply,"bot"); 
+   let w=await getWeather(city); 
+   reply=w; 
  }
  // Quiz start
- else if(text.includes("quiz")){
-   currentQuiz=quiz[Math.floor(Math.random()*quiz.length)];
-   reply="Quiz Time! 😎 "+currentQuiz.q;
- }
+ else if(text.includes("quiz")){ currentQuiz=quiz[Math.floor(Math.random()*quiz.length)]; reply="Quiz Time! 😎 "+currentQuiz.q; }
  // Quiz answer
- else if(currentQuiz){
-   if(text.includes(currentQuiz.a)){
-     reply="Correct! 🎉";
-   } else { reply="Wrong 😅. Correct answer: "+currentQuiz.a; }
-   currentQuiz=null;
+ else if(currentQuiz){ 
+   if(text.includes(currentQuiz.a)){ reply="Correct! 🎉"; } 
+   else { reply="Wrong 😅. Correct answer: "+currentQuiz.a; } 
+   currentQuiz=null; 
+ }
+ // Game start
+ else if(text.includes("game")){ reply=startNumberGame(); }
+ // Game guess
+ else if(currentGame){
+   let guess=parseInt(text);
+   if(isNaN(guess)){ reply="Please enter a number between 1 and 20 😅"; }
+   else if(guess>currentGame){ reply="Too high! 📈 Guess again."; }
+   else if(guess<currentGame){ reply="Too low! 📉 Guess again."; }
+   else{ reply="🎉 Congrats! You guessed it right!"; currentGame=null; }
  }
  // Default
- else{
-   reply="Main MR7 AI hoon 🤖, thoda aur clear bolo 😌";
- }
+ else{ reply="Main MR7 AI hoon 🤖, thoda aur clear bolo 😌"; }
 
  setTimeout(()=>typeText("AI: "+reply,"bot"),300);
  setTimeout(()=>{ localStorage.chat=chat.innerHTML; },500);
