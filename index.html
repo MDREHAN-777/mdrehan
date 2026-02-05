@@ -234,7 +234,10 @@ let jokes=[
 // Load previous chat
 chat.innerHTML=localStorage.chat||"";
 
-// Function to type text with effect
+// Memory for user's name
+let userName="";
+
+// Typing effect
 function typeText(text,cls){
  let i=0;
  let div=document.createElement("div");
@@ -248,7 +251,19 @@ function typeText(text,cls){
  },20);
 }
 
-// Function to process AI response
+// Function to check math
+function calculateMath(text){
+ try{
+   // Remove unwanted characters
+   let expr=text.replace(/[^0-9\+\-\*\/\.\(\) ]/g,'');
+   if(expr.length>0 && expr.match(/[0-9]/)){
+     return eval(expr);
+   }
+ }catch{}
+ return null;
+}
+
+// Main AI function
 function askAI(){
  let q=aiInput.value.trim();
  if(!q)return;
@@ -256,38 +271,42 @@ function askAI(){
  aiInput.value="";
  let reply="";
 
- // Convert to lower case for comparison
  let text=q.toLowerCase();
 
- // Simple keyword responses
- if(text.includes("joke")){
-   reply=jokes[Math.floor(Math.random()*jokes.length)];
- }else if(text.includes("hello") || text.includes("hi")){
-   reply="Hello 😄! Kaise ho?";
- }else if(text.includes("how are you")){
+ // Remember name
+ if(text.includes("mera name") || text.includes("my name is")){
+   let parts=q.split("hai");
+   if(parts[1]) userName=parts[0].split("name")[1].trim();
+   else userName=text.split("name")[1].trim();
+   reply="Nice to meet you "+userName+"! 😄";
+ } 
+ // Greetings
+ else if(text.includes("hello") || text.includes("hi")){
+   reply="Hello "+(userName?userName:"") + "! 😄 Kaise ho?";
+ }
+ else if(text.includes("how are you")){
    reply="Main theek hoon 🤖, aap kaise ho?";
- }else if(text.includes("your name")){
+ }
+ else if(text.includes("your name")){
    reply="Mera naam MR7 AI hai 🤖";
- }else if(text.includes("time")){
+ }
+ else if(text.includes("time")){
    let now=new Date();
    reply="Abhi ka time: "+now.toLocaleTimeString();
- }else if(text.match(/what is \d+ [\+\-\*\/] \d+/)){
-   // Simple math
-   try{
-     let expr=text.replace(/[^0-9\+\-\*\/\.]/g,'');
-     reply="Answer: "+eval(expr);
-   }catch{
-     reply="Math calculation mein error 🤖";
-   }
- }else{
+ }
+ else if(text.includes("joke")){
+   reply=jokes[Math.floor(Math.random()*jokes.length)];
+ }
+ // Check if math
+ else if(calculateMath(text)!==null){
+   reply="Answer: "+calculateMath(text);
+ }
+ else{
    reply="Main MR7 AI hoon 🤖, thoda aur clear bolo 😌";
  }
 
- setTimeout(()=>typeText("AI: "+reply,"bot"),400);
-
- setTimeout(()=>{
-  localStorage.chat=chat.innerHTML;
- },800);
+ setTimeout(()=>typeText("AI: "+reply,"bot"),300);
+ setTimeout(()=>{ localStorage.chat=chat.innerHTML; },500);
 }
 </script>
 
