@@ -231,6 +231,13 @@ let jokes=[
 "Why computer is cold? Because it forgot to close windows 😂"
 ];
 
+let facts=[
+"Did you know? Honey never spoils 🍯",
+"Bananas are berries, but strawberries are not 🍌",
+"Octopuses have three hearts 🐙",
+"Sharks existed before trees 🌲"
+];
+
 // Load previous chat
 chat.innerHTML=localStorage.chat||"";
 
@@ -254,7 +261,6 @@ function typeText(text,cls){
 // Function to check math
 function calculateMath(text){
  try{
-   // Remove unwanted characters
    let expr=text.replace(/[^0-9\+\-\*\/\.\(\) ]/g,'');
    if(expr.length>0 && expr.match(/[0-9]/)){
      return eval(expr);
@@ -270,7 +276,6 @@ function askAI(){
  typeText("You: "+q,"user");
  aiInput.value="";
  let reply="";
-
  let text=q.toLowerCase();
 
  // Remember name
@@ -281,26 +286,40 @@ function askAI(){
    reply="Nice to meet you "+userName+"! 😄";
  } 
  // Greetings
- else if(text.includes("hello") || text.includes("hi")){
+ else if(/hello|hi|hey|namaste/i.test(text)){
    reply="Hello "+(userName?userName:"") + "! 😄 Kaise ho?";
  }
- else if(text.includes("how are you")){
+ // How are you
+ else if(text.includes("how are you") || text.includes("kaise ho")){
    reply="Main theek hoon 🤖, aap kaise ho?";
  }
- else if(text.includes("your name")){
+ // AI name
+ else if(text.includes("your name") || text.includes("tumhara name")){
    reply="Mera naam MR7 AI hai 🤖";
  }
- else if(text.includes("time")){
+ // Time
+ else if(text.includes("time") || text.includes("samay")){
    let now=new Date();
    reply="Abhi ka time: "+now.toLocaleTimeString();
  }
- else if(text.includes("joke")){
+ // Date
+ else if(text.includes("date") || text.includes("aaj ki date")){
+   let now=new Date();
+   reply="Aaj ki date: "+now.toLocaleDateString();
+ }
+ // Joke
+ else if(text.includes("joke") || text.includes("mazak")){
    reply=jokes[Math.floor(Math.random()*jokes.length)];
  }
- // Check if math
+ // Fact
+ else if(text.includes("fact") || text.includes("interesting")){
+   reply=facts[Math.floor(Math.random()*facts.length)];
+ }
+ // Math
  else if(calculateMath(text)!==null){
    reply="Answer: "+calculateMath(text);
  }
+ // Default
  else{
    reply="Main MR7 AI hoon 🤖, thoda aur clear bolo 😌";
  }
