@@ -79,7 +79,7 @@ body.dark-mode{background:#111;color:#eee}
 
 /* CONTACT / AI */
 .contact-box,.ai-box{
- max-width:400px;margin:40px auto;
+ max-width:420px;margin:40px auto;
  padding:20px;border-radius:20px;
  border:2px solid green;
 }
@@ -104,6 +104,29 @@ input,textarea{
 .user{color:#00c853;margin:5px 0;padding:8px;background:#e8f5e9;border-radius:10px;}
 .bot{color:#2196f3;margin:5px 0;padding:8px;background:#e3f2fd;border-radius:10px;}
 #typing{ color:gray;font-style:italic;margin:5px 0; display:none; }
+
+/* SUGGESTIONS */
+#suggestions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ justify-content:center;
+ margin:10px 0;
+}
+.sug-btn{
+ background:#222;
+ color:white;
+ border:none;
+ padding:7px 12px;
+ border-radius:20px;
+ cursor:pointer;
+ font-size:13px;
+ transition:.2s;
+}
+.sug-btn:hover{
+ transform:scale(1.05);
+ background:green;
+}
 
 /* IMAGES */
 .image-gallery{
@@ -182,13 +205,20 @@ input,textarea{
 <!-- AI -->
 <div id="ai" class="section">
 <div class="ai-box">
-<h2>🤖 MR7 AI</h2>
+<h2>🤖 MR7 AI (JARVIS MODE)</h2>
+
 <div id="chat"></div>
 <div id="typing">AI typing...</div>
+
+<div id="suggestions"></div>
+
 <input id="aiInput" placeholder="Ask anything">
+
 <button class="ai-btn" onclick="askAI()">Send</button>
 <button class="ai-btn" onclick="clearChat()">Clear Chat</button>
 <button class="ai-btn" onclick="copyChat()">Copy Chat</button>
+<button class="ai-btn" onclick="toggleVoice()">🔊 Voice: OFF</button>
+
 </div>
 <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
@@ -229,7 +259,7 @@ function goBack(){
   home.classList.add("active");
 }
 
-// Outside click close menu
+// outside click close menu
 document.addEventListener("click", function(e){
   if(!menuBox.contains(e.target) && !e.target.classList.contains("menu")){
     menuBox.style.display="none";
@@ -237,7 +267,7 @@ document.addEventListener("click", function(e){
 });
 
 // =======================
-// CONTACT EMAIL (IMPROVED)
+// CONTACT EMAIL
 // =======================
 function sendMail(){
   let n=document.getElementById("name").value.trim();
@@ -253,19 +283,25 @@ function sendMail(){
 }
 
 // =======================
-// AI MEMORY + DATA
+// AI SYSTEM MEMORY
 // =======================
 let userName=localStorage.userName || "";
 let lastBotReply=localStorage.lastBotReply || "";
 let lastTopic=localStorage.lastTopic || "";
+let userMood=localStorage.userMood || "";
+let voiceEnabled=(localStorage.voiceEnabled=="on");
 
+// =======================
+// AI DATA
+// =======================
 let jokes=[
  "Teacher: Homework done? Student: Yes sir, but at home 😄",
  "Why phone went to school? To improve its *cell* 😆",
  "Life is short, smile while you still have teeth 😁",
  "Why computer is cold? Because it forgot to close windows 😂",
  "Why did the football player bring string? To tie the score 😆",
- "Why YouTuber is happy? Because views are coming 😄"
+ "Why YouTuber is happy? Because views are coming 😄",
+ "Why did AI laugh? Because it got a funny input 🤣"
 ];
 
 let facts=[
@@ -274,7 +310,8 @@ let facts=[
  "Octopuses have three hearts 🐙",
  "Sharks existed before trees 🌲",
  "The human brain can store 2.5 million GB data 🧠",
- "A day on Venus is longer than a year on Venus 🌍"
+ "A day on Venus is longer than a year on Venus 🌍",
+ "Google was originally called BackRub 😆"
 ];
 
 let quiz=[
@@ -283,7 +320,8 @@ let quiz=[
  {q:"Color of sky?",a:"blue"},
  {q:"Who is GOAT of football?",a:"ronaldo"},
  {q:"HTML stands for?",a:"hypertext markup language"},
- {q:"1 GB = how many MB?",a:"1024"}
+ {q:"1 GB = how many MB?",a:"1024"},
+ {q:"CSS stands for?",a:"cascading style sheets"}
 ];
 
 let currentQuiz=null;
@@ -291,18 +329,22 @@ let currentGame=null;
 let currentGameMode="";
 let weatherPending=false;
 
-// load chat memory
+// load chat
 let chatMemory=localStorage.chat || "";
 chat.innerHTML=chatMemory;
 
-// Enter key send
+// =======================
+// ENTER KEY SEND
+// =======================
 aiInput.addEventListener("keypress", function(e){
   if(e.key==="Enter"){
     askAI();
   }
 });
 
-// Typing effect
+// =======================
+// Typing Effect
+// =======================
 function typeText(text,cls){
  let i=0;
  let div=document.createElement("div");
@@ -316,44 +358,99 @@ function typeText(text,cls){
    chat.scrollTop=chat.scrollHeight;
    if(i>=text.length){
      clearInterval(t);
-     chat.scrollTop=chat.scrollHeight;
    }
  },12);
 }
 
-// clear chat
+// =======================
+// SUGGESTIONS
+// =======================
+function setSuggestions(arr){
+  let box=document.getElementById("suggestions");
+  box.innerHTML="";
+  arr.forEach(txt=>{
+    let btn=document.createElement("button");
+    btn.className="sug-btn";
+    btn.innerText=txt;
+    btn.onclick=()=>{
+      aiInput.value=txt;
+      askAI();
+    };
+    box.appendChild(btn);
+  });
+}
+
+// default suggestions
+setSuggestions(["help","joke","fact","quiz","game","youtube title","thumbnail text","football ideas","motivation"]);
+
+// =======================
+// VOICE SYSTEM
+// =======================
+function speak(text){
+  if(!voiceEnabled) return;
+  try{
+    window.speechSynthesis.cancel();
+    let msg=new SpeechSynthesisUtterance(text);
+    msg.lang="en-IN";
+    msg.rate=1;
+    msg.pitch=1;
+    window.speechSynthesis.speak(msg);
+  }catch{}
+}
+
+function toggleVoice(){
+  voiceEnabled=!voiceEnabled;
+  localStorage.voiceEnabled=voiceEnabled?"on":"off";
+  alert("Voice Mode: " + (voiceEnabled?"ON 🔊":"OFF 🔇"));
+}
+
+// update button text
+function updateVoiceButton(){
+  let btn=document.querySelectorAll(".ai-btn")[3];
+  if(btn) btn.innerHTML="🔊 Voice: " + (voiceEnabled?"ON":"OFF");
+}
+updateVoiceButton();
+
+// =======================
+// CLEAR + COPY CHAT
+// =======================
 function clearChat(){
   chat.innerHTML="";
   localStorage.removeItem("chat");
   localStorage.removeItem("lastBotReply");
+  localStorage.removeItem("lastTopic");
+  localStorage.removeItem("userMood");
+  currentQuiz=null;
+  currentGame=null;
+  currentGameMode="";
+  alert("Chat cleared ✅");
 }
 
-// copy chat
 function copyChat(){
-  let text=chat.innerText;
-  navigator.clipboard.writeText(text);
+  navigator.clipboard.writeText(chat.innerText);
   alert("Chat copied ✅");
 }
 
-// safe math
+// =======================
+// SAFE MATH
+// =======================
 function safeMath(expression){
   try{
     expression = expression.replace(/[^0-9+\-*/(). ]/g, "");
     if(!expression) return null;
-
     if(expression.includes("**") || expression.includes("//")) return null;
 
     let result = Function('"use strict";return (' + expression + ')')();
-    if(result===Infinity || result===-Infinity) return "Infinity";
     if(isNaN(result)) return null;
-
     return result;
   }catch{
     return null;
   }
 }
 
-// translator
+// =======================
+// TRANSLATE
+// =======================
 function translate(text){
  text=text.toLowerCase().trim();
 
@@ -365,13 +462,11 @@ function translate(text){
   "good night":"शुभ रात्रि",
   "thank you":"धन्यवाद",
   "bye":"अलविदा",
-  "joke":"मजाक",
-  "time":"समय",
-  "date":"तारीख",
   "friend":"दोस्त",
   "love":"प्यार",
   "football":"फुटबॉल",
-  "subscribe":"सब्सक्राइब"
+  "subscribe":"सब्सक्राइब",
+  "success":"सफलता"
  };
 
  let reverse={
@@ -385,16 +480,18 @@ function translate(text){
   "दोस्त":"friend",
   "प्यार":"love",
   "फुटबॉल":"football",
-  "सब्सक्राइब":"subscribe"
+  "सब्सक्राइब":"subscribe",
+  "सफलता":"success"
  };
 
  if(dict[text]) return dict[text];
  if(reverse[text]) return reverse[text];
-
- return "Translation not found 😅 (Try simple word)";
+ return "Translation not found 😅";
 }
 
-// weather fetch
+// =======================
+// WEATHER
+// =======================
 async function getWeather(city){
  try{
    let res=await fetch(`https://wttr.in/${city}?format=3`);
@@ -404,14 +501,18 @@ async function getWeather(city){
  }
 }
 
-// number game
+// =======================
+// GAME
+// =======================
 function startNumberGame(){
  currentGame=Math.floor(Math.random()*20)+1;
  currentGameMode="number";
  return "🎮 Number Guessing Game started! Guess a number between 1 and 20.";
 }
 
-// help command
+// =======================
+// HELP
+// =======================
 function aiHelp(){
  return `🤖 MR7 AI Commands:
 - help
@@ -425,13 +526,20 @@ function aiHelp(){
 - math like 5+5*2
 - motivation
 - youtube title
+- youtube description
+- hashtags
 - thumbnail text
 - football ideas
 - coding help
-- repeat`;
+- repeat
+- open youtube`;
 }
 
-// youtube title generator
+// =======================
+// GENERATORS
+// =======================
+function randomPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
 function youtubeTitle(topic){
  let arr=[
   `🔥 ${topic} Skills in Real Match 😱`,
@@ -439,12 +547,25 @@ function youtubeTitle(topic){
   `Top 5 ${topic} Moves You Must Try ⚽🔥`,
   `${topic} Edit | Viral Shorts 🔥`,
   `Best ${topic} Moments 😍⚽`,
-  `${topic} vs Defender 😱🔥`
+  `${topic} vs Defender 😱🔥`,
+  `INSANE ${topic} Skills Compilation 😈⚽`
  ];
- return arr[Math.floor(Math.random()*arr.length)];
+ return randomPick(arr);
 }
 
-// thumbnail text generator
+function youtubeDescription(topic){
+ return `🔥 ${topic} Skills Video
+📌 Like, Share & Subscribe MR7 WORLD
+⚽ Football Lovers Must Watch!
+💚 Support MR7 REHAN
+
+#shorts #football #skills #mr7 #rehan`;
+}
+
+function hashtagGenerator(topic){
+ return `#${topic.replace(/\s/g,"")} #football #shorts #viral #mr7 #rehan #edit #skills #youtube`;
+}
+
 function thumbnailText(topic){
  let arr=[
   `${topic} 🔥`,
@@ -452,31 +573,32 @@ function thumbnailText(topic){
   `GOAT MODE 🐐`,
   `VIRAL SKILLS ⚡`,
   `UNSTOPPABLE 💥`,
-  `OMG 😳⚽`
+  `OMG 😳⚽`,
+  `HARDWORK 💪🔥`
  ];
- return arr[Math.floor(Math.random()*arr.length)];
+ return randomPick(arr);
 }
 
-// football ideas
 function footballIdeas(){
  let arr=[
-  "⚽ Idea: Ronaldo chop skill slow motion edit",
-  "⚽ Idea: Messi dribble + beat drop edit",
-  "⚽ Idea: Freekick tutorial + practice shots",
-  "⚽ Idea: 1v1 street football challenge",
-  "⚽ Idea: Top 3 skills to impress friends",
-  "⚽ Idea: Skills with trending music remix"
+  "⚽ Ronaldo chop skill slow motion edit",
+  "⚽ Messi dribble + beat drop edit",
+  "⚽ Freekick tutorial + practice shots",
+  "⚽ 1v1 street football challenge",
+  "⚽ Top 3 skills to impress friends",
+  "⚽ Skills with trending music remix",
+  "⚽ Goalkeeper vs Striker challenge",
+  "⚽ Penalty shootout funny moments"
  ];
- return arr[Math.floor(Math.random()*arr.length)];
+ return randomPick(arr);
 }
 
-// smart match keywords
 function containsAny(text,words){
  return words.some(w=>text.includes(w));
 }
 
 // =======================
-// MAIN AI FUNCTION (SMART)
+// MAIN AI FUNCTION
 // =======================
 async function askAI(){
  let q=aiInput.value.trim();
@@ -491,9 +613,7 @@ async function askAI(){
 
  await new Promise(r=>setTimeout(r,250));
 
- // =======================
- // PRIORITY 1: WEATHER CITY FLOW
- // =======================
+ // PRIORITY 1: WEATHER CITY
  if(weatherPending){
    weatherPending=false;
    let city=q.trim();
@@ -503,9 +623,7 @@ async function askAI(){
    reply=w;
  }
 
- // =======================
  // PRIORITY 2: QUIZ ANSWER
- // =======================
  else if(currentQuiz){
    if(text.trim() === currentQuiz.a){
      reply="✅ Correct! 🎉🔥";
@@ -515,9 +633,7 @@ async function askAI(){
    currentQuiz=null;
  }
 
- // =======================
  // PRIORITY 3: GAME GUESS
- // =======================
  else if(currentGameMode==="number" && currentGame){
    let guess=parseInt(text);
 
@@ -537,11 +653,15 @@ async function askAI(){
    }
  }
 
- // =======================
- // NORMAL COMMANDS
- // =======================
+ // HELP
  else if(text=="help" || text=="commands"){
    reply=aiHelp();
+ }
+
+ // OPEN YOUTUBE
+ else if(text.includes("open youtube") || text.includes("youtube kholo")){
+   window.open("https://www.youtube.com/@MR7OFFICIAL777","_blank");
+   reply="Opening MR7 YouTube Channel 🔥😎";
  }
 
  // NAME SET
@@ -560,6 +680,13 @@ async function askAI(){
    reply="Nice to meet you "+userName+" 😄🔥";
  }
 
+ // MOOD SET
+ else if(containsAny(text,["i am sad","mai sad hu","mai dukhi hu","tension","depressed"])){
+   userMood="sad";
+   localStorage.userMood=userMood;
+   reply="😔 Koi baat nahi "+(userName?userName:"bro")+"...\nMain hoon na 💚\nTu strong hai 💪🔥";
+ }
+
  // GREETING
  else if(containsAny(text,["hello","hi","hey","namaste","assalam"])){
    reply="Hello "+(userName?userName:"Friend")+" 😄\nMain MR7 AI hoon 🤖🔥 Kaise ho?";
@@ -568,16 +695,6 @@ async function askAI(){
  // HOW ARE YOU
  else if(containsAny(text,["how are you","kaise ho","kya hal hai"])){
    reply="Main mast hoon 🤖🔥\nAap batao "+(userName?userName:"")+" 😄";
- }
-
- // AI NAME
- else if(containsAny(text,["your name","tumhara name"])){
-   reply="Mera naam MR7 AI hai 🤖🔥\nMain MR7 WORLD ka smart assistant hoon 😎";
- }
-
- // WHO MADE YOU
- else if(containsAny(text,["who made you","kisne banaya","creator"])){
-   reply="Mujhe MR7 REHAN ne banaya hai 😎🔥";
  }
 
  // TIME
@@ -594,22 +711,22 @@ async function askAI(){
 
  // JOKE
  else if(containsAny(text,["joke","mazak"])){
-   reply=jokes[Math.floor(Math.random()*jokes.length)];
+   reply=randomPick(jokes);
  }
 
  // FACT
  else if(containsAny(text,["fact","interesting"])){
-   reply=facts[Math.floor(Math.random()*facts.length)];
+   reply=randomPick(facts);
  }
 
  // MOTIVATION
- else if(containsAny(text,["motivation","motivate","sad","depressed","tension"])){
-   reply="🔥 Sun "+(userName?userName:"bro")+"!\nTu ek din zaroor successful hoga 😎\nBas daily thoda thoda practice kar 💪\nMR7 never gives up 🔥";
+ else if(containsAny(text,["motivation","motivate","inspire"])){
+   reply="🔥 Sun "+(userName?userName:"bro")+"!\nTu ek din zaroor successful hoga 😎\nBas daily practice kar 💪\nMR7 never gives up 🔥";
  }
 
  // QUIZ START
  else if(containsAny(text,["quiz","quiz khele","quiz start"])){
-   currentQuiz=quiz[Math.floor(Math.random()*quiz.length)];
+   currentQuiz=randomPick(quiz);
    reply="🧠 Quiz Time! 😎\n"+currentQuiz.q;
  }
 
@@ -642,6 +759,20 @@ async function askAI(){
    localStorage.lastTopic=lastTopic;
  }
 
+ // YOUTUBE DESCRIPTION
+ else if(containsAny(text,["youtube description","description do","desc generate"])){
+   reply="Topic bolo 😎 Example: Ronaldo / Football / Skills";
+   lastTopic="youtubeDesc";
+   localStorage.lastTopic=lastTopic;
+ }
+
+ // HASHTAGS
+ else if(containsAny(text,["hashtags","hashtag"])){
+   reply="Topic bolo 😎 Example: Ronaldo / Football / Skills";
+   lastTopic="hashtags";
+   localStorage.lastTopic=lastTopic;
+ }
+
  // THUMBNAIL TEXT
  else if(containsAny(text,["thumbnail","thumbnail text","thumb text"])){
    reply="Topic bolo 😎 Example: Ronaldo / Football / Skills";
@@ -671,25 +802,32 @@ async function askAI(){
    localStorage.lastTopic="";
  }
 
+ else if(lastTopic==="youtubeDesc"){
+   reply="📝 YouTube Description:\n"+youtubeDescription(q.trim());
+   lastTopic="";
+   localStorage.lastTopic="";
+ }
+
+ else if(lastTopic==="hashtags"){
+   reply="🏷️ Hashtags:\n"+hashtagGenerator(q.trim());
+   lastTopic="";
+   localStorage.lastTopic="";
+ }
+
  else if(lastTopic==="thumbnailText"){
    reply="🖼️ Thumbnail Text:\n"+thumbnailText(q.trim());
    lastTopic="";
    localStorage.lastTopic="";
  }
 
- // MATH (LAST PRIORITY)
+ // MATH LAST
  else if(safeMath(text)!==null){
    reply="🧮 Answer: "+safeMath(text);
  }
 
- // MR7 SPECIAL
- else if(containsAny(text,["mr7","rehan"])){
-   reply="🔥 MR7 WORLD is power 😎\nRehan ek future legend hai 💚";
- }
-
- // DEFAULT
+ // DEFAULT SMART
  else{
-   reply="🤖 Main MR7 AI hoon 😎\nAap jo bol rahe ho usko thoda clear likho.\nType 'help' to see commands 🔥";
+   reply="🤖 Main MR7 AI hoon 😎\nThoda clear likho.\nType 'help' for commands 🔥";
  }
 
  setTimeout(()=>{
@@ -700,10 +838,13 @@ async function askAI(){
    localStorage.lastBotReply=reply;
 
    localStorage.chat=chat.innerHTML;
+
+   speak(reply);
+   updateVoiceButton();
  },400);
 }
 
-// auto welcome message
+// welcome message
 if(!localStorage.welcomeDone){
   setTimeout(()=>{
     typeText("AI: Hello! Main MR7 AI hoon 🤖🔥\nType 'help' to see commands 😎","bot");
