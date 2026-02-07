@@ -177,30 +177,6 @@ input:focus,textarea:focus{
  box-shadow:0 0 10px rgba(0,255,0,.6);
 }
 
-/* CONTACT EXTRA BUTTONS */
-.contact-actions{
- display:flex;
- gap:10px;
- flex-wrap:wrap;
- justify-content:center;
- margin-top:10px;
-}
-.contact-actions button{
- width:130px;
- background:#111;
- color:white;
- border:1px solid lime;
- padding:10px;
- border-radius:12px;
- cursor:pointer;
- transition:.3s;
- font-size:14px;
-}
-.contact-actions button:hover{
- background:green;
- transform:scale(1.05);
-}
-
 /* AI CHAT */
 #chat{
  text-align:left;
@@ -365,12 +341,6 @@ body.dark-mode .bot{
 
 <button class="submit-btn" onclick="sendMail()">Send Email</button>
 
-<div class="contact-actions">
-  <button onclick="openWhatsApp()">WhatsApp</button>
-  <button onclick="callNow()">Call</button>
-  <button onclick="openMap()">Map</button>
-</div>
-
 </div>
 <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
@@ -513,43 +483,14 @@ function sendMail(){
   location.href="mailto:mrrehanofficial.1777@gmail.com?subject="+subject+"&body="+body;
 }
 
-// WhatsApp
-function openWhatsApp(){
-  let n=document.getElementById("name").value.trim();
-  let msg=document.getElementById("message").value.trim();
-
-  if(!msg){
-    alert("Please write message first 😅");
-    return;
-  }
-
-  let phone="917000000000"; 
-  // IMPORTANT: Replace this number with your WhatsApp number
-
-  let text = `Hello MR7 👋\n\nName: ${n}\nMessage: ${msg}`;
-  let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
-
-  window.open(url,"_blank");
-}
-
-// Call
-function callNow(){
-  let phone="+917000000000"; 
-  // IMPORTANT: Replace this number with your real phone number
-  location.href="tel:"+phone;
-}
-
-// Map
-function openMap(){
-  window.open("https://www.google.com/maps","_blank");
-}
-
-
 // CHAT MEMORY
 let userName=localStorage.userName || "";
 let lastBotReply=localStorage.lastBotReply || "";
 let aiMode=localStorage.aiMode || "normal";
 let speakOn = localStorage.speakOn ? JSON.parse(localStorage.speakOn) : true;
+
+let lastTopic = localStorage.lastTopic || "";
+let lastUserMsg = localStorage.lastUserMsg || "";
 
 let chatMemory=localStorage.chat||"";
 chat.innerHTML=chatMemory;
@@ -703,9 +644,23 @@ function footballCoach(){
 }
 
 // quiz + game
-let jokes=["Why phone went to school? To improve its cell 😆","Teacher: Homework done? Yes sir but at home 😄"];
-let facts=["Honey never spoils 🍯","Sharks existed before trees 🌲","Octopus has 3 hearts 🐙"];
-let quiz=[{q:"Capital of India?",a:"new delhi"},{q:"5+7=?",a:"12"},{q:"HTML stands for?",a:"hypertext markup language"}];
+let jokes=[
+ "Why phone went to school? To improve its cell 😆",
+ "Teacher: Homework done? Yes sir but at home 😄",
+ "Why computer got cold? Because it forgot to close windows 😂"
+];
+let facts=[
+ "Honey never spoils 🍯",
+ "Sharks existed before trees 🌲",
+ "Octopus has 3 hearts 🐙",
+ "Banana is technically a berry 🍌"
+];
+let quiz=[
+ {q:"Capital of India?",a:"new delhi"},
+ {q:"5+7=?",a:"12"},
+ {q:"HTML stands for?",a:"hypertext markup language"},
+ {q:"Which planet is called Red Planet?",a:"mars"}
+];
 let currentQuiz=null;
 let currentGame=null;
 let currentGameMode="";
@@ -727,21 +682,58 @@ function aiHelp(){
 - hashtags ronaldo
 - description ronaldo
 - football tip
-- repeat`;
+- repeat
+- clear memory`;
 }
 
 function containsAny(text,words){
  return words.some(w=>text.includes(w));
 }
 
-// SMART RESPONSE (NEW)
+// AI SMART REPLY (UPGRADED)
 function smartReply(text){
+  text=text.toLowerCase();
+
+  if(text.includes("who are you") || text.includes("tum kaun ho")){
+    return "Main MR7 AI PRO hoon 🤖🔥 Rehan ka personal assistant 😎";
+  }
+
+  if(text.includes("your owner") || text.includes("tumhara malik") || text.includes("creator")){
+    return "Mera creator MR7 WORLD ka owner MD REHAN hai 😎🔥";
+  }
+
+  if(text.includes("love") || text.includes("i love you")){
+    return "Aree wah 😄❤️ MR7 AI bhi tumko support karta hai boss 🔥";
+  }
+
+  if(text.includes("sad") || text.includes("depressed") || text.includes("tension")){
+    return "Bhai tension mat lo 😎💚 MR7 AI tumhare sath hai. Batao kya hua?";
+  }
+
+  if(text.includes("goal") || text.includes("future") || text.includes("career")){
+    return "🔥 Bhai tumhara future bright hai! Bas daily practice karo aur consistent raho 😎";
+  }
+
+  if(text.includes("hello") || text.includes("hi")){
+    return "Hello boss 😄🔥 MR7 AI ready hai!";
+  }
+
+  // Topic memory save
+  if(text.includes("python")) return "🐍 Python best language hai! Tum kya sikhna chahte ho?";
+  if(text.includes("html")) return "🌐 HTML easy hai! Main tumko full website banane me help kar dunga 😎";
+  if(text.includes("css")) return "🎨 CSS se website stylish banta hai. Tumko animation chahiye kya?";
+  if(text.includes("javascript")) return "⚡ JavaScript se website smart banti hai. Tum AI aur powerful bana sakte ho 🔥";
+  if(text.includes("youtube")) return "📺 YouTube ke liye main title + hashtags + description ready kar dunga 😎";
+  if(text.includes("football") || text.includes("ronaldo")) return "⚽ Ronaldo style edit? Bhai super 🔥 Main ideas deta hoon!";
+
   let replies=[
     "Hmm interesting 🤔 thoda aur detail me bolo.",
-    "Achha 😄 ab mujhe batao tum exactly kya chahte ho?",
-    "Main samajh gaya 😎 ab main help karta hoon.",
-    "Nice! 🔥 tum isko aur improve kar sakte ho.",
-    "Okay boss 😄 main ready hoon."
+    "Achha 😄 tum exactly kya chahte ho? main help karta hoon.",
+    "Boss samajh gaya 😎 ab main tumko best solution deta hoon.",
+    "🔥 Nice! ye idea bohot tagda hai.",
+    "Okay 😄 tum next step bolo, main ready hoon.",
+    "Bhai tum smart ho 😎 bas practice continue rakho.",
+    "Ye kaam easy hai boss 😄 main bata deta hoon."
   ];
   return replies[Math.floor(Math.random()*replies.length)];
 }
@@ -758,10 +750,23 @@ async function askAI(){
  let reply="";
  let text=q.toLowerCase().trim();
 
+ // save last user msg
+ lastUserMsg=q;
+ localStorage.lastUserMsg=lastUserMsg;
+
  await new Promise(r=>setTimeout(r,200));
 
+ // CLEAR MEMORY
+ if(text.includes("clear memory")){
+   localStorage.removeItem("userName");
+   localStorage.removeItem("lastTopic");
+   userName="";
+   lastTopic="";
+   reply="🧠 Memory cleared ✅";
+ }
+
  // QUIZ ANSWER
- if(currentQuiz){
+ else if(currentQuiz){
    if(text === currentQuiz.a){
      reply="✅ Correct! 🎉🔥";
    }else{
@@ -905,6 +910,16 @@ async function askAI(){
 
  // DEFAULT SMART
  else{
+   // save topic memory
+   if(text.includes("python")) lastTopic="python";
+   else if(text.includes("html")) lastTopic="html";
+   else if(text.includes("css")) lastTopic="css";
+   else if(text.includes("javascript")) lastTopic="javascript";
+   else if(text.includes("football")) lastTopic="football";
+   else if(text.includes("youtube")) lastTopic="youtube";
+
+   if(lastTopic) localStorage.lastTopic=lastTopic;
+
    if(aiMode==="study"){
      reply="📚 Study Mode:\nTopic bolo main easy language me samjha dunga 😎";
    }
@@ -916,6 +931,11 @@ async function askAI(){
    }
    else{
      reply=smartReply(text);
+
+     // extra memory response
+     if(lastTopic && text.includes("what") && text.includes("next")){
+       reply += "\n\n🔥 Last topic was: "+lastTopic.toUpperCase()+"\nBolo main next step batata hoon 😎";
+     }
    }
  }
 
