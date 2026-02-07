@@ -204,23 +204,6 @@ body.light #chat{
 body.light .user{color:green;}
 body.light .bot{color:blue;}
 
-/* GAMES GRID */
-.games-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-  margin-top:20px;
-}
-
-/* CANVAS */
-canvas{
-  background:#000;
-  border-radius:15px;
-  border:2px solid lime;
-  max-width:100%;
-  touch-action:none;
-}
-
 /* MOBILE FIX */
 @media(max-width:600px){
   #typingTitle{font-size:26px;}
@@ -264,20 +247,25 @@ canvas{
   </div>
 </div>
 
-<!-- LOGIN -->
+<!-- LOGIN + SIGNUP -->
 <div id="login" class="section">
   <div class="box">
-    <h2>🔐 Login System</h2>
+    <h2>🔐 Login / Signup</h2>
+
     <input id="username" placeholder="Enter Username">
     <input id="password" placeholder="Enter Password" type="password">
+
+    <button class="btn" onclick="signupUser()">Signup</button>
     <button class="btn" onclick="loginUser()">Login</button>
     <button class="btn" onclick="logoutUser()">Logout</button>
-    <p id="loginStatus" style="margin-top:10px;color:lime;"></p>
+
+    <p id="loginStatus" style="margin-top:10px;color:lime;font-weight:bold;"></p>
   </div>
+
   <button class="btn back-btn" onclick="openSection('home')">⬅ Back</button>
 </div>
 
-<!-- PROFILE EDIT -->
+<!-- PROFILE -->
 <div id="profile" class="section">
   <div class="box">
     <h2>👤 Create / Edit Profile</h2>
@@ -330,39 +318,7 @@ canvas{
   <div class="box">
     <h2>🎮 MR7 Games Zone</h2>
     <p>Mobile + PC dono me game perfect chalega 🔥</p>
-
-    <div class="games-grid">
-      <button class="btn" onclick="openGame('snakeBox')">🐍 Snake Game</button>
-      <button class="btn" onclick="openGame('carBox')">🚗 Car Racing</button>
-      <button class="btn" onclick="openGame('tttBox')">❌⭕ Tic Tac Toe</button>
-    </div>
-  </div>
-
-  <!-- Snake -->
-  <div id="snakeBox" class="box" style="display:none;">
-    <h2>🐍 Snake Game</h2>
-    <canvas id="snakeCanvas" width="320" height="320"></canvas>
-    <p style="margin-top:10px;">Controls: Swipe (Mobile) | Arrow Keys (PC)</p>
-    <button class="btn" onclick="startSnake()">Start Snake</button>
-    <button class="btn back-btn" onclick="closeGames()">⬅ Back</button>
-  </div>
-
-  <!-- Car -->
-  <div id="carBox" class="box" style="display:none;">
-    <h2>🚗 Car Racing</h2>
-    <canvas id="carCanvas" width="320" height="400"></canvas>
-    <p style="margin-top:10px;">Controls: Swipe (Mobile) | Arrow Keys (PC)</p>
-    <button class="btn" onclick="startCar()">Start Car</button>
-    <button class="btn back-btn" onclick="closeGames()">⬅ Back</button>
-  </div>
-
-  <!-- Tic Tac Toe -->
-  <div id="tttBox" class="box" style="display:none;">
-    <h2>❌⭕ Tic Tac Toe</h2>
-    <div id="tttBoard" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px;"></div>
-    <p id="tttStatus" style="margin-top:10px;color:lime;font-weight:bold;"></p>
-    <button class="btn" onclick="resetTTT()">Restart</button>
-    <button class="btn back-btn" onclick="closeGames()">⬅ Back</button>
+    <p style="color:lime;">(Games section yaha baad me same add kar dena)</p>
   </div>
 
   <button class="btn back-btn" onclick="openSectionSecure('home')">⬅ Back Home</button>
@@ -375,7 +331,7 @@ function toggleMenu(){
   box.style.display = box.style.display==="block" ? "none" : "block";
 }
 
-/* OPEN SECTION NORMAL */
+/* OPEN SECTION */
 function openSection(id){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -384,10 +340,13 @@ function openSection(id){
 
 /* SECURITY CHECK */
 function isLoggedIn(){
-  return localStorage.getItem("mr7User") ? true : false;
+  return localStorage.getItem("mr7CurrentUser") ? true : false;
 }
 function isProfileDone(){
-  return localStorage.getItem("mr7Profile") ? true : false;
+  let user=localStorage.getItem("mr7CurrentUser");
+  if(!user) return false;
+
+  return localStorage.getItem("mr7Profile_"+user) ? true : false;
 }
 
 /* OPEN SECTION SECURE */
@@ -401,6 +360,7 @@ function openSectionSecure(id){
   if(!isProfileDone()){
     alert("⚠ Profile create karo tabhi website unlock hogi!");
     openSection("profile");
+    loadProfile();
     return;
   }
 
@@ -421,7 +381,7 @@ function startTypingTitle(){
 }
 startTypingTitle();
 
-/* DARK MODE PERMANENT */
+/* DARK MODE */
 function applyMode(){
   let mode = localStorage.getItem("mode") || "dark";
   if(mode==="light"){
@@ -459,7 +419,38 @@ function sendMail(){
   location.href="mailto:mrrehanofficial.1777@gmail.com?subject="+subject+"&body="+body;
 }
 
-/* LOGIN SYSTEM */
+/* GET USERS */
+function getUsers(){
+  return JSON.parse(localStorage.getItem("mr7Users") || "[]");
+}
+function saveUsers(users){
+  localStorage.setItem("mr7Users", JSON.stringify(users));
+}
+
+/* SIGNUP */
+function signupUser(){
+  let u=document.getElementById("username").value.trim();
+  let p=document.getElementById("password").value.trim();
+
+  if(!u || !p){
+    alert("Enter username and password!");
+    return;
+  }
+
+  let users=getUsers();
+
+  if(users.find(x=>x.username===u)){
+    alert("⚠ Username already exists!");
+    return;
+  }
+
+  users.push({username:u,password:p});
+  saveUsers(users);
+
+  alert("✅ Signup Successful! Ab Login karo boss 😎");
+}
+
+/* LOGIN */
 function loginUser(){
   let u=document.getElementById("username").value.trim();
   let p=document.getElementById("password").value.trim();
@@ -469,25 +460,42 @@ function loginUser(){
     return;
   }
 
-  localStorage.setItem("mr7User",u);
+  let users=getUsers();
+  let found=users.find(x=>x.username===u && x.password===p);
+
+  if(!found){
+    alert("❌ Wrong Username or Password!");
+    return;
+  }
+
+  localStorage.setItem("mr7CurrentUser",u);
   document.getElementById("loginStatus").innerText="✅ Logged in as: "+u;
 
-  // login ke baad profile open
+  // profile open after login
   setTimeout(()=>{
     openSection("profile");
+    loadProfile();
   },500);
 }
 
+/* LOGOUT */
 function logoutUser(){
-  localStorage.removeItem("mr7User");
-  localStorage.removeItem("mr7Profile");
+  localStorage.removeItem("mr7CurrentUser");
   document.getElementById("loginStatus").innerText="❌ Logged out!";
   alert("Logout Successful ❌");
   openSection("home");
+  showWelcomeUser();
 }
 
-/* PROFILE SAVE */
+/* SAVE PROFILE */
 function saveProfile(){
+  let user=localStorage.getItem("mr7CurrentUser");
+  if(!user){
+    alert("❌ Login first!");
+    openSection("login");
+    return;
+  }
+
   let name=document.getElementById("pname").value.trim();
   let age=document.getElementById("page").value.trim();
   let city=document.getElementById("pcity").value.trim();
@@ -498,61 +506,66 @@ function saveProfile(){
     return;
   }
 
-  let profileData={
-    name:name,
-    age:age,
-    city:city,
-    bio:bio
-  };
+  let profileData={name,age,city,bio};
 
-  localStorage.setItem("mr7Profile", JSON.stringify(profileData));
+  localStorage.setItem("mr7Profile_"+user, JSON.stringify(profileData));
+
   document.getElementById("profileStatus").innerText="✅ Profile Saved Successfully!";
+  alert("🔥 Profile done! Website unlocked!");
 
-  setTimeout(()=>{
-    alert("🔥 Profile done! Website unlocked!");
-    openSection("home");
-    showWelcomeUser();
-  },700);
+  openSection("home");
+  showWelcomeUser();
 }
 
-/* LOAD PROFILE INTO INPUT */
+/* LOAD PROFILE */
 function loadProfile(){
-  let data=localStorage.getItem("mr7Profile");
+  let user=localStorage.getItem("mr7CurrentUser");
+  if(!user) return;
+
+  let data=localStorage.getItem("mr7Profile_"+user);
   if(data){
     let p=JSON.parse(data);
     document.getElementById("pname").value=p.name || "";
     document.getElementById("page").value=p.age || "";
     document.getElementById("pcity").value=p.city || "";
     document.getElementById("pbio").value=p.bio || "";
+  }else{
+    document.getElementById("pname").value="";
+    document.getElementById("page").value="";
+    document.getElementById("pcity").value="";
+    document.getElementById("pbio").value="";
   }
 }
 
-/* SHOW WELCOME */
+/* SHOW WELCOME USER */
 function showWelcomeUser(){
-  let user=localStorage.getItem("mr7User");
-  let profile=localStorage.getItem("mr7Profile");
+  let user=localStorage.getItem("mr7CurrentUser");
+  if(!user){
+    document.getElementById("welcomeUser").innerText="";
+    return;
+  }
 
-  if(user && profile){
+  let profile=localStorage.getItem("mr7Profile_"+user);
+  if(profile){
     let p=JSON.parse(profile);
     document.getElementById("welcomeUser").innerText =
       "👋 Welcome " + p.name + " ("+p.city+") 😎🔥";
   }else{
-    document.getElementById("welcomeUser").innerText = "";
+    document.getElementById("welcomeUser").innerText =
+      "👋 Welcome " + user + " 😎🔥 (Profile not set)";
   }
 }
 
 /* ON LOAD */
 window.onload=()=>{
-  let u=localStorage.getItem("mr7User");
-  if(u){
-    document.getElementById("loginStatus").innerText="✅ Logged in as: "+u;
+  let user=localStorage.getItem("mr7CurrentUser");
+  if(user){
+    document.getElementById("loginStatus").innerText="✅ Logged in as: "+user;
   }
-
-  loadProfile();
   showWelcomeUser();
 };
 
-/* AI CHATGPT STYLE OFFLINE */
+/* AI CHAT */
 let chat=document.getElementById("chat");
 let aiInput=document.getElementById("aiInput");
 
@@ -582,36 +595,18 @@ function smartReply(q){
   if(q.includes("hello")||q.includes("hi")||q.includes("namaste"))
     return "Hello Boss 😎🔥 Welcome to MR7 WORLD!";
 
-  if(q.includes("who are you")||q.includes("tum kaun ho"))
-    return "Main MR7 AI hoon 🤖🔥 Offline ChatGPT style system!";
-
   if(q.includes("time"))
     return "⏰ Time: " + new Date().toLocaleTimeString();
 
   if(q.includes("date"))
     return "📅 Date: " + new Date().toLocaleDateString();
 
-  if(q.includes("your owner")||q.includes("tumhara owner"))
-    return "Mera owner MD REHAN hai 😎🔥";
-
-  if(q.includes("football"))
-    return "⚽ Football tip: Dribbling improve karne ke liye daily cone practice karo!";
-
-  if(q.includes("youtube"))
-    return "📌 YouTube tip: Title short + catchy rakho, thumbnail bright banao!";
-
-  if(q.includes("coding"))
-    return "💻 Coding tip: Daily 1 hour HTML + JS practice karo, fast improvement hoga!";
-
-  if(q.includes("motivation"))
-    return "🔥 Boss, discipline > motivation. Roz thoda thoda karte raho!";
-
   let random=[
-    "😎 Boss ye question interesting hai! Thoda detail me batao.",
+    "😎 Boss ye question interesting hai!",
     "🔥 MR7 WORLD never gives up!",
-    "🤖 Main samajh gaya boss, aur kuch puchna hai?",
-    "⚡ Good question! Tum bahut smart ho 😄",
-    "💚 Main help kar sakta hoon. Thoda clear bolo."
+    "🤖 Main samajh gaya boss!",
+    "⚡ Good question!",
+    "💚 Aur kuch puchna hai?"
   ];
   return random[Math.floor(Math.random()*random.length)];
 }
@@ -644,266 +639,6 @@ function clearChat(){
 function saveChat(){
   localStorage.setItem("mr7Chat",chat.innerHTML);
   alert("Chat Saved ✅");
-}
-
-/* GAME OPEN */
-function openGame(id){
-  document.getElementById("snakeBox").style.display="none";
-  document.getElementById("carBox").style.display="none";
-  document.getElementById("tttBox").style.display="none";
-  document.getElementById(id).style.display="block";
-}
-
-function closeGames(){
-  document.getElementById("snakeBox").style.display="none";
-  document.getElementById("carBox").style.display="none";
-  document.getElementById("tttBox").style.display="none";
-}
-
-/* SNAKE GAME PERFECT */
-let snakeCanvas=document.getElementById("snakeCanvas");
-let sctx=snakeCanvas.getContext("2d");
-
-let snake,food,dir,snakeInterval;
-
-function resetSnake(){
-  snake=[{x:160,y:160}];
-  food={x:80,y:80};
-  dir="RIGHT";
-}
-
-function drawSnake(){
-  sctx.clearRect(0,0,320,320);
-
-  sctx.fillStyle="red";
-  sctx.fillRect(food.x,food.y,20,20);
-
-  sctx.fillStyle="lime";
-  snake.forEach(part=>{
-    sctx.fillRect(part.x,part.y,20,20);
-  });
-}
-
-function moveSnake(){
-  let head={...snake[0]};
-
-  if(dir==="RIGHT") head.x+=20;
-  if(dir==="LEFT") head.x-=20;
-  if(dir==="UP") head.y-=20;
-  if(dir==="DOWN") head.y+=20;
-
-  if(head.x<0||head.y<0||head.x>=320||head.y>=320){
-    clearInterval(snakeInterval);
-    alert("Game Over 😭");
-    return;
-  }
-
-  for(let i=1;i<snake.length;i++){
-    if(snake[i].x===head.x && snake[i].y===head.y){
-      clearInterval(snakeInterval);
-      alert("Game Over 😭");
-      return;
-    }
-  }
-
-  snake.unshift(head);
-
-  if(head.x===food.x && head.y===food.y){
-    food={
-      x:Math.floor(Math.random()*16)*20,
-      y:Math.floor(Math.random()*16)*20
-    };
-  }else{
-    snake.pop();
-  }
-
-  drawSnake();
-}
-
-function startSnake(){
-  resetSnake();
-  drawSnake();
-  clearInterval(snakeInterval);
-  snakeInterval=setInterval(moveSnake,140);
-}
-
-document.addEventListener("keydown",(e)=>{
-  if(e.key==="ArrowUp" && dir!=="DOWN") dir="UP";
-  if(e.key==="ArrowDown" && dir!=="UP") dir="DOWN";
-  if(e.key==="ArrowLeft" && dir!=="RIGHT") dir="LEFT";
-  if(e.key==="ArrowRight" && dir!=="LEFT") dir="RIGHT";
-});
-
-/* Swipe Mobile Snake */
-let startX=0,startY=0;
-snakeCanvas.addEventListener("touchstart",(e)=>{
-  startX=e.touches[0].clientX;
-  startY=e.touches[0].clientY;
-});
-snakeCanvas.addEventListener("touchend",(e)=>{
-  let endX=e.changedTouches[0].clientX;
-  let endY=e.changedTouches[0].clientY;
-  let dx=endX-startX;
-  let dy=endY-startY;
-
-  if(Math.abs(dx)>Math.abs(dy)){
-    if(dx>0 && dir!=="LEFT") dir="RIGHT";
-    if(dx<0 && dir!=="RIGHT") dir="LEFT";
-  }else{
-    if(dy>0 && dir!=="UP") dir="DOWN";
-    if(dy<0 && dir!=="DOWN") dir="UP";
-  }
-});
-
-/* CAR GAME PERFECT */
-let carCanvas=document.getElementById("carCanvas");
-let cctx=carCanvas.getContext("2d");
-
-let carX=140,carY=320,enemyCars=[],score=0,carInterval;
-
-function resetCar(){
-  carX=140;
-  enemyCars=[{x:Math.random()*260,y:-80}];
-  score=0;
-}
-
-function drawCarGame(){
-  cctx.clearRect(0,0,320,400);
-
-  cctx.fillStyle="#222";
-  cctx.fillRect(0,0,320,400);
-
-  cctx.strokeStyle="white";
-  cctx.lineWidth=4;
-  cctx.setLineDash([15,15]);
-  cctx.beginPath();
-  cctx.moveTo(160,0);
-  cctx.lineTo(160,400);
-  cctx.stroke();
-  cctx.setLineDash([]);
-
-  cctx.fillStyle="lime";
-  cctx.fillRect(carX,carY,40,60);
-
-  cctx.fillStyle="red";
-  enemyCars.forEach(e=>{
-    cctx.fillRect(e.x,e.y,40,60);
-  });
-
-  cctx.fillStyle="yellow";
-  cctx.font="18px Arial";
-  cctx.fillText("Score: "+score,10,25);
-}
-
-function updateCarGame(){
-  enemyCars.forEach(e=>{
-    e.y += 6;
-
-    if(carX < e.x+40 && carX+40 > e.x && carY < e.y+60 && carY+60 > e.y){
-      clearInterval(carInterval);
-      alert("Crash 💥 Game Over! Score: "+score);
-    }
-
-    if(e.y>400){
-      e.y=-80;
-      e.x=Math.random()*260;
-      score++;
-    }
-  });
-
-  drawCarGame();
-}
-
-function startCar(){
-  resetCar();
-  drawCarGame();
-  clearInterval(carInterval);
-  carInterval=setInterval(updateCarGame,50);
-}
-
-document.addEventListener("keydown",(e)=>{
-  if(e.key==="ArrowLeft") carX -= 20;
-  if(e.key==="ArrowRight") carX += 20;
-
-  if(carX<0) carX=0;
-  if(carX>280) carX=280;
-});
-
-/* Mobile swipe for car */
-carCanvas.addEventListener("touchstart",(e)=>{
-  startX=e.touches[0].clientX;
-});
-carCanvas.addEventListener("touchmove",(e)=>{
-  let x=e.touches[0].clientX;
-  if(x>startX) carX+=6;
-  else carX-=6;
-  startX=x;
-
-  if(carX<0) carX=0;
-  if(carX>280) carX=280;
-});
-
-/* TIC TAC TOE PERFECT */
-let tttBoard=document.getElementById("tttBoard");
-let tttStatus=document.getElementById("tttStatus");
-let tttCells=[],currentPlayer="X";
-
-function createTTT(){
-  tttBoard.innerHTML="";
-  tttCells=new Array(9).fill("");
-  currentPlayer="X";
-  tttStatus.innerText="Player X turn";
-
-  for(let i=0;i<9;i++){
-    let btn=document.createElement("button");
-    btn.style.height="80px";
-    btn.style.fontSize="30px";
-    btn.style.borderRadius="15px";
-    btn.style.border="2px solid lime";
-    btn.style.cursor="pointer";
-    btn.style.background="#111";
-    btn.style.color="lime";
-    btn.innerText="";
-
-    btn.onclick=()=>playTTT(i,btn);
-    tttBoard.appendChild(btn);
-  }
-}
-createTTT();
-
-function playTTT(i,btn){
-  if(tttCells[i]!=="" ) return;
-
-  tttCells[i]=currentPlayer;
-  btn.innerText=currentPlayer;
-
-  if(checkWin()){
-    tttStatus.innerText="🏆 Player "+currentPlayer+" Wins!";
-    return;
-  }
-
-  if(tttCells.every(c=>c!=="")){
-    tttStatus.innerText="😐 Draw!";
-    return;
-  }
-
-  currentPlayer = currentPlayer==="X" ? "O" : "X";
-  tttStatus.innerText="Player "+currentPlayer+" turn";
-}
-
-function checkWin(){
-  let w=[
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-  return w.some(p=>{
-    return tttCells[p[0]] && tttCells[p[0]]===tttCells[p[1]] && tttCells[p[1]]===tttCells[p[2]];
-  });
-}
-
-function resetTTT(){
-  createTTT();
 }
 </script>
 
