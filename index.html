@@ -9,8 +9,8 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
  font-family:Segoe UI, sans-serif;
- background:#fff;
- color:#333;
+ background:#111;
+ color:#eee;
  text-align:center;
  padding:15px;
  overflow-x:hidden;
@@ -38,6 +38,28 @@ body::before{
 body.dark-mode{
  background:#111;
  color:#eee;
+}
+
+/* LIGHT MODE */
+body.light-mode{
+ background:#fff;
+ color:#111;
+}
+body.light-mode #chat{
+ background:#f5f5f5;
+ color:#111;
+}
+body.light-mode .neon-inner{
+ background:rgba(255,255,255,.8);
+ color:#111;
+}
+body.light-mode .card{
+ background:rgba(255,255,255,.9);
+ color:#111;
+}
+body.light-mode .tttCell{
+ background:#fff;
+ color:green;
 }
 
 /* SCROLL BAR */
@@ -126,6 +148,7 @@ body.dark-mode{
  font-size:30px;
  cursor:pointer;
  z-index:1000;
+ user-select:none;
 }
 .menu-box{
  position:fixed;
@@ -136,9 +159,11 @@ body.dark-mode{
  display:none;
  box-shadow:0 0 20px rgba(0,255,0,.5);
  z-index:1000;
+ max-height:80vh;
+ overflow:auto;
 }
 .menu-box button{
- width:200px;
+ width:210px;
  margin:6px 0;
  padding:10px;
  border:none;
@@ -267,39 +292,28 @@ input:focus,textarea:focus{
 /* CHAT */
 #chat{
  text-align:left;
- max-height:280px;
+ max-height:300px;
  overflow-y:auto;
- background:#f5f5f5;
+ background:#222;
  border-radius:12px;
  padding:10px;
  margin-top:10px;
- border:1px solid #aaa;
-}
-body.dark-mode #chat{
- background:#222;
  border:1px solid #555;
+ white-space:pre-line;
 }
 .user{
- background:#e8f5e9;
- color:#00c853;
+ background:#133a20;
+ color:#00ff88;
  padding:8px;
  border-radius:10px;
  margin:6px 0;
 }
 .bot{
- background:#e3f2fd;
- color:#2196f3;
+ background:#0e2b44;
+ color:#6bbcff;
  padding:8px;
  border-radius:10px;
  margin:6px 0;
-}
-body.dark-mode .user{
- background:#133a20;
- color:#00ff88;
-}
-body.dark-mode .bot{
- background:#0e2b44;
- color:#6bbcff;
 }
 #typingAI{
  display:none;
@@ -317,6 +331,7 @@ canvas{
  width:100%;
  max-width:400px;
  height:auto;
+ touch-action:none;
 }
 
 /* TIC TAC TOE */
@@ -339,6 +354,7 @@ canvas{
  align-items:center;
  cursor:pointer;
  transition:.2s;
+ user-select:none;
 }
 .tttCell:hover{transform:scale(1.05);}
 
@@ -360,17 +376,51 @@ canvas{
  box-shadow:0 0 15px rgba(0,255,0,.3);
  cursor:pointer;
  transition:.3s;
+ user-select:none;
 }
 .card:hover{
  transform:translateY(-6px) scale(1.05);
  box-shadow:0 0 25px lime;
 }
 
+/* MOBILE SNAKE BUTTONS */
+.snake-controls{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ flex-direction:column;
+ gap:10px;
+ margin-top:15px;
+}
+.snake-row{
+ display:flex;
+ gap:10px;
+ justify-content:center;
+}
+.control-btn{
+ width:70px;
+ height:55px;
+ border:none;
+ border-radius:12px;
+ background:#111;
+ color:lime;
+ border:2px solid lime;
+ font-size:20px;
+ cursor:pointer;
+ transition:.2s;
+}
+.control-btn:active{
+ transform:scale(0.95);
+ background:green;
+ color:white;
+}
+
 /* MOBILE */
 @media(max-width:600px){
  #typingTitle{font-size:26px;}
- .menu-box button{width:185px;}
+ .menu-box button{width:200px;}
  .card{width:140px;}
+ .tttCell{height:80px;font-size:36px;}
 }
 </style>
 </head>
@@ -400,8 +450,7 @@ canvas{
  <button onclick="openPage('contact')">📞 Contact</button>
 </div>
 
-<button class="dark-toggle" onclick="toggleDark()">🌙 Dark</button>
-
+<button class="dark-toggle" onclick="toggleDark()">🌙 Mode</button>
 
 <!-- HOME -->
 <div id="home" class="section active">
@@ -420,7 +469,7 @@ canvas{
 <div class="neon-inner">
 <h2 style="color:lime;">🔥 MR7 WORLD FEATURES</h2>
 <p style="color:white;margin-top:10px;line-height:1.6;">
-✅ Smart Offline AI <br>
+✅ Smart Offline AI (ChatGPT Style) <br>
 ✅ Login System <br>
 ✅ Calculator Mode <br>
 ✅ Game Zone (Snake + TicTacToe + Racing) <br>
@@ -428,9 +477,7 @@ canvas{
 </p>
 </div>
 </div>
-
 </div>
-
 
 <!-- LOGIN -->
 <div id="login" class="section">
@@ -446,17 +493,16 @@ canvas{
 </div>
 </div>
 
-
 <!-- AI -->
 <div id="ai" class="section">
 <div class="neon-box">
 <div class="neon-inner">
-<h2 style="color:lime;">🤖 MR7 AI (Smart Offline)</h2>
+<h2 style="color:lime;">🤖 MR7 AI PRO (Offline)</h2>
 
 <div id="chat"></div>
 <div id="typingAI">AI typing...</div>
 
-<input id="aiInput" placeholder="Ask anything...">
+<input id="aiInput" placeholder="Ask anything... (Hindi/English)">
 <button class="btn" onclick="askAI()">Send</button>
 <button class="btn" onclick="clearChat()">Clear Chat</button>
 <button class="btn" onclick="downloadChat()">Download Chat</button>
@@ -464,7 +510,6 @@ canvas{
 </div>
 </div>
 </div>
-
 
 <!-- CALCULATOR -->
 <div id="calculator" class="section">
@@ -477,7 +522,6 @@ canvas{
 </div>
 </div>
 </div>
-
 
 <!-- GAME ZONE -->
 <div id="games" class="section">
@@ -496,25 +540,39 @@ canvas{
 </div>
 </div>
 
-
 <!-- SNAKE GAME -->
 <div id="snake" class="section">
 <div class="neon-box">
 <div class="neon-inner">
-<h2 style="color:lime;">🐍 Snake Game (Fixed)</h2>
+<h2 style="color:lime;">🐍 Snake Game (Mobile Fixed)</h2>
+
 <canvas id="snakeCanvas" width="400" height="400"></canvas>
+
 <button class="btn" onclick="startSnake()">▶ Start</button>
 <button class="btn" onclick="pauseSnake()">⏸ Pause</button>
 <button class="btn" onclick="resetSnake()">🔄 Reset</button>
+
 <h3 id="snakeScore" style="margin-top:10px;color:lime;">Score: 0</h3>
-<p style="color:white;margin-top:10px;font-size:14px;">
-📌 Mobile: Swipe support coming soon <br>
-⌨ PC: Arrow keys
-</p>
-</div>
-</div>
+
+<div class="snake-controls">
+  <div class="snake-row">
+    <button class="control-btn" ontouchstart="setDir('up')" onclick="setDir('up')">⬆</button>
+  </div>
+  <div class="snake-row">
+    <button class="control-btn" ontouchstart="setDir('left')" onclick="setDir('left')">⬅</button>
+    <button class="control-btn" ontouchstart="setDir('down')" onclick="setDir('down')">⬇</button>
+    <button class="control-btn" ontouchstart="setDir('right')" onclick="setDir('right')">➡</button>
+  </div>
 </div>
 
+<p style="color:white;margin-top:10px;font-size:14px;">
+📱 Mobile: Swipe or buttons <br>
+⌨ PC: Arrow keys
+</p>
+
+</div>
+</div>
+</div>
 
 <!-- TIC TAC TOE -->
 <div id="tictactoe" class="section">
@@ -528,30 +586,32 @@ canvas{
 </div>
 </div>
 
-
 <!-- CAR RACING -->
 <div id="race" class="section">
 <div class="neon-box">
 <div class="neon-inner">
 <h2 style="color:lime;">🏎 Car Racing Mini</h2>
+
 <canvas id="raceCanvas" width="400" height="500"></canvas>
+
 <button class="btn" onclick="startRace()">▶ Start Race</button>
 <button class="btn" onclick="resetRace()">🔄 Reset</button>
+
 <h3 id="raceScore" style="margin-top:10px;color:lime;">Score: 0</h3>
+
 <p style="color:white;font-size:14px;margin-top:8px;">
 ⌨ PC: Left / Right Arrow <br>
-📱 Mobile: Tap Left / Right (below)
+📱 Mobile: Tap buttons below
 </p>
 
 <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;">
-  <button class="btn" style="width:45%;" onclick="moveLeft()">⬅ Left</button>
-  <button class="btn" style="width:45%;" onclick="moveRight()">Right ➡</button>
+  <button class="btn" style="width:45%;" ontouchstart="moveLeft()" onclick="moveLeft()">⬅ Left</button>
+  <button class="btn" style="width:45%;" ontouchstart="moveRight()" onclick="moveRight()">Right ➡</button>
 </div>
 
 </div>
 </div>
 </div>
-
 
 <!-- CONTACT -->
 <div id="contact" class="section">
@@ -566,55 +626,74 @@ canvas{
 </div>
 </div>
 
-
 <script>
-// =====================
-// DARK MODE PERMANENT
-// =====================
-if(localStorage.darkMode==="on"){
- document.body.classList.add("dark-mode");
-}else{
- document.body.classList.add("dark-mode");
- localStorage.darkMode="on";
+/* =====================
+   DARK MODE PERMANENT
+===================== */
+let theme = localStorage.getItem("mr7_theme");
+if(!theme){
+  theme="dark";
+  localStorage.setItem("mr7_theme","dark");
 }
-function toggleDark(){
- document.body.classList.toggle("dark-mode");
- localStorage.darkMode = document.body.classList.contains("dark-mode") ? "on" : "off";
+applyTheme(theme);
+
+function applyTheme(mode){
+  document.body.classList.remove("dark-mode","light-mode");
+  if(mode==="dark"){
+    document.body.classList.add("dark-mode");
+  }else{
+    document.body.classList.add("light-mode");
+  }
 }
 
-// =====================
-// LOADER
-// =====================
+function toggleDark(){
+  let current = localStorage.getItem("mr7_theme");
+  if(current==="dark"){
+    localStorage.setItem("mr7_theme","light");
+    applyTheme("light");
+    showNotification("☀ Light Mode ON");
+  }else{
+    localStorage.setItem("mr7_theme","dark");
+    applyTheme("dark");
+    showNotification("🌙 Dark Mode ON");
+  }
+}
+
+/* =====================
+   LOADER
+===================== */
 let percent=0;
 let loadInt=setInterval(()=>{
  percent++;
- loadPercent.innerText=percent+"%";
+ document.getElementById("loadPercent").innerText=percent+"%";
  if(percent>=100) clearInterval(loadInt);
 },12);
 
 window.onload=function(){
  setTimeout(()=>{
-   loader.style.display="none";
+   document.getElementById("loader").style.display="none";
    showNotification("🔥 MR7 WORLD Ready!");
    startTypingTitle();
  },1500);
 };
 
-// =====================
-// NOTIFY
-// =====================
+/* =====================
+   NOTIFY
+===================== */
 function showNotification(text){
+ let notify=document.getElementById("notify");
  notify.innerText=text;
  notify.style.display="block";
  setTimeout(()=>{notify.style.display="none";},2500);
 }
 
-// =====================
-// TITLE
-// =====================
+/* =====================
+   TITLE
+===================== */
 function startTypingTitle(){
  let text="- MR7 WORLD -";
  let i=0;
+ let typingTitle=document.getElementById("typingTitle");
  typingTitle.innerHTML="";
  let t=setInterval(()=>{
    typingTitle.innerHTML+=text.charAt(i);
@@ -623,38 +702,41 @@ function startTypingTitle(){
  },120);
 }
 
-// =====================
-// SCROLL BAR
-// =====================
+/* =====================
+   SCROLL BAR
+===================== */
 window.onscroll=function(){
  let winScroll=document.documentElement.scrollTop || document.body.scrollTop;
  let height=document.documentElement.scrollHeight-document.documentElement.clientHeight;
  let scrolled=(winScroll/height)*100;
- scrollBar.style.width=scrolled+"%";
+ document.getElementById("scrollBar").style.width=scrolled+"%";
 }
 
-// =====================
-// MENU
-// =====================
+/* =====================
+   MENU
+===================== */
 function toggleMenu(){
+ let menuBox=document.getElementById("menuBox");
  menuBox.style.display = menuBox.style.display=="block"?"none":"block";
 }
 
-// =====================
-// OPEN PAGE
-// =====================
+/* =====================
+   OPEN PAGE
+===================== */
 function openPage(id){
  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
  document.getElementById(id).classList.add("active");
- menuBox.style.display="none";
+ document.getElementById("menuBox").style.display="none";
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 
-// =====================
-// LOGIN SYSTEM
-// =====================
+/* =====================
+   LOGIN SYSTEM
+===================== */
 function doLogin(){
- let u=loginUser.value.trim();
- let p=loginPass.value.trim();
+ let u=document.getElementById("loginUser").value.trim();
+ let p=document.getElementById("loginPass").value.trim();
+ let loginStatus=document.getElementById("loginStatus");
 
  if(!u || !p){
    loginStatus.innerText="⚠ Enter username and password!";
@@ -671,21 +753,22 @@ function doLogin(){
 
 function doLogout(){
  localStorage.loggedIn="no";
- loginStatus.innerText="❌ Logged Out!";
+ document.getElementById("loginStatus").innerText="❌ Logged Out!";
  showNotification("Logout Successful!");
 }
 
 if(localStorage.loggedIn==="yes"){
- loginStatus.innerText="✅ Logged in as: " + localStorage.mr7User;
+ document.getElementById("loginStatus").innerText="✅ Logged in as: " + localStorage.mr7User;
 }
 
-// =====================
-// AI SYSTEM (SMART OFFLINE)
-// =====================
+/* =====================
+   AI PRO SYSTEM (OFFLINE)
+===================== */
 let chat=document.getElementById("chat");
 chat.innerHTML = localStorage.chatHistory || "";
 
 let aiMemory = JSON.parse(localStorage.aiMemory || "{}");
+if(!aiMemory.mood) aiMemory.mood="normal";
 
 function saveAIMemory(){
  localStorage.aiMemory = JSON.stringify(aiMemory);
@@ -696,9 +779,9 @@ function addMsg(text,cls){
  div.className=cls;
  chat.appendChild(div);
 
- // typing effect
  let i=0;
- let speed=12;
+ let speed=10;
+
  let interval=setInterval(()=>{
    div.innerText = text.substring(0,i);
    i++;
@@ -710,92 +793,171 @@ function addMsg(text,cls){
  },speed);
 }
 
-function getAIReply(q){
- let original=q;
+function detectMood(q){
  q=q.toLowerCase();
 
- // name memory
- if(q.includes("my name is") || q.includes("mera naam")){
-   let name = original.split(" ").pop();
-   aiMemory.userName=name;
-   saveAIMemory();
-   return "🔥 Wow! Ab main yaad rakhunga tumhara naam: " + name + " 😎";
+ if(q.includes("sad")||q.includes("depressed")||q.includes("tension")||q.includes("cry")){
+   return "sad";
+ }
+ if(q.includes("angry")||q.includes("gussa")||q.includes("hate")){
+   return "angry";
+ }
+ if(q.includes("happy")||q.includes("excited")||q.includes("mast")){
+   return "happy";
+ }
+ return "normal";
+}
+
+function isMathExpression(text){
+ return /^[0-9+\-*/().%\s]+$/.test(text);
+}
+
+function getAIReply(q){
+ let original=q;
+ let low=q.toLowerCase();
+
+ // mood detect
+ aiMemory.mood = detectMood(original);
+ saveAIMemory();
+
+ // name memory (better)
+ if(low.includes("my name is")){
+   let name = original.split("my name is")[1].trim();
+   if(name.length>1){
+     aiMemory.userName=name;
+     saveAIMemory();
+     return "🔥 Nice! Ab main yaad rakhunga tumhara naam: " + name + " 😎";
+   }
+ }
+
+ if(low.includes("mera naam")){
+   let name = original.split("mera naam")[1].replace("hai","").trim();
+   if(name.length>1){
+     aiMemory.userName=name;
+     saveAIMemory();
+     return "🔥 Wah Boss! Ab main yaad rakhunga tumhara naam: " + name + " 😎";
+   }
  }
 
  let boss = aiMemory.userName ? aiMemory.userName : "Boss";
 
- if(q.includes("hello")||q.includes("hi")||q.includes("namaste")){
+ // greeting
+ if(low.includes("hello")||low.includes("hi")||low.includes("namaste")){
    return "Hello " + boss + " 😄🔥 MR7 WORLD me welcome!";
  }
 
- if(q.includes("how are you") || q.includes("kaise ho")){
+ // mood reply
+ if(aiMemory.mood==="sad"){
+   return "💚 " + boss + ", tension mat lo. Tum strong ho 💪🔥 MR7 WORLD always with you!";
+ }
+ if(aiMemory.mood==="angry"){
+   return "😅 " + boss + ", gussa thoda kam karo. Chill karo bro 🔥";
+ }
+ if(aiMemory.mood==="happy"){
+   return "😎🔥 Wahh " + boss + "! Tumhara mood full OP lag raha hai!";
+ }
+
+ // common Q&A
+ if(low.includes("how are you") || low.includes("kaise ho")){
    return "Main mast hoon " + boss + " 😎🔥 Tum batao!";
  }
 
- if(q.includes("owner")||q.includes("malik")){
+ if(low.includes("owner")||low.includes("malik")){
    return "Mera owner MD REHAN hai 😎🔥 MR7 WORLD ka king!";
  }
 
- if(q.includes("time")){
+ if(low.includes("time")){
    return "⏰ Time: " + new Date().toLocaleTimeString();
  }
 
- if(q.includes("date") || q.includes("day")){
+ if(low.includes("date") || low.includes("day")){
    return "📅 Date: " + new Date().toLocaleDateString();
  }
 
- if(q.includes("game")){
-   return "🎮 MR7 GAME ZONE ready hai! Snake, TicTacToe aur Racing available hai 🔥";
+ if(low.includes("game")){
+   return "🎮 MR7 GAME ZONE me Snake, TicTacToe aur Car Racing available hai 😎🔥";
  }
 
- if(q.includes("joke")){
+ // jokes improved
+ if(low.includes("joke")){
    let jokes=[
      "😂 Teacher: Homework kiya? Student: Sir laptop hang ho gaya 😭",
      "🤣 Coding me bug fix karna life fix karne se easy hai!",
-     "😂 Boss, tumhari website already hacker level lag rahi hai 😎"
+     "😂 Boss, tumhara future software developer pakka hai 😎🔥",
+     "🤣 Tumhari website dekh ke lagta hai hacker bhi subscribe karega 😆",
+     "😂 MR7 AI: Main smart hoon... lekin tum aur smart ho 😎"
    ];
    return jokes[Math.floor(Math.random()*jokes.length)];
  }
 
- if(q.includes("sad") || q.includes("depressed") || q.includes("tension")){
-   return "💚 " + boss + " tension mat lo! Tu legend banega 🔥 MR7 WORLD always with you!";
- }
-
- if(q.includes("motivate") || q.includes("motivation")){
+ // motivation
+ if(low.includes("motivate") || low.includes("motivation") || low.includes("inspire")){
    let mot=[
-     "🔥 " + boss + " ek din top pe hoga! Bas rukna nahi 💪",
+     "🔥 " + boss + ", tu ek din top pe hoga! Bas rukna nahi 💪",
      "⚡ Fail hona normal hai, give up karna galat hai!",
-     "🏆 Jo mehnat karta hai wahi legend banta hai 😎"
+     "🏆 Jo mehnat karta hai wahi legend banta hai 😎",
+     "🚀 Consistency = Success. Daily practice kar boss!",
+     "💯 Tumhara time aayega, aur duniya dekhegi MR7 WORLD!"
    ];
    return mot[Math.floor(Math.random()*mot.length)];
  }
 
- // calculator auto
- if(q.match(/^[0-9+\-*/().\s]+$/)){
+ // calculator auto mode
+ if(isMathExpression(low)){
    try{
-     return "🧮 Answer: " + eval(q);
+     return "🧮 Answer: " + eval(low);
    }catch{
-     return "😅 Boss ye calculation galat lag raha hai.";
+     return "😅 Boss calculation samajh nahi aaya.";
    }
  }
 
- return "🤖 " + boss + " tumhara question interesting hai 😎🔥\nAgar tum detail me bologe to main best answer dunga!";
+ // memory recall
+ if(low.includes("my name") && low.includes("what")){
+   return aiMemory.userName ? ("😎 Tumhara naam " + aiMemory.userName + " hai!") : "😅 Tumne abhi naam nahi bataya.";
+ }
+ if(low.includes("mera naam kya hai")){
+   return aiMemory.userName ? ("😎 Tumhara naam " + aiMemory.userName + " hai!") : "😅 Tumne abhi naam nahi bataya.";
+ }
+
+ // smart general answers
+ if(low.includes("who are you") || low.includes("tum kaun ho")){
+   return "Main MR7 AI PRO hoon 🤖🔥 Offline Smart AI, MD REHAN ke website ke liye!";
+ }
+
+ if(low.includes("help")){
+   return "😎 " + boss + ", main help kar sakta hoon: Games, Calculator, Motivation, Jokes, Website tips aur basic answers!";
+ }
+
+ // default (no suggestion reply)
+ let smartReplies=[
+   "😎 " + boss + ", ye question interesting hai! Thoda aur detail me bolo.",
+   "🔥 Haan " + boss + ", ye possible hai. Tum daily practice karte raho!",
+   "💡 Good question! Agar tum chaho to main ispe step-by-step explain kar dunga.",
+   "⚡ " + boss + ", main ready hoon! Next question bolo.",
+   "🤖 " + boss + ", main offline AI hoon, lekin main smart reply dene ki try karta hoon 😄"
+ ];
+ return smartReplies[Math.floor(Math.random()*smartReplies.length)];
 }
 
 function askAI(){
- let q=aiInput.value.trim();
+ let input=document.getElementById("aiInput");
+ let q=input.value.trim();
  if(!q) return;
 
- typingAI.style.display="block";
+ document.getElementById("typingAI").style.display="block";
  addMsg("You: "+q,"user");
- aiInput.value="";
+ input.value="";
 
  setTimeout(()=>{
-   typingAI.style.display="none";
+   document.getElementById("typingAI").style.display="none";
    let reply=getAIReply(q);
    addMsg("AI: "+reply,"bot");
- },800);
+ },700);
 }
+
+document.getElementById("aiInput").addEventListener("keypress",(e)=>{
+ if(e.key==="Enter") askAI();
+});
 
 function clearChat(){
  if(confirm("Clear full chat?")){
@@ -813,25 +975,27 @@ function downloadChat(){
  a.click();
 }
 
-// =====================
-// CALCULATOR MODE
-// =====================
+/* =====================
+   CALCULATOR MODE
+===================== */
 function calculate(){
- let exp = calcInput.value.trim();
+ let exp=document.getElementById("calcInput").value.trim();
+ let result=document.getElementById("calcResult");
+
  if(!exp){
-   calcResult.innerText="⚠ Enter calculation!";
+   result.innerText="⚠ Enter calculation!";
    return;
  }
  try{
-   calcResult.innerText="✅ Result: " + eval(exp);
+   result.innerText="✅ Result: " + eval(exp);
  }catch{
-   calcResult.innerText="❌ Invalid Expression!";
+   result.innerText="❌ Invalid Expression!";
  }
 }
 
-// =====================
-// SNAKE GAME FIXED
-// =====================
+/* =====================
+   SNAKE GAME (MOBILE FIX)
+===================== */
 const snakeCanvas=document.getElementById("snakeCanvas");
 const sctx=snakeCanvas.getContext("2d");
 
@@ -842,7 +1006,7 @@ function initSnake(){
  dir={x:20,y:0};
  food=randomFood();
  snakeScore=0;
- snakeScoreText();
+ updateSnakeScore();
  drawSnake();
 }
 
@@ -853,9 +1017,8 @@ function randomFood(){
  };
 }
 
-function snakeScoreText(){
- snakeScoreTextEl = document.getElementById("snakeScore");
- snakeScoreTextEl.innerText="Score: "+snakeScore;
+function updateSnakeScore(){
+ document.getElementById("snakeScore").innerText="Score: "+snakeScore;
 }
 
 function drawSnake(){
@@ -887,7 +1050,7 @@ function updateSnake(){
 
  if(head.x===food.x && head.y===food.y){
    snakeScore++;
-   snakeScoreText();
+   updateSnakeScore();
    food=randomFood();
  }else{
    snake.pop();
@@ -919,23 +1082,55 @@ function resetSnake(){
  initSnake();
 }
 
+function setDir(d){
+ if(d==="up" && dir.y===0) dir={x:0,y:-20};
+ if(d==="down" && dir.y===0) dir={x:0,y:20};
+ if(d==="left" && dir.x===0) dir={x:-20,y:0};
+ if(d==="right" && dir.x===0) dir={x:20,y:0};
+}
+
 document.addEventListener("keydown",(e)=>{
- if(e.key==="ArrowUp" && dir.y===0) dir={x:0,y:-20};
- if(e.key==="ArrowDown" && dir.y===0) dir={x:0,y:20};
- if(e.key==="ArrowLeft" && dir.x===0) dir={x:-20,y:0};
- if(e.key==="ArrowRight" && dir.x===0) dir={x:20,y:0};
+ if(e.key==="ArrowUp") setDir("up");
+ if(e.key==="ArrowDown") setDir("down");
+ if(e.key==="ArrowLeft") setDir("left");
+ if(e.key==="ArrowRight") setDir("right");
+});
+
+// swipe mobile
+let touchStartX=0,touchStartY=0;
+
+snakeCanvas.addEventListener("touchstart",(e)=>{
+ let t=e.touches[0];
+ touchStartX=t.clientX;
+ touchStartY=t.clientY;
+});
+
+snakeCanvas.addEventListener("touchmove",(e)=>{
+ e.preventDefault();
+ let t=e.touches[0];
+ let dx=t.clientX-touchStartX;
+ let dy=t.clientY-touchStartY;
+
+ if(Math.abs(dx)>Math.abs(dy)){
+   if(dx>30) setDir("right");
+   if(dx<-30) setDir("left");
+ }else{
+   if(dy>30) setDir("down");
+   if(dy<-30) setDir("up");
+ }
 });
 
 initSnake();
 
-// =====================
-// TIC TAC TOE
-// =====================
+/* =====================
+   TIC TAC TOE
+===================== */
 let board=["","","","","","","","",""];
 let currentPlayer="X";
 let gameOverTTT=false;
 
 function createBoard(){
+ let tttBoard=document.getElementById("tttBoard");
  tttBoard.innerHTML="";
  board.forEach((val,i)=>{
    let cell=document.createElement("div");
@@ -953,19 +1148,19 @@ function makeMove(i){
  createBoard();
 
  if(checkWinner()){
-   tttStatus.innerText="🏆 Player "+currentPlayer+" Wins!";
+   document.getElementById("tttStatus").innerText="🏆 Player "+currentPlayer+" Wins!";
    gameOverTTT=true;
    return;
  }
 
  if(board.every(x=>x!=="")){
-   tttStatus.innerText="🤝 Draw Match!";
+   document.getElementById("tttStatus").innerText="🤝 Draw Match!";
    gameOverTTT=true;
    return;
  }
 
  currentPlayer = currentPlayer==="X"?"O":"X";
- tttStatus.innerText="Player "+currentPlayer+" Turn";
+ document.getElementById("tttStatus").innerText="Player "+currentPlayer+" Turn";
 }
 
 function checkWinner(){
@@ -983,15 +1178,15 @@ function resetTTT(){
  board=["","","","","","","","",""];
  currentPlayer="X";
  gameOverTTT=false;
- tttStatus.innerText="Player X Turn";
+ document.getElementById("tttStatus").innerText="Player X Turn";
  createBoard();
 }
 
 createBoard();
 
-// =====================
-// CAR RACING GAME
-// =====================
+/* =====================
+   CAR RACING GAME
+===================== */
 const raceCanvas=document.getElementById("raceCanvas");
 const rctx=raceCanvas.getContext("2d");
 
@@ -1006,6 +1201,11 @@ function drawRace(){
 
  rctx.fillStyle="#222";
  rctx.fillRect(0,0,400,500);
+
+ // road lines
+ rctx.strokeStyle="lime";
+ rctx.lineWidth=2;
+ rctx.strokeRect(5,5,390,490);
 
  rctx.fillStyle="lime";
  rctx.fillRect(car.x,car.y,car.w,car.h);
@@ -1022,9 +1222,9 @@ function spawnObstacle(){
 }
 
 function updateRace(){
- if(Math.random()<0.05) spawnObstacle();
+ if(Math.random()<0.06) spawnObstacle();
 
- obstacles.forEach(o=>o.y+=6);
+ obstacles.forEach(o=>o.y+=7);
 
  obstacles.forEach(o=>{
    if(car.x < o.x+o.w && car.x+car.w > o.x && car.y < o.y+o.h && car.y+car.h > o.y){
@@ -1035,8 +1235,7 @@ function updateRace(){
  obstacles = obstacles.filter(o=>o.y<520);
 
  raceScore++;
- raceScoreEl=document.getElementById("raceScore");
- raceScoreEl.innerText="Score: "+raceScore;
+ document.getElementById("raceScore").innerText="Score: "+raceScore;
 
  drawRace();
 }
@@ -1079,9 +1278,9 @@ document.addEventListener("keydown",(e)=>{
 
 drawRace();
 
-// =====================
-// CONTACT EMAIL
-// =====================
+/* =====================
+   CONTACT EMAIL
+===================== */
 function sendMail(){
  let n=document.getElementById("name").value.trim();
  let m=document.getElementById("mobile").value.trim();
