@@ -12,8 +12,34 @@ body{
  background:#fff;color:#333;
  transition:.4s;
  overflow-x:hidden;
+ cursor:none;
 }
 body.dark-mode{background:#111;color:#eee}
+
+/* CUSTOM CURSOR */
+#cursor{
+ position:fixed;
+ width:18px;height:18px;
+ border:2px solid lime;
+ border-radius:50%;
+ pointer-events:none;
+ z-index:99999;
+ transform:translate(-50%,-50%);
+ box-shadow:0 0 15px lime;
+ transition:0.05s;
+}
+#cursor2{
+ position:fixed;
+ width:45px;height:45px;
+ background:rgba(0,255,0,0.1);
+ border:1px solid lime;
+ border-radius:50%;
+ pointer-events:none;
+ z-index:99998;
+ transform:translate(-50%,-50%);
+ box-shadow:0 0 25px rgba(0,255,0,0.5);
+ transition:0.15s;
+}
 
 /* PARTICLES CANVAS */
 #particles{
@@ -50,6 +76,12 @@ body.dark-mode{background:#111;color:#eee}
 @keyframes spin{
  0%{transform:rotate(0deg)}
  100%{transform:rotate(360deg)}
+}
+#loadPercent{
+ font-size:18px;
+ margin-top:10px;
+ color:lime;
+ font-weight:bold;
 }
 
 /* PROFILE */
@@ -114,6 +146,41 @@ body.dark-mode{background:#111;color:#eee}
  margin-top:20px;padding:10px 25px;
  background:gray;color:white;border:none;
  border-radius:20px;cursor:pointer;
+}
+
+/* NEON BORDER ANIMATION */
+.neon-border{
+ position:relative;
+ overflow:hidden;
+}
+.neon-border::before{
+ content:"";
+ position:absolute;
+ top:-50%;
+ left:-50%;
+ width:200%;
+ height:200%;
+ background:conic-gradient(lime, green, lime, transparent, lime);
+ animation:rotateBorder 3s linear infinite;
+ opacity:.7;
+}
+.neon-border::after{
+ content:"";
+ position:absolute;
+ top:3px;left:3px;
+ width:calc(100% - 6px);
+ height:calc(100% - 6px);
+ background:#111;
+ border-radius:18px;
+ z-index:1;
+}
+.neon-content{
+ position:relative;
+ z-index:2;
+}
+@keyframes rotateBorder{
+ 0%{transform:rotate(0deg)}
+ 100%{transform:rotate(360deg)}
 }
 
 /* DARK */
@@ -210,7 +277,6 @@ body.dark-mode .bot{
  background:#0e2b44;
  color:#6bbcff;
 }
-
 @keyframes pop{
  from{transform:scale(.9);opacity:.6}
  to{transform:scale(1);opacity:1}
@@ -240,30 +306,56 @@ body.dark-mode .bot{
  transform:scale(1.05);
 }
 
-/* MODE TAG */
-#modeTag{
- padding:8px;
- border-radius:15px;
- margin:10px 0;
- font-weight:bold;
- background:black;
- color:lime;
- box-shadow:0 0 10px rgba(0,255,0,.4);
-}
-
 /* IMAGES */
 .image-gallery{
- display:flex;justify-content:center;
- gap:20px;margin:40px 0;flex-wrap:wrap;
+ display:flex;
+ justify-content:center;
+ gap:20px;
+ margin:40px 0;
+ flex-wrap:wrap;
 }
-.image-gallery img{
- width:160px;border-radius:18px;
+
+/* IMAGE SLIDER */
+.slider{
+ width:260px;
+ height:180px;
+ border-radius:18px;
+ overflow:hidden;
  box-shadow:0 5px 20px rgba(0,0,0,.3);
- transition:.4s;
+ position:relative;
 }
-.image-gallery img:hover{
- transform:translateY(-10px) scale(1.08);
- box-shadow:0 0 30px lime;
+.slider img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:none;
+}
+.slider img.active{
+ display:block;
+ animation:fadeSlide 0.7s ease;
+}
+@keyframes fadeSlide{
+ from{opacity:0;transform:scale(1.05)}
+ to{opacity:1;transform:scale(1)}
+}
+.slider-btns{
+ margin-top:10px;
+ display:flex;
+ justify-content:center;
+ gap:10px;
+}
+.slider-btns button{
+ padding:8px 16px;
+ border:none;
+ border-radius:12px;
+ cursor:pointer;
+ background:green;
+ color:white;
+ transition:.3s;
+}
+.slider-btns button:hover{
+ transform:scale(1.1);
+ box-shadow:0 0 15px lime;
 }
 
 /* FLOAT */
@@ -294,12 +386,16 @@ body.dark-mode .bot{
 
 <body>
 
+<div id="cursor"></div>
+<div id="cursor2"></div>
+
 <canvas id="particles"></canvas>
 
 <!-- LOADER -->
 <div id="loader">
   <div class="loader-circle"></div>
   <div>Welcome to MR7 WORLD 🔥</div>
+  <div id="loadPercent">0%</div>
 </div>
 
 <div class="menu" onclick="toggleMenu()">⋮</div>
@@ -324,15 +420,28 @@ body.dark-mode .bot{
 <img src="rehan.png" class="profile-pic">
 
 <div class="image-gallery">
- <img src="animi 1.jpeg">
- <img src="animi 2 .jpeg">
- <img src="animi 3.jpeg">
+
+  <div class="slider neon-border">
+    <div class="neon-content">
+      <img src="animi 1.jpeg" class="active">
+      <img src="animi 2 .jpeg">
+      <img src="animi 3.jpeg">
+    </div>
+  </div>
+
 </div>
+
+<div class="slider-btns">
+  <button onclick="prevSlide()">⬅ Prev</button>
+  <button onclick="nextSlide()">Next ➡</button>
+</div>
+
 </div>
 
 <!-- CONTACT -->
 <div id="contact" class="section">
-<div class="contact-box">
+<div class="contact-box neon-border">
+<div class="neon-content">
 <h2>Contact Me</h2>
 
 <input id="name" placeholder="Name">
@@ -340,17 +449,16 @@ body.dark-mode .bot{
 <textarea id="message" placeholder="Message"></textarea>
 
 <button class="submit-btn" onclick="sendMail()">Send Email</button>
-
+</div>
 </div>
 <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
 <!-- AI -->
 <div id="ai" class="section">
-<div class="ai-box">
+<div class="ai-box neon-border">
+<div class="neon-content">
 <h2>🤖 MR7 AI PRO</h2>
-
-<div id="modeTag">MODE: NORMAL</div>
 
 <div id="chat"></div>
 <div id="typing">AI typing...</div>
@@ -362,25 +470,18 @@ body.dark-mode .bot{
 <button class="ai-btn" onclick="copyChat()">Copy Chat</button>
 <button class="ai-btn" onclick="downloadChat()">Download Chat</button>
 
-<button class="ai-btn" onclick="startVoice()">🎤 Voice</button>
-<button class="ai-btn" onclick="toggleSpeak()">🔊 Speak: ON/OFF</button>
-
 <div class="suggestions">
   <button onclick="quickAsk('help')">Help</button>
   <button onclick="quickAsk('joke')">Joke</button>
   <button onclick="quickAsk('fact')">Fact</button>
   <button onclick="quickAsk('quiz')">Quiz</button>
   <button onclick="quickAsk('game')">Game</button>
-  <button onclick="quickAsk('football tip')">Football</button>
   <button onclick="quickAsk('youtube title ronaldo')">Title</button>
   <button onclick="quickAsk('hashtags ronaldo')">Hashtags</button>
   <button onclick="quickAsk('motivation')">Motivation</button>
-  <button onclick="quickAsk('study mode on')">Study Mode</button>
-  <button onclick="quickAsk('youtube mode on')">YouTube Mode</button>
-  <button onclick="quickAsk('football mode on')">Football Mode</button>
-  <button onclick="quickAsk('normal mode on')">Normal Mode</button>
 </div>
 
+</div>
 </div>
 <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
@@ -388,11 +489,21 @@ body.dark-mode .bot{
 <img src="animi 1.jpeg" class="floating-img">
 
 <script>
+// CUSTOM CURSOR
+let cursor=document.getElementById("cursor");
+let cursor2=document.getElementById("cursor2");
+document.addEventListener("mousemove",(e)=>{
+  cursor.style.left=e.pageX+"px";
+  cursor.style.top=e.pageY+"px";
+  cursor2.style.left=e.pageX+"px";
+  cursor2.style.top=e.pageY+"px";
+});
+
 // PARTICLES BACKGROUND
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
-
 let particles = [];
+
 function resizeCanvas(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -421,10 +532,8 @@ function drawParticles(){
     ctx.beginPath();
     ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
     ctx.fill();
-
     p.x += p.dx;
     p.y += p.dy;
-
     if(p.x<0||p.x>canvas.width) p.dx*=-1;
     if(p.y<0||p.y>canvas.height) p.dy*=-1;
   });
@@ -432,13 +541,23 @@ function drawParticles(){
 }
 drawParticles();
 
+// LOADING PERCENTAGE
+let percent=0;
+let loaderInterval=setInterval(()=>{
+  percent+=5;
+  if(percent>100) percent=100;
+  document.getElementById("loadPercent").innerText=percent+"%";
+  if(percent==100){
+    clearInterval(loaderInterval);
+  }
+},60);
 
-// LOADER
+// LOADER + TYPING TITLE
 window.onload=function(){
   setTimeout(()=>{
     document.getElementById("loader").style.display="none";
     startTypingTitle();
-  },1200);
+  },1400);
 };
 
 // TYPING TITLE
@@ -484,22 +603,36 @@ function sendMail(){
   location.href="mailto:mrrehanofficial.1777@gmail.com?subject="+subject+"&body="+body;
 }
 
-// CHAT MEMORY
+// IMAGE SLIDER
+let slides=document.querySelectorAll(".slider img");
+let slideIndex=0;
+
+function showSlide(index){
+  slides.forEach(s=>s.classList.remove("active"));
+  slides[index].classList.add("active");
+}
+
+function nextSlide(){
+  slideIndex++;
+  if(slideIndex>=slides.length) slideIndex=0;
+  showSlide(slideIndex);
+}
+
+function prevSlide(){
+  slideIndex--;
+  if(slideIndex<0) slideIndex=slides.length-1;
+  showSlide(slideIndex);
+}
+
+// auto slider
+setInterval(nextSlide,3000);
+
+// AI MEMORY
 let userName=localStorage.userName || "";
 let lastBotReply=localStorage.lastBotReply || "";
-let aiMode=localStorage.aiMode || "normal";
-let speakOn = localStorage.speakOn ? JSON.parse(localStorage.speakOn) : true;
-
-let lastTopic = localStorage.lastTopic || "";
-let lastUserMsg = localStorage.lastUserMsg || "";
-
+let lastUserText=localStorage.lastUserText || "";
 let chatMemory=localStorage.chat||"";
 chat.innerHTML=chatMemory;
-
-function updateModeTag(){
-  modeTag.innerText="MODE: "+aiMode.toUpperCase();
-}
-updateModeTag();
 
 // Enter key send
 aiInput.addEventListener("keypress", function(e){
@@ -519,39 +652,6 @@ function typeText(text,cls){
    chat.scrollTop=chat.scrollHeight;
    if(i>=text.length){ clearInterval(t); }
  },12);
-}
-
-// speak
-function speakText(text){
-  if(!speakOn) return;
-  if(!window.speechSynthesis) return;
-  let utter = new SpeechSynthesisUtterance(text);
-  utter.rate=1;
-  utter.pitch=1;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utter);
-}
-
-function toggleSpeak(){
-  speakOn=!speakOn;
-  localStorage.speakOn=JSON.stringify(speakOn);
-  alert("Speak Mode: "+(speakOn?"ON 🔊":"OFF 🔇"));
-}
-
-// voice input
-function startVoice(){
-  if(!('webkitSpeechRecognition' in window)){
-    alert("Voice not supported 😅");
-    return;
-  }
-  let rec = new webkitSpeechRecognition();
-  rec.lang="en-IN";
-  rec.start();
-  rec.onresult=function(event){
-    let voiceText=event.results[0][0].transcript;
-    aiInput.value=voiceText;
-    askAI();
-  };
 }
 
 // clear chat
@@ -599,137 +699,60 @@ function safeMath(expression){
  }
 }
 
-// translator
-function translate(text){
- text=text.toLowerCase().trim();
- let dict={
-  "hello":"नमस्ते","hi":"हाय","how are you":"कैसे हो","good morning":"सुप्रभात",
-  "good night":"शुभ रात्रि","thank you":"धन्यवाद","bye":"अलविदा",
-  "football":"फुटबॉल","subscribe":"सब्सक्राइब","love":"प्यार"
- };
- if(dict[text]) return dict[text];
- return "Translation not found 😅";
+// AI SMART REPLY SYSTEM
+function smartReply(text){
+  let replies=[
+    "Hmm interesting 🤔 thoda aur clear bolo.",
+    "Achha 😄 tum exactly kya chahte ho?",
+    "Main samajh gaya boss 😎🔥",
+    "Nice! 🔥 ye idea kaafi badiya hai.",
+    "Okay bro 😄 main help karta hoon.",
+    "Tumhara plan solid hai 💚",
+    "Wah! 🔥 ab isko aur next level le jaate hain."
+  ];
+
+  if(text.includes("love")) return "Love you too 😄💚";
+  if(text.includes("who are you")) return "Main MR7 AI PRO hoon 🤖🔥";
+  if(text.includes("mr7")) return "MR7 WORLD is OP 🔥😎";
+  if(text.includes("rehan")) return "Rehan bhai legend hai 😎🔥";
+
+  return replies[Math.floor(Math.random()*replies.length)];
 }
 
-// youtube tools
-function youtubeTitle(topic){
- let arr=[
-  `🔥 ${topic} Skills in Real Match 😱`,
-  `${topic} Skills That Shocked Everyone 😳`,
-  `Top 5 ${topic} Moves You Must Try ⚽🔥`,
-  `${topic} Edit | Viral Shorts 🔥`,
-  `Best ${topic} Moments 😍⚽`,
-  `${topic} vs Defender 😱🔥`
- ];
- return arr[Math.floor(Math.random()*arr.length)];
-}
-
-function hashtagGen(topic){
- topic=topic.replace(/\s+/g,"");
- return `#${topic} #football #skills #viral #shorts #edit #ronaldo #messi #mr7world #trending`;
-}
-
-function descriptionGen(topic){
- return `🔥 ${topic} skills edit by MR7 WORLD 😎\n\n⚽ Football Shorts\n🔥 Viral Edit\n💚 Subscribe for more!\n\n#football #shorts #viral #mr7world`;
-}
-
-function footballCoach(){
- let arr=[
-  "⚽ Tip: Daily 50 toe taps practice karo",
-  "⚽ Tip: Sprint + dribble practice 20 min",
-  "⚽ Tip: Fake shot skill practice",
-  "⚽ Tip: Weak foot shooting improve karo",
-  "⚽ Tip: Ball control wall passing practice"
- ];
- return arr[Math.floor(Math.random()*arr.length)];
+// AI HELP
+function aiHelp(){
+ return `🤖 MR7 AI Commands:
+- help
+- joke
+- fact
+- time
+- date
+- quiz
+- game
+- math (example: 5+5*2)
+- youtube title ronaldo
+- hashtags ronaldo
+- motivation
+- repeat`;
 }
 
 // quiz + game
 let jokes=[
  "Why phone went to school? To improve its cell 😆",
- "Teacher: Homework done? Yes sir but at home 😄",
- "Why computer got cold? Because it forgot to close windows 😂"
+ "Teacher: Homework done? Student: Yes sir, but at home 😄"
 ];
 let facts=[
  "Honey never spoils 🍯",
  "Sharks existed before trees 🌲",
- "Octopus has 3 hearts 🐙",
- "Banana is technically a berry 🍌"
+ "Octopus has 3 hearts 🐙"
 ];
 let quiz=[
  {q:"Capital of India?",a:"new delhi"},
  {q:"5+7=?",a:"12"},
- {q:"HTML stands for?",a:"hypertext markup language"},
- {q:"Which planet is called Red Planet?",a:"mars"}
+ {q:"HTML stands for?",a:"hypertext markup language"}
 ];
 let currentQuiz=null;
 let currentGame=null;
-let currentGameMode="";
-
-// help
-function aiHelp(){
- return `🤖 MR7 AI PRO Commands:
-- help
-- joke / fact
-- time / date
-- quiz / game
-- translate hello
-- math 5+5*2
-- study mode on
-- youtube mode on
-- football mode on
-- normal mode on
-- youtube title ronaldo
-- hashtags ronaldo
-- description ronaldo
-- football tip
-- repeat
-- clear memory`;
-}
-
-function containsAny(text,words){
- return words.some(w=>text.includes(w));
-}
-
-// AI SMART REPLY
-function smartReply(text){
-  text=text.toLowerCase();
-
-  if(text.includes("who are you") || text.includes("tum kaun ho")){
-    return "Main MR7 AI PRO hoon 🤖🔥 Rehan ka personal assistant 😎";
-  }
-
-  if(text.includes("your owner") || text.includes("tumhara malik") || text.includes("creator")){
-    return "Mera creator MR7 WORLD ka owner MD REHAN hai 😎🔥";
-  }
-
-  if(text.includes("love") || text.includes("i love you")){
-    return "Aree wah 😄❤️ MR7 AI bhi tumko support karta hai boss 🔥";
-  }
-
-  if(text.includes("sad") || text.includes("depressed") || text.includes("tension")){
-    return "Bhai tension mat lo 😎💚 MR7 AI tumhare sath hai. Batao kya hua?";
-  }
-
-  if(text.includes("goal") || text.includes("future") || text.includes("career")){
-    return "🔥 Bhai tumhara future bright hai! Bas daily practice karo aur consistent raho 😎";
-  }
-
-  if(text.includes("hello") || text.includes("hi")){
-    return "Hello boss 😄🔥 MR7 AI ready hai!";
-  }
-
-  let replies=[
-    "Hmm interesting 🤔 thoda aur detail me bolo.",
-    "Achha 😄 tum exactly kya chahte ho? main help karta hoon.",
-    "Boss samajh gaya 😎 ab main tumko best solution deta hoon.",
-    "🔥 Nice! ye idea bohot tagda hai.",
-    "Okay 😄 tum next step bolo, main ready hoon.",
-    "Bhai tum smart ho 😎 bas practice continue rakho.",
-    "Ye kaam easy hai boss 😄 main bata deta hoon."
-  ];
-  return replies[Math.floor(Math.random()*replies.length)];
-}
 
 // MAIN AI
 async function askAI(){
@@ -743,19 +766,10 @@ async function askAI(){
  let reply="";
  let text=q.toLowerCase().trim();
 
- localStorage.lastUserMsg=q;
-
  await new Promise(r=>setTimeout(r,200));
 
- if(text.includes("clear memory")){
-   localStorage.removeItem("userName");
-   localStorage.removeItem("lastTopic");
-   userName="";
-   lastTopic="";
-   reply="🧠 Memory cleared ✅";
- }
-
- else if(currentQuiz){
+ // QUIZ ANSWER
+ if(currentQuiz){
    if(text === currentQuiz.a){
      reply="✅ Correct! 🎉🔥";
    }else{
@@ -764,7 +778,8 @@ async function askAI(){
    currentQuiz=null;
  }
 
- else if(currentGameMode==="number" && currentGame){
+ // GAME GUESS
+ else if(currentGame!==null){
    let guess=parseInt(text);
    if(isNaN(guess)) reply="Please enter number 1 to 20 😅";
    else if(guess>currentGame) reply="Too high 📈 Try again!";
@@ -772,101 +787,84 @@ async function askAI(){
    else{
      reply="🎉 Congrats! You guessed right 😎🔥";
      currentGame=null;
-     currentGameMode="";
    }
  }
 
- else if(text.includes("study mode on")){
-   aiMode="study";
-   localStorage.aiMode=aiMode;
-   updateModeTag();
-   reply="📚 Study Mode ON ✅";
- }
- else if(text.includes("youtube mode on")){
-   aiMode="youtube";
-   localStorage.aiMode=aiMode;
-   updateModeTag();
-   reply="📺 YouTube Mode ON ✅";
- }
- else if(text.includes("football mode on")){
-   aiMode="football";
-   localStorage.aiMode=aiMode;
-   updateModeTag();
-   reply="⚽ Football Mode ON ✅";
- }
- else if(text.includes("normal mode on")){
-   aiMode="normal";
-   localStorage.aiMode=aiMode;
-   updateModeTag();
-   reply="🤖 Normal Mode ON ✅";
- }
-
+ // HELP
  else if(text=="help" || text=="commands"){
    reply=aiHelp();
  }
 
- else if(containsAny(text,["time","samay"])){
+ // NAME
+ else if(text.includes("mera name") || text.includes("my name is")){
+   userName=q.split("is")[1] ? q.split("is")[1].trim() : "Friend";
+   localStorage.userName=userName;
+   reply="Nice to meet you "+userName+" 😄🔥";
+ }
+
+ // GREET
+ else if(/hello|hi|hey|namaste/i.test(text)){
+   reply="Hello "+(userName?userName:"Friend")+" 😄\nMain MR7 AI PRO hoon 🤖🔥";
+ }
+
+ // TIME
+ else if(text.includes("time")){
    reply="⏰ Time: "+new Date().toLocaleTimeString();
  }
 
- else if(containsAny(text,["date","aaj ki date"])){
+ // DATE
+ else if(text.includes("date")){
    reply="📅 Date: "+new Date().toLocaleDateString();
  }
 
+ // JOKE
  else if(text.includes("joke")){
    reply=jokes[Math.floor(Math.random()*jokes.length)];
  }
 
+ // FACT
  else if(text.includes("fact")){
    reply=facts[Math.floor(Math.random()*facts.length)];
  }
 
+ // QUIZ
  else if(text.includes("quiz")){
    currentQuiz=quiz[Math.floor(Math.random()*quiz.length)];
    reply="🧠 Quiz Time! "+currentQuiz.q;
  }
 
+ // GAME
  else if(text.includes("game")){
    currentGame=Math.floor(Math.random()*20)+1;
-   currentGameMode="number";
-   reply="🎮 Guess 1 to 20.";
+   reply="🎮 Number Guessing Game started! Guess 1 to 20.";
  }
 
- else if(text.includes("translate")){
-   let words=text.split("translate")[1].trim();
-   reply="Translation: "+translate(words);
- }
-
- else if(text.includes("youtube title")){
-   let topic=q.split("youtube title")[1].trim();
-   if(!topic) topic="Football";
-   reply="🔥 Viral Title:\n"+youtubeTitle(topic);
- }
-
- else if(text.includes("hashtags")){
-   let topic=q.split("hashtags")[1].trim();
-   if(!topic) topic="football";
-   reply="📌 Hashtags:\n"+hashtagGen(topic);
- }
-
- else if(text.includes("description")){
-   let topic=q.split("description")[1].trim();
-   if(!topic) topic="football";
-   reply="📝 YouTube Description:\n"+descriptionGen(topic);
- }
-
- else if(text.includes("football tip")){
-   reply=footballCoach();
- }
-
- else if(text=="repeat"){
-   reply=lastBotReply ? ("🔁 Last Reply:\n"+lastBotReply) : "Nothing to repeat 😅";
- }
-
+ // MATH
  else if(safeMath(text)!==null){
    reply="🧮 Answer: "+safeMath(text);
  }
 
+ // YOUTUBE TITLE
+ else if(text.includes("youtube title")){
+   reply="🔥 Viral Title: Ronaldo Skills Edit 🔥😱";
+ }
+
+ // HASHTAGS
+ else if(text.includes("hashtags")){
+   reply="#ronaldo #football #skills #viral #shorts #mr7world #edit #trending";
+ }
+
+ // MOTIVATION
+ else if(text.includes("motivation")){
+   reply="🔥 Never give up bro! MR7 WORLD will be famous 😎💚";
+ }
+
+ // REPEAT
+ else if(text=="repeat"){
+   reply=lastBotReply ? ("🔁 Last Reply:\n"+lastBotReply) : "Nothing to repeat 😅";
+ }
+
+ // DEFAULT SMART
  else{
    reply=smartReply(text);
  }
@@ -874,10 +872,10 @@ async function askAI(){
  setTimeout(()=>{
    typing.style.display="none";
    typeText("AI: "+reply,"bot");
-   speakText(reply);
 
    lastBotReply=reply;
    localStorage.lastBotReply=reply;
+   localStorage.lastUserText=q;
    localStorage.chat=chat.innerHTML;
  },350);
 }
