@@ -213,7 +213,7 @@ body.dark-mode{background:#111;color:#eee}
 
 /* CONTACT / AI */
 .contact-box,.ai-box{
- max-width:420px;margin:40px auto;
+ max-width:450px;margin:40px auto;
  padding:0;
  border-radius:20px;
  box-shadow:0 0 20px rgba(0,255,0,.3);
@@ -443,6 +443,31 @@ body.dark-mode .bot{
  z-index:99999;
  animation:pop .4s ease;
 }
+
+/* AI QUICK BUTTONS */
+.quick-btns{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:center;
+ gap:8px;
+ margin:10px 0;
+}
+.quick-btns button{
+ padding:8px 12px;
+ border:none;
+ border-radius:10px;
+ cursor:pointer;
+ background:#111;
+ color:lime;
+ border:1px solid lime;
+ font-size:13px;
+ transition:.3s;
+}
+.quick-btns button:hover{
+ background:green;
+ color:white;
+ transform:scale(1.05);
+}
 </style>
 </head>
 
@@ -532,6 +557,17 @@ body.dark-mode .bot{
 <div class="neon-inner">
 <h2>🤖 MR7 AI SMART</h2>
 
+<div class="quick-btns">
+  <button onclick="autoAsk('hello')">Hello</button>
+  <button onclick="autoAsk('time')">Time</button>
+  <button onclick="autoAsk('date')">Date</button>
+  <button onclick="autoAsk('tell me a joke')">Joke</button>
+  <button onclick="autoAsk('motivate me')">Motivation</button>
+  <button onclick="autoAsk('football tips')">Football Tips</button>
+  <button onclick="autoAsk('youtube title ronaldo skills')">YouTube Title</button>
+  <button onclick="autoAsk('hashtags football')">Hashtags</button>
+</div>
+
 <div id="chat"></div>
 <div id="typing">AI typing...</div>
 
@@ -541,6 +577,7 @@ body.dark-mode .bot{
 <button class="ai-btn" onclick="clearChat()">Clear Chat</button>
 <button class="ai-btn" onclick="copyChat()">Copy Chat</button>
 <button class="ai-btn" onclick="downloadChat()">Download Chat</button>
+<button class="ai-btn" onclick="toggleVoice()">🔊 Voice: OFF</button>
 
 </div>
 </div>
@@ -556,13 +593,36 @@ body.dark-mode .bot{
 </div>
 
 <script>
-// AUTO DARK MODE AT NIGHT
-let hour = new Date().getHours();
-if(hour >= 18 || hour <= 6){
+/* ==========================
+   DARK MODE FIX (PERMANENT)
+========================== */
+let savedTheme = localStorage.getItem("mr7_theme");
+
+if(savedTheme){
+  if(savedTheme === "dark"){
+    document.body.classList.add("dark-mode");
+  }else{
+    document.body.classList.remove("dark-mode");
+  }
+}else{
+  // Default always dark
   document.body.classList.add("dark-mode");
+  localStorage.setItem("mr7_theme","dark");
 }
 
-// LOADER PERCENT
+function toggleDark(){
+  document.body.classList.toggle("dark-mode");
+
+  if(document.body.classList.contains("dark-mode")){
+    localStorage.setItem("mr7_theme","dark");
+  }else{
+    localStorage.setItem("mr7_theme","light");
+  }
+}
+
+/* ==========================
+   LOADER PERCENT
+========================== */
 let percent = 0;
 let loadInt = setInterval(()=>{
   percent++;
@@ -580,7 +640,9 @@ window.onload=function(){
   },1500);
 };
 
-// NOTIFICATION
+/* ==========================
+   NOTIFICATION
+========================== */
 function showNotification(text){
   let n=document.getElementById("notify");
   n.innerText=text;
@@ -588,7 +650,9 @@ function showNotification(text){
   setTimeout(()=>{ n.style.display="none"; },2500);
 }
 
-// SCROLL BAR
+/* ==========================
+   SCROLL BAR
+========================== */
 window.onscroll=function(){
   let winScroll=document.documentElement.scrollTop || document.body.scrollTop;
   let height=document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -596,18 +660,33 @@ window.onscroll=function(){
   document.getElementById("scrollBar").style.width=scrolled+"%";
 };
 
-// MENU
-function toggleMenu(){ menuBox.style.display=menuBox.style.display=="block"?"none":"block"; }
-function openContact(){ home.classList.remove("active"); ai.classList.remove("active"); contact.classList.add("active"); menuBox.style.display="none"; }
-function openAI(){ home.classList.remove("active"); contact.classList.remove("active"); ai.classList.add("active"); menuBox.style.display="none"; }
-function goBack(){ contact.classList.remove("active"); ai.classList.remove("active"); home.classList.add("active"); }
-
-// DARK TOGGLE
-function toggleDark(){
-  document.body.classList.toggle("dark-mode");
+/* ==========================
+   MENU
+========================== */
+function toggleMenu(){
+  menuBox.style.display=menuBox.style.display=="block"?"none":"block";
+}
+function openContact(){
+  home.classList.remove("active");
+  ai.classList.remove("active");
+  contact.classList.add("active");
+  menuBox.style.display="none";
+}
+function openAI(){
+  home.classList.remove("active");
+  contact.classList.remove("active");
+  ai.classList.add("active");
+  menuBox.style.display="none";
+}
+function goBack(){
+  contact.classList.remove("active");
+  ai.classList.remove("active");
+  home.classList.add("active");
 }
 
-// TYPING TITLE
+/* ==========================
+   TYPING TITLE
+========================== */
 function startTypingTitle(){
   let text="- MR7 WORLD -";
   let i=0;
@@ -620,21 +699,28 @@ function startTypingTitle(){
   },120);
 }
 
-// QUOTES SYSTEM
+/* ==========================
+   QUOTES SYSTEM
+========================== */
 let quotes=[
  "💚 Success ke liye discipline zaroori hai.",
  "🔥 Hard work beats talent every time.",
  "⚡ Focus on your goal, not distractions.",
  "😎 MR7 WORLD never gives up!",
- "🏆 Dream big, work hard, stay strong."
+ "🏆 Dream big, work hard, stay strong.",
+ "🚀 Jo log try karte hain wahi winner bante hain.",
+ "🔥 Apna time aayega boss!"
 ];
 function changeQuote(){
-  document.getElementById("quoteBox").innerText = quotes[Math.floor(Math.random()*quotes.length)];
+  document.getElementById("quoteBox").innerText =
+    quotes[Math.floor(Math.random()*quotes.length)];
 }
 changeQuote();
 setInterval(changeQuote,6000);
 
-// LIVE VISITORS FAKE SYSTEM
+/* ==========================
+   LIVE VISITORS FAKE SYSTEM
+========================== */
 function updateVisitors(){
   let count=Math.floor(Math.random()*80)+10;
   document.getElementById("liveVisitors").innerText="👥 "+count+" people online";
@@ -642,7 +728,9 @@ function updateVisitors(){
 updateVisitors();
 setInterval(updateVisitors,4000);
 
-// IMAGE POPUP
+/* ==========================
+   IMAGE POPUP
+========================== */
 function openPopup(src){
   document.getElementById("imgPopup").style.display="flex";
   document.getElementById("popupImg").src=src;
@@ -651,7 +739,9 @@ function closePopup(){
   document.getElementById("imgPopup").style.display="none";
 }
 
-// SLIDER
+/* ==========================
+   SLIDER
+========================== */
 let slides=document.querySelectorAll(".slider img");
 let currentSlide=0;
 
@@ -671,7 +761,9 @@ function prevSlide(){
 }
 setInterval(nextSlide,4000);
 
-// CONTACT EMAIL
+/* ==========================
+   CONTACT EMAIL
+========================== */
 function sendMail(){
   let n=document.getElementById("name").value.trim();
   let m=document.getElementById("mobile").value.trim();
@@ -688,22 +780,25 @@ function sendMail(){
   location.href="mailto:mrrehanofficial.1777@gmail.com?subject="+subject+"&body="+body;
 }
 
-// CHAT MEMORY
+/* ==========================
+   CHAT MEMORY
+========================== */
 let chatMemory=localStorage.chat||"";
 chat.innerHTML=chatMemory;
 
-// Enter key send
+/* Enter key send */
 aiInput.addEventListener("keypress", function(e){
   if(e.key==="Enter"){ askAI(); }
 });
 
-// typing effect
+/* typing effect */
 function typeText(text,cls){
- let i=0;
  let div=document.createElement("div");
  div.className=cls;
  chat.appendChild(div);
  chat.scrollTop=chat.scrollHeight;
+
+ let i=0;
  let t=setInterval(()=>{
    div.innerHTML+=text.charAt(i);
    i++;
@@ -712,7 +807,7 @@ function typeText(text,cls){
  },12);
 }
 
-// clear chat
+/* clear chat */
 function clearChat(){
  if(confirm("Clear full chat?")){
    chat.innerHTML="";
@@ -720,13 +815,13 @@ function clearChat(){
  }
 }
 
-// copy chat
+/* copy chat */
 function copyChat(){
  navigator.clipboard.writeText(chat.innerText);
  alert("Chat copied ✅");
 }
 
-// download chat
+/* download chat */
 function downloadChat(){
  let text=chat.innerText;
  let blob=new Blob([text],{type:"text/plain"});
@@ -736,62 +831,228 @@ function downloadChat(){
  a.click();
 }
 
-// SMART AI MEMORY
+/* ==========================
+   VOICE SYSTEM
+========================== */
+let voiceOn = false;
+
+function toggleVoice(){
+  voiceOn = !voiceOn;
+  let btns = document.querySelectorAll(".ai-btn");
+  btns[btns.length-1].innerText = voiceOn ? "🔊 Voice: ON" : "🔊 Voice: OFF";
+}
+
+function speak(text){
+  if(!voiceOn) return;
+  let speech = new SpeechSynthesisUtterance(text);
+  speech.rate = 1;
+  speech.pitch = 1;
+  speech.lang = "en-IN";
+  window.speechSynthesis.speak(speech);
+}
+
+/* ==========================
+   SMART AI MEMORY SYSTEM
+========================== */
 let memory = JSON.parse(localStorage.aiMemory || "{}");
 
-// AI Smart Logic
-function smartAIReply(text){
-  text=text.toLowerCase();
+function saveMemory(){
+  localStorage.aiMemory = JSON.stringify(memory);
+}
 
+/* ==========================
+   CALCULATOR SYSTEM
+========================== */
+function isMathExpression(text){
+  return /^[0-9+\-*/(). %]+$/.test(text.replace(/\s+/g,""));
+}
+
+function solveMath(text){
+  try{
+    let safe = text.replace(/[^0-9+\-*/().% ]/g,"");
+    let result = Function("return " + safe)();
+    return "🧮 Answer: " + result;
+  }catch(err){
+    return "😅 Boss calculation samajh nahi aaya.";
+  }
+}
+
+/* ==========================
+   YOUTUBE TITLE GENERATOR
+========================== */
+function youtubeTitle(topic){
+  let titles=[
+    "🔥 " + topic + " | Must Watch Viral Video!",
+    "😱 " + topic + " That Shocked Everyone!",
+    "⚡ Top 5 " + topic + " You Must Try!",
+    "🏆 Best " + topic + " Ever!",
+    "🎥 " + topic + " | New MR7 Style Edit!",
+    "🔥 " + topic + " Tutorial (Easy Tricks)",
+    "😎 " + topic + " Like Pro Player!"
+  ];
+  return titles[Math.floor(Math.random()*titles.length)];
+}
+
+/* ==========================
+   HASHTAG GENERATOR
+========================== */
+function hashtagGenerator(topic){
+  let base = topic.toLowerCase().replace(/\s+/g,"");
+  let tags=[
+    "#viral","#trending","#shorts","#youtube","#mr7world",
+    "#football","#skills","#edit","#ronaldo","#messiskills",
+    "#india","#gaming","#motivation"
+  ];
+
+  let randomTags = tags.sort(()=>0.5 - Math.random()).slice(0,7).join(" ");
+  return "🏷 Hashtags: #" + base + " " + randomTags;
+}
+
+/* ==========================
+   FOOTBALL TIPS PRO
+========================== */
+function footballTips(){
+  let tips=[
+    "⚽ Tip: Daily 20 min dribbling practice karo cones ke sath.",
+    "🏃 Tip: Speed badhane ke liye sprint 10 rounds daily.",
+    "🎯 Tip: Shooting improve ke liye wall passing + target practice karo.",
+    "🧠 Tip: Match dekho aur player movement copy karo.",
+    "💪 Tip: Fitness ke liye pushups + squats daily karo.",
+    "🔥 Tip: First touch improve karne ke liye ball juggling karo."
+  ];
+  return tips[Math.floor(Math.random()*tips.length)];
+}
+
+/* ==========================
+   SMART AI LOGIC (UPGRADED)
+========================== */
+function smartAIReply(text){
+  let originalText = text;
+  text = text.toLowerCase();
+
+  // NAME DETECT
+  if(text.includes("mera naam") && text.includes("hai")){
+    let name = originalText.split("mera naam")[1];
+    name = name.replace("hai","").trim();
+    if(name.length > 1){
+      memory.userName = name;
+      saveMemory();
+      return "🔥 Wow Boss! Ab main yaad rakhunga tumhara naam: " + name + " 😎";
+    }
+  }
+
+  let bossName = memory.userName ? memory.userName : "Boss";
+
+  // HELLO
+  if(text.includes("hello") || text.includes("hi") || text.includes("namaste")){
+    return "Hello " + bossName + " 😄🔥 MR7 WORLD me welcome!";
+  }
+
+  // WHO ARE YOU
   if(text.includes("who are you") || text.includes("tum kaun ho")){
     return "Main MR7 AI SMART hoon 🤖🔥 Main tumhari help karne ke liye bana hoon!";
   }
 
-  if(text.includes("your owner") || text.includes("tumhara owner")){
+  // OWNER
+  if(text.includes("owner") || text.includes("tumhara malik")){
     return "Mera owner MD REHAN hai 😎🔥 MR7 WORLD ka king!";
   }
 
-  if(text.includes("hello") || text.includes("hi") || text.includes("namaste")){
-    return "Hello Boss 😄🔥 Welcome to MR7 WORLD!";
-  }
-
+  // TIME / DATE
   if(text.includes("time")){
     return "⏰ Time: " + new Date().toLocaleTimeString();
   }
-
-  if(text.includes("date")){
+  if(text.includes("date") || text.includes("din")){
     return "📅 Date: " + new Date().toLocaleDateString();
   }
 
-  if(text.includes("bye")){
-    return "Bye Boss 😄🔥 Jaldi milte hai!";
+  // JOKE
+  if(text.includes("joke")){
+    let jokes=[
+      "😂 Teacher: Homework kiya? Student: Sir, laptop hang ho gaya 😭",
+      "🤣 Boss, meri coding bhi tumhari tarah smart ban rahi hai 😎",
+      "😂 Life me bug fix karna coding se bhi hard hota hai!"
+    ];
+    return jokes[Math.floor(Math.random()*jokes.length)];
   }
 
-  // Memory system
+  // MOTIVATION
+  if(text.includes("motivate") || text.includes("motivation") || text.includes("inspire")){
+    let mot=[
+      "🔥 " + bossName + ", tu ek din top pe hoga! Bas rukna nahi 💪",
+      "⚡ Fail hona normal hai, give up karna galat hai!",
+      "🏆 Jo mehnat karta hai wahi legend banta hai 😎"
+    ];
+    return mot[Math.floor(Math.random()*mot.length)];
+  }
+
+  // FACT
+  if(text.includes("fact")){
+    let facts=[
+      "🧠 Fact: Brain 1 second me millions of signals process karta hai!",
+      "🌍 Fact: Football duniya ka #1 popular sport hai!",
+      "⚡ Fact: Ronaldo ka speed 33 km/h tak ja chuka hai!"
+    ];
+    return facts[Math.floor(Math.random()*facts.length)];
+  }
+
+  // FOOTBALL TIPS
+  if(text.includes("football") || text.includes("dribbling") || text.includes("shooting")){
+    return footballTips();
+  }
+
+  // YOUTUBE TITLE
+  if(text.includes("youtube title")){
+    let topic = originalText.replace(/youtube title/i,"").trim();
+    if(!topic) topic = "MR7 Video";
+    return "🎬 Viral Title: " + youtubeTitle(topic);
+  }
+
+  // HASHTAGS
+  if(text.includes("hashtags") || text.includes("hashtag")){
+    let topic = originalText.replace(/hashtags|hashtag/gi,"").trim();
+    if(!topic) topic = "mr7";
+    return hashtagGenerator(topic);
+  }
+
+  // MEMORY SAVE
   if(text.startsWith("remember")){
-    let msg=text.replace("remember","").trim();
-    memory["saved"]=msg;
-    localStorage.aiMemory=JSON.stringify(memory);
-    return "✅ Okay boss! Main yaad rakhunga: " + msg;
+    let msg = originalText.replace("remember","").trim();
+    memory.saved = msg;
+    saveMemory();
+    return "✅ Okay " + bossName + "! Main yaad rakhunga: " + msg;
   }
 
-  if(text.includes("what did you remember")){
-    return memory["saved"] ? ("📌 Mujhe yaad hai: " + memory["saved"]) : "😅 Abhi kuch yaad nahi hai.";
+  if(text.includes("what did you remember") || text.includes("kya yaad hai")){
+    return memory.saved ? ("📌 Mujhe yaad hai: " + memory.saved) : "😅 Abhi kuch yaad nahi hai.";
   }
 
-  // Default smart reply
+  // CALCULATOR
+  if(isMathExpression(originalText)){
+    return solveMath(originalText);
+  }
+
+  // BYE
+  if(text.includes("bye")){
+    return "Bye " + bossName + " 😄🔥 MR7 WORLD always with you!";
+  }
+
+  // DEFAULT SMART REPLY
   let replies=[
-    "Hmm interesting 🤔 thoda aur clear bolo.",
-    "Boss 😎 ye idea accha hai!",
-    "🔥 MR7 WORLD style me bolu? Tum bahut smart ho!",
+    "Hmm " + bossName + " 🤔 thoda aur clear bolo.",
+    "Boss 😎 ye idea bahut strong hai!",
+    "🔥 MR7 WORLD style me bolu? Tu legend banega!",
     "Okay 😄 main samajh gaya.",
-    "Acha! ab mujhe batao next kya karna hai? 😎"
+    "Acha! ab next command do boss 😎",
+    "💚 " + bossName + ", tumhari website already pro lag rahi hai!"
   ];
 
   return replies[Math.floor(Math.random()*replies.length)];
 }
 
-// MAIN AI
+/* ==========================
+   MAIN AI
+========================== */
 function askAI(){
  let q=aiInput.value.trim();
  if(!q)return;
@@ -806,7 +1067,14 @@ function askAI(){
    typing.style.display="none";
    typeText("AI: "+reply,"bot");
    localStorage.chat=chat.innerHTML;
+   speak(reply);
  },500);
+}
+
+/* Quick Ask Buttons */
+function autoAsk(text){
+  aiInput.value = text;
+  askAI();
 }
 </script>
 
