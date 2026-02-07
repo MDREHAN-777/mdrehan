@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MR7 - OFFICIAL</title>
+<title>MR7 WORLD - OFFICIAL</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{
-  font-family:Segoe UI;
+  font-family:Segoe UI, sans-serif;
   background:#111;
   color:white;
   text-align:center;
@@ -59,7 +59,8 @@ body.light{
   padding:10px;
   display:none;
   z-index:999;
-  width:180px;
+  width:190px;
+  box-shadow:0 0 25px rgba(0,255,0,.5);
 }
 .menu-box button{
   width:100%;
@@ -71,6 +72,7 @@ body.light{
   background:#222;
   color:white;
   transition:0.3s;
+  font-weight:bold;
 }
 .menu-box button:hover{
   background:lime;
@@ -115,7 +117,7 @@ body.light{
   text-shadow:0 0 15px lime;
 }
 
-/* PROFILE */
+/* PROFILE PIC */
 .profile-pic{
   width:200px;
   height:200px;
@@ -141,7 +143,6 @@ body.light{
   transform:scale(1.08);
   box-shadow:0 0 20px lime;
 }
-
 .back-btn{
   margin-top:20px;
   background:gray;
@@ -150,13 +151,13 @@ body.light{
 
 /* BOX */
 .box{
-  max-width:500px;
+  max-width:520px;
   margin:30px auto;
   padding:20px;
   border-radius:20px;
-  background:rgba(0,0,0,.5);
+  background:rgba(0,0,0,.55);
   border:1px solid lime;
-  box-shadow:0 0 20px rgba(0,255,0,.4);
+  box-shadow:0 0 25px rgba(0,255,0,.4);
 }
 body.light .box{
   background:rgba(255,255,255,.9);
@@ -171,8 +172,13 @@ input,textarea{
   border-radius:10px;
   border:1px solid #777;
   outline:none;
+  font-size:15px;
 }
 textarea{height:100px;}
+input:focus,textarea:focus{
+  border:1px solid lime;
+  box-shadow:0 0 15px rgba(0,255,0,.4);
+}
 
 /* CHAT */
 #chat{
@@ -193,6 +199,7 @@ body.light #chat{
   margin:8px 0;
   border-radius:12px;
   color:lime;
+  font-weight:bold;
 }
 .bot{
   background:#0088ff33;
@@ -200,15 +207,31 @@ body.light #chat{
   margin:8px 0;
   border-radius:12px;
   color:#66ccff;
+  font-weight:bold;
 }
-body.light .user{color:green;}
-body.light .bot{color:blue;}
 
-/* MOBILE FIX */
+/* GAMES GRID */
+.games-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
+
+/* CANVAS */
+canvas{
+  background:#000;
+  border-radius:15px;
+  border:2px solid lime;
+  max-width:100%;
+  touch-action:none;
+}
+
+/* MOBILE */
 @media(max-width:600px){
   #typingTitle{font-size:26px;}
   .profile-pic{width:160px;height:160px;}
-  .menu-box{width:160px;}
+  .menu-box{width:170px;}
 }
 </style>
 </head>
@@ -216,18 +239,54 @@ body.light .bot{color:blue;}
 <body>
 
 <div class="menu" onclick="toggleMenu()">☰</div>
+
 <div class="menu-box" id="menuBox">
-  <button onclick="openSectionSecure('home')">🏠 Home</button>
-  <button onclick="openSectionSecure('ai')">🤖 MR7 AI</button>
-  <button onclick="openSectionSecure('games')">🎮 Games</button>
-  <button onclick="openSectionSecure('contact')">📩 Contact</button>
+  <button onclick="secureOpen('home')">🏠 Home</button>
+  <button onclick="secureOpen('ai')">🤖 MR7 AI</button>
+  <button onclick="secureOpen('games')">🎮 Games</button>
+  <button onclick="secureOpen('contact')">📩 Contact</button>
   <button onclick="openSection('login')">🔐 Login</button>
 </div>
 
 <button class="dark-toggle" onclick="toggleMode()">🌙 Mode</button>
 
+<!-- LOGIN -->
+<div id="login" class="section active">
+  <div class="box">
+    <h2 style="color:lime;">🔐 MR7 LOGIN SYSTEM</h2>
+    <p style="margin-top:10px;">Login karoge tabhi website open hogi 😎🔥</p>
+
+    <input id="email" placeholder="Enter Gmail / Email">
+    <input id="password" type="password" placeholder="Enter Password">
+
+    <button class="btn" onclick="signupUser()">Signup</button>
+    <button class="btn" onclick="loginUser()">Login</button>
+    <button class="btn" onclick="logoutUser()">Logout</button>
+
+    <p id="loginStatus" style="margin-top:10px;color:lime;font-weight:bold;"></p>
+  </div>
+</div>
+
+<!-- PROFILE SETUP -->
+<div id="profile" class="section">
+  <div class="box">
+    <h2 style="color:lime;">👤 Create Your Profile</h2>
+    <p style="margin-top:10px;">Profile banaoge tabhi website unlock hogi 🔥</p>
+
+    <input id="pname" placeholder="Your Name">
+    <input id="page" placeholder="Your Age">
+    <input id="pcity" placeholder="Your City">
+    <input id="pfav" placeholder="Your Favourite Game">
+    
+    <button class="btn" onclick="saveProfile()">Save Profile</button>
+    <button class="btn back-btn" onclick="backToLogin()">⬅ Back</button>
+
+    <p id="profileStatus" style="margin-top:10px;color:lime;font-weight:bold;"></p>
+  </div>
+</div>
+
 <!-- HOME -->
-<div id="home" class="section active">
+<div id="home" class="section">
   <h1 id="typingTitle"></h1>
   <h2>- MD -</h2>
   <h3>- REHAN -</h3>
@@ -241,87 +300,83 @@ body.light .bot{color:blue;}
   <img src="rehan.png" class="profile-pic">
 
   <div class="box">
-    <h2>🔥 MR7 WORLD Updates</h2>
-    <p>Welcome to MR7 WORLD - Gaming + AI + Cool Features 😎</p>
-    <p id="welcomeUser" style="margin-top:10px;color:lime;font-weight:bold;"></p>
-  </div>
-</div>
-
-<!-- LOGIN + SIGNUP -->
-<div id="login" class="section">
-  <div class="box">
-    <h2>🔐 Login / Signup</h2>
-
-    <input id="username" placeholder="Enter Username">
-    <input id="password" placeholder="Enter Password" type="password">
-
-    <button class="btn" onclick="signupUser()">Signup</button>
-    <button class="btn" onclick="loginUser()">Login</button>
-    <button class="btn" onclick="logoutUser()">Logout</button>
-
-    <p id="loginStatus" style="margin-top:10px;color:lime;font-weight:bold;"></p>
+    <h2 style="color:lime;">🔥 Welcome to MR7 WORLD</h2>
+    <p id="welcomeUser" style="margin-top:10px;"></p>
+    <p style="margin-top:10px;">Gaming + AI + Future System 😎🔥</p>
   </div>
 
-  <button class="btn back-btn" onclick="openSection('home')">⬅ Back</button>
-</div>
-
-<!-- PROFILE -->
-<div id="profile" class="section">
-  <div class="box">
-    <h2>👤 Create / Edit Profile</h2>
-    <p style="color:lime;">Profile save karna zaroori hai tabhi website unlock hogi ✅</p>
-
-    <input id="pname" placeholder="Full Name">
-    <input id="page" placeholder="Age">
-    <input id="pcity" placeholder="City">
-    <textarea id="pbio" placeholder="Write your bio..."></textarea>
-
-    <button class="btn" onclick="saveProfile()">Save Profile</button>
-    <button class="btn back-btn" onclick="openSection('login')">⬅ Back</button>
-
-    <p id="profileStatus" style="margin-top:10px;color:lime;font-weight:bold;"></p>
-  </div>
+  <button class="btn back-btn" onclick="logoutUser()">🚪 Logout</button>
 </div>
 
 <!-- CONTACT -->
 <div id="contact" class="section">
   <div class="box">
-    <h2>📩 Contact Me</h2>
+    <h2 style="color:lime;">📩 Contact Me</h2>
     <input id="name" placeholder="Name">
     <input id="mobile" placeholder="Mobile">
     <textarea id="message" placeholder="Message"></textarea>
     <button class="btn" onclick="sendMail()">Send Email</button>
   </div>
-  <button class="btn back-btn" onclick="openSectionSecure('home')">⬅ Back</button>
+  <button class="btn back-btn" onclick="secureOpen('home')">⬅ Back</button>
 </div>
 
 <!-- AI -->
 <div id="ai" class="section">
   <div class="box">
-    <h2>🤖 MR7 AI (ChatGPT Style Offline)</h2>
-
+    <h2 style="color:lime;">🤖 MR7 AI (Smart Offline)</h2>
     <div id="chat"></div>
 
     <input id="aiInput" placeholder="Ask anything...">
     <button class="btn" onclick="askAI()">Send</button>
     <button class="btn" onclick="clearChat()">Clear</button>
-    <button class="btn" onclick="saveChat()">Save Chat</button>
 
-    <p style="margin-top:10px;color:lime;">💡 Tip: Type "calc 50+20" for calculator mode</p>
+    <p style="margin-top:10px;color:lime;">💡 Tip: type "calc 50+20"</p>
   </div>
 
-  <button class="btn back-btn" onclick="openSectionSecure('home')">⬅ Back</button>
+  <button class="btn back-btn" onclick="secureOpen('home')">⬅ Back</button>
 </div>
 
 <!-- GAMES -->
 <div id="games" class="section">
   <div class="box">
-    <h2>🎮 MR7 Games Zone</h2>
-    <p>Mobile + PC dono me game perfect chalega 🔥</p>
-    <p style="color:lime;">(Games section yaha baad me same add kar dena)</p>
+    <h2 style="color:lime;">🎮 MR7 Games Zone</h2>
+    <p>Mobile + PC dono me perfect chalega 🔥</p>
+
+    <div class="games-grid">
+      <button class="btn" onclick="openGame('snakeBox')">🐍 Snake Game</button>
+      <button class="btn" onclick="openGame('carBox')">🚗 Car Racing</button>
+      <button class="btn" onclick="openGame('tttBox')">❌⭕ Tic Tac Toe</button>
+    </div>
   </div>
 
-  <button class="btn back-btn" onclick="openSectionSecure('home')">⬅ Back Home</button>
+  <!-- Snake -->
+  <div id="snakeBox" class="box" style="display:none;">
+    <h2 style="color:lime;">🐍 Snake Game</h2>
+    <canvas id="snakeCanvas" width="320" height="320"></canvas>
+    <p style="margin-top:10px;">Controls: Swipe | Arrow Keys</p>
+    <button class="btn" onclick="startSnake()">Start Snake</button>
+    <button class="btn back-btn" onclick="closeGames()">⬅ Back</button>
+  </div>
+
+  <!-- Car -->
+  <div id="carBox" class="box" style="display:none;">
+    <h2 style="color:lime;">🚗 Car Racing</h2>
+    <canvas id="carCanvas" width="320" height="400"></canvas>
+    <p style="margin-top:10px;">Controls: Swipe | Arrow Keys</p>
+    <button class="btn" onclick="startCar()">Start Car</button>
+    <button class="btn back-btn" onclick="closeGames()">⬅ Back</button>
+  </div>
+
+  <!-- Tic Tac Toe -->
+  <div id="tttBox" class="box" style="display:none;">
+    <h2 style="color:lime;">❌⭕ Tic Tac Toe</h2>
+    <div id="tttBoard" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px;"></div>
+    <p id="tttStatus" style="margin-top:10px;color:lime;font-weight:bold;"></p>
+    <button class="btn" onclick="resetTTT()">Restart</button>
+    <button class="btn back-btn" onclick="closeGames()">⬅ Back</button>
+  </div>
+
+  <button class="btn back-btn" onclick="secureOpen('home')">⬅ Back Home</button>
 </div>
 
 <script>
@@ -338,29 +393,20 @@ function openSection(id){
   document.getElementById("menuBox").style.display="none";
 }
 
-/* SECURITY CHECK */
-function isLoggedIn(){
-  return localStorage.getItem("mr7CurrentUser") ? true : false;
-}
-function isProfileDone(){
-  let user=localStorage.getItem("mr7CurrentUser");
-  if(!user) return false;
+/* SECURE OPEN */
+function secureOpen(id){
+  let loggedIn = localStorage.getItem("mr7LoggedIn");
 
-  return localStorage.getItem("mr7Profile_"+user) ? true : false;
-}
-
-/* OPEN SECTION SECURE */
-function openSectionSecure(id){
-  if(!isLoggedIn()){
-    alert("❌ Pehle Login karo boss!");
+  if(loggedIn !== "yes"){
+    alert("⚠ Pehle login karo!");
     openSection("login");
     return;
   }
 
-  if(!isProfileDone()){
-    alert("⚠ Profile create karo tabhi website unlock hogi!");
+  let profileDone = localStorage.getItem("mr7ProfileDone");
+  if(profileDone !== "yes"){
+    alert("⚠ Pehle profile complete karo!");
     openSection("profile");
-    loadProfile();
     return;
   }
 
@@ -381,7 +427,7 @@ function startTypingTitle(){
 }
 startTypingTitle();
 
-/* DARK MODE */
+/* DARK MODE PERMANENT */
 function applyMode(){
   let mode = localStorage.getItem("mode") || "dark";
   if(mode==="light"){
@@ -419,157 +465,142 @@ function sendMail(){
   location.href="mailto:mrrehanofficial.1777@gmail.com?subject="+subject+"&body="+body;
 }
 
-/* GET USERS */
-function getUsers(){
-  return JSON.parse(localStorage.getItem("mr7Users") || "[]");
-}
-function saveUsers(users){
-  localStorage.setItem("mr7Users", JSON.stringify(users));
-}
-
-/* SIGNUP */
+/* SIGNUP SYSTEM */
 function signupUser(){
-  let u=document.getElementById("username").value.trim();
+  let email=document.getElementById("email").value.trim();
   let p=document.getElementById("password").value.trim();
 
-  if(!u || !p){
-    alert("Enter username and password!");
+  if(!email || !p){
+    alert("⚠ Email aur Password daalo!");
     return;
   }
 
-  let users=getUsers();
-
-  if(users.find(x=>x.username===u)){
-    alert("⚠ Username already exists!");
+  if(!email.includes("@")){
+    alert("❌ Valid Gmail/Email daalo!");
     return;
   }
 
-  users.push({username:u,password:p});
-  saveUsers(users);
+  let users = JSON.parse(localStorage.getItem("mr7Users") || "[]");
 
-  alert("✅ Signup Successful! Ab Login karo boss 😎");
+  if(users.find(x=>x.email===email)){
+    alert("⚠ Ye Email already registered hai!");
+    return;
+  }
+
+  users.push({email:email,password:p});
+  localStorage.setItem("mr7Users", JSON.stringify(users));
+
+  alert("✅ Signup Successful! Ab Login karo 😎🔥");
 }
 
-/* LOGIN */
+/* LOGIN SYSTEM */
 function loginUser(){
-  let u=document.getElementById("username").value.trim();
+  let email=document.getElementById("email").value.trim();
   let p=document.getElementById("password").value.trim();
 
-  if(!u || !p){
-    alert("Enter username and password!");
+  if(!email || !p){
+    alert("⚠ Email aur Password daalo!");
     return;
   }
 
-  let users=getUsers();
-  let found=users.find(x=>x.username===u && x.password===p);
+  let users = JSON.parse(localStorage.getItem("mr7Users") || "[]");
+  let found = users.find(x => x.email === email && x.password === p);
 
   if(!found){
-    alert("❌ Wrong Username or Password!");
+    alert("❌ Galat hai! Email ya Password wrong 😅");
     return;
   }
 
-  localStorage.setItem("mr7CurrentUser",u);
-  document.getElementById("loginStatus").innerText="✅ Logged in as: "+u;
+  localStorage.setItem("mr7LoggedIn","yes");
+  localStorage.setItem("mr7CurrentUser",email);
 
-  // profile open after login
-  setTimeout(()=>{
+  document.getElementById("loginStatus").innerText="✅ Login Successful!";
+  
+  // if profile not done go profile
+  if(localStorage.getItem("mr7ProfileDone") !== "yes"){
     openSection("profile");
-    loadProfile();
-  },500);
+  }else{
+    openSection("home");
+  }
+
+  showWelcome();
 }
 
 /* LOGOUT */
 function logoutUser(){
+  localStorage.removeItem("mr7LoggedIn");
   localStorage.removeItem("mr7CurrentUser");
-  document.getElementById("loginStatus").innerText="❌ Logged out!";
-  alert("Logout Successful ❌");
-  openSection("home");
-  showWelcomeUser();
+  localStorage.removeItem("mr7ProfileDone");
+  localStorage.removeItem("mr7Profile");
+
+  alert("Logout Successful!");
+  openSection("login");
+}
+
+/* BACK TO LOGIN */
+function backToLogin(){
+  openSection("login");
 }
 
 /* SAVE PROFILE */
 function saveProfile(){
-  let user=localStorage.getItem("mr7CurrentUser");
-  if(!user){
-    alert("❌ Login first!");
-    openSection("login");
-    return;
-  }
-
   let name=document.getElementById("pname").value.trim();
   let age=document.getElementById("page").value.trim();
   let city=document.getElementById("pcity").value.trim();
-  let bio=document.getElementById("pbio").value.trim();
+  let fav=document.getElementById("pfav").value.trim();
 
   if(!name || !age || !city){
-    alert("⚠ Name, Age, City fill karo boss!");
+    document.getElementById("profileStatus").innerText="❌ Fill all details!";
     return;
   }
 
-  let profileData={name,age,city,bio};
+  let profileData={
+    name:name,
+    age:age,
+    city:city,
+    fav:fav
+  };
 
-  localStorage.setItem("mr7Profile_"+user, JSON.stringify(profileData));
+  localStorage.setItem("mr7Profile", JSON.stringify(profileData));
+  localStorage.setItem("mr7ProfileDone","yes");
 
   document.getElementById("profileStatus").innerText="✅ Profile Saved Successfully!";
-  alert("🔥 Profile done! Website unlocked!");
 
-  openSection("home");
-  showWelcomeUser();
+  showWelcome();
+  setTimeout(()=>{
+    openSection("home");
+  },800);
 }
 
-/* LOAD PROFILE */
-function loadProfile(){
-  let user=localStorage.getItem("mr7CurrentUser");
-  if(!user) return;
+/* SHOW WELCOME */
+function showWelcome(){
+  let p = JSON.parse(localStorage.getItem("mr7Profile") || "{}");
+  if(p.name){
+    document.getElementById("welcomeUser").innerHTML =
+      "👑 Welcome <b style='color:lime;'>" + p.name + "</b> 🔥<br>🏙 City: " + p.city + "<br>🎮 Fav: " + (p.fav||"Not set");
+  }
+}
 
-  let data=localStorage.getItem("mr7Profile_"+user);
-  if(data){
-    let p=JSON.parse(data);
-    document.getElementById("pname").value=p.name || "";
-    document.getElementById("page").value=p.age || "";
-    document.getElementById("pcity").value=p.city || "";
-    document.getElementById("pbio").value=p.bio || "";
+/* AUTO LOGIN CHECK */
+window.onload = ()=>{
+  let loggedIn = localStorage.getItem("mr7LoggedIn");
+  let profileDone = localStorage.getItem("mr7ProfileDone");
+
+  if(loggedIn==="yes"){
+    if(profileDone==="yes"){
+      openSection("home");
+      showWelcome();
+    }else{
+      openSection("profile");
+    }
   }else{
-    document.getElementById("pname").value="";
-    document.getElementById("page").value="";
-    document.getElementById("pcity").value="";
-    document.getElementById("pbio").value="";
+    openSection("login");
   }
-}
-
-/* SHOW WELCOME USER */
-function showWelcomeUser(){
-  let user=localStorage.getItem("mr7CurrentUser");
-  if(!user){
-    document.getElementById("welcomeUser").innerText="";
-    return;
-  }
-
-  let profile=localStorage.getItem("mr7Profile_"+user);
-  if(profile){
-    let p=JSON.parse(profile);
-    document.getElementById("welcomeUser").innerText =
-      "👋 Welcome " + p.name + " ("+p.city+") 😎🔥";
-  }else{
-    document.getElementById("welcomeUser").innerText =
-      "👋 Welcome " + user + " 😎🔥 (Profile not set)";
-  }
-}
-
-/* ON LOAD */
-window.onload=()=>{
-  let user=localStorage.getItem("mr7CurrentUser");
-  if(user){
-    document.getElementById("loginStatus").innerText="✅ Logged in as: "+user;
-  }
-  showWelcomeUser();
 };
 
-/* AI CHAT */
+/* AI CHAT SYSTEM */
 let chat=document.getElementById("chat");
 let aiInput=document.getElementById("aiInput");
-
-chat.innerHTML = localStorage.getItem("mr7Chat") || "";
 
 function addMsg(text,cls){
   let div=document.createElement("div");
@@ -593,7 +624,10 @@ function smartReply(q){
   }
 
   if(q.includes("hello")||q.includes("hi")||q.includes("namaste"))
-    return "Hello Boss 😎🔥 Welcome to MR7 WORLD!";
+    return "Hello Boss 😎🔥 MR7 WORLD me welcome!";
+
+  if(q.includes("who are you")||q.includes("tum kaun ho"))
+    return "Main MR7 AI hoon 🤖🔥 Future assistant system!";
 
   if(q.includes("time"))
     return "⏰ Time: " + new Date().toLocaleTimeString();
@@ -601,12 +635,24 @@ function smartReply(q){
   if(q.includes("date"))
     return "📅 Date: " + new Date().toLocaleDateString();
 
+  if(q.includes("owner"))
+    return "Mera owner MD REHAN hai 😎🔥";
+
+  if(q.includes("football"))
+    return "⚽ Football Tip: Daily dribbling + sprint practice karo 🔥";
+
+  if(q.includes("youtube"))
+    return "📌 YouTube Tip: Thumbnail bright + title short rakho 😎";
+
+  if(q.includes("motivation"))
+    return "🔥 Boss, tu legend banega! Give up mat kar 💪";
+
   let random=[
-    "😎 Boss ye question interesting hai!",
+    "😎 Boss ye question interesting hai! Detail me bolo.",
     "🔥 MR7 WORLD never gives up!",
     "🤖 Main samajh gaya boss!",
-    "⚡ Good question!",
-    "💚 Aur kuch puchna hai?"
+    "⚡ Good question! Tum smart ho 😄",
+    "💚 Main help karunga boss!"
   ];
   return random[Math.floor(Math.random()*random.length)];
 }
@@ -621,8 +667,7 @@ function askAI(){
   setTimeout(()=>{
     let reply=smartReply(q);
     addMsg("AI: "+reply,"bot");
-    localStorage.setItem("mr7Chat",chat.innerHTML);
-  },300);
+  },400);
 }
 
 aiInput.addEventListener("keypress",(e)=>{
@@ -632,13 +677,258 @@ aiInput.addEventListener("keypress",(e)=>{
 function clearChat(){
   if(confirm("Clear full chat?")){
     chat.innerHTML="";
-    localStorage.removeItem("mr7Chat");
   }
 }
 
-function saveChat(){
-  localStorage.setItem("mr7Chat",chat.innerHTML);
-  alert("Chat Saved ✅");
+/* GAME OPEN */
+function openGame(id){
+  document.getElementById("snakeBox").style.display="none";
+  document.getElementById("carBox").style.display="none";
+  document.getElementById("tttBox").style.display="none";
+  document.getElementById(id).style.display="block";
+}
+function closeGames(){
+  document.getElementById("snakeBox").style.display="none";
+  document.getElementById("carBox").style.display="none";
+  document.getElementById("tttBox").style.display="none";
+}
+
+/* SNAKE GAME */
+let snakeCanvas=document.getElementById("snakeCanvas");
+let sctx=snakeCanvas.getContext("2d");
+
+let snake,food,dir,snakeInterval;
+
+function resetSnake(){
+  snake=[{x:160,y:160}];
+  food={x:80,y:80};
+  dir="RIGHT";
+}
+function drawSnake(){
+  sctx.clearRect(0,0,320,320);
+  sctx.fillStyle="red";
+  sctx.fillRect(food.x,food.y,20,20);
+
+  sctx.fillStyle="lime";
+  snake.forEach(part=>{
+    sctx.fillRect(part.x,part.y,20,20);
+  });
+}
+function moveSnake(){
+  let head={...snake[0]};
+
+  if(dir==="RIGHT") head.x+=20;
+  if(dir==="LEFT") head.x-=20;
+  if(dir==="UP") head.y-=20;
+  if(dir==="DOWN") head.y+=20;
+
+  if(head.x<0||head.y<0||head.x>=320||head.y>=320){
+    clearInterval(snakeInterval);
+    alert("Game Over 😭");
+    return;
+  }
+
+  for(let i=1;i<snake.length;i++){
+    if(snake[i].x===head.x && snake[i].y===head.y){
+      clearInterval(snakeInterval);
+      alert("Game Over 😭");
+      return;
+    }
+  }
+
+  snake.unshift(head);
+
+  if(head.x===food.x && head.y===food.y){
+    food={
+      x:Math.floor(Math.random()*16)*20,
+      y:Math.floor(Math.random()*16)*20
+    };
+  }else{
+    snake.pop();
+  }
+
+  drawSnake();
+}
+function startSnake(){
+  resetSnake();
+  drawSnake();
+  clearInterval(snakeInterval);
+  snakeInterval=setInterval(moveSnake,140);
+}
+
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="ArrowUp" && dir!=="DOWN") dir="UP";
+  if(e.key==="ArrowDown" && dir!=="UP") dir="DOWN";
+  if(e.key==="ArrowLeft" && dir!=="RIGHT") dir="LEFT";
+  if(e.key==="ArrowRight" && dir!=="LEFT") dir="RIGHT";
+});
+
+/* Swipe Mobile Snake */
+let startX=0,startY=0;
+snakeCanvas.addEventListener("touchstart",(e)=>{
+  startX=e.touches[0].clientX;
+  startY=e.touches[0].clientY;
+});
+snakeCanvas.addEventListener("touchend",(e)=>{
+  let endX=e.changedTouches[0].clientX;
+  let endY=e.changedTouches[0].clientY;
+  let dx=endX-startX;
+  let dy=endY-startY;
+
+  if(Math.abs(dx)>Math.abs(dy)){
+    if(dx>0 && dir!=="LEFT") dir="RIGHT";
+    if(dx<0 && dir!=="RIGHT") dir="LEFT";
+  }else{
+    if(dy>0 && dir!=="UP") dir="DOWN";
+    if(dy<0 && dir!=="DOWN") dir="UP";
+  }
+});
+
+/* CAR GAME */
+let carCanvas=document.getElementById("carCanvas");
+let cctx=carCanvas.getContext("2d");
+
+let carX=140,carY=320,enemyCars=[],score=0,carInterval;
+
+function resetCar(){
+  carX=140;
+  enemyCars=[{x:Math.random()*260,y:-80}];
+  score=0;
+}
+function drawCarGame(){
+  cctx.clearRect(0,0,320,400);
+
+  cctx.fillStyle="#222";
+  cctx.fillRect(0,0,320,400);
+
+  cctx.strokeStyle="white";
+  cctx.lineWidth=4;
+  cctx.setLineDash([15,15]);
+  cctx.beginPath();
+  cctx.moveTo(160,0);
+  cctx.lineTo(160,400);
+  cctx.stroke();
+  cctx.setLineDash([]);
+
+  cctx.fillStyle="lime";
+  cctx.fillRect(carX,carY,40,60);
+
+  cctx.fillStyle="red";
+  enemyCars.forEach(e=>{
+    cctx.fillRect(e.x,e.y,40,60);
+  });
+
+  cctx.fillStyle="yellow";
+  cctx.font="18px Arial";
+  cctx.fillText("Score: "+score,10,25);
+}
+function updateCarGame(){
+  enemyCars.forEach(e=>{
+    e.y += 6;
+
+    if(carX < e.x+40 && carX+40 > e.x && carY < e.y+60 && carY+60 > e.y){
+      clearInterval(carInterval);
+      alert("Crash 💥 Game Over! Score: "+score);
+    }
+
+    if(e.y>400){
+      e.y=-80;
+      e.x=Math.random()*260;
+      score++;
+    }
+  });
+
+  drawCarGame();
+}
+function startCar(){
+  resetCar();
+  drawCarGame();
+  clearInterval(carInterval);
+  carInterval=setInterval(updateCarGame,50);
+}
+
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="ArrowLeft") carX -= 20;
+  if(e.key==="ArrowRight") carX += 20;
+
+  if(carX<0) carX=0;
+  if(carX>280) carX=280;
+});
+
+/* Mobile swipe for car */
+carCanvas.addEventListener("touchstart",(e)=>{
+  startX=e.touches[0].clientX;
+});
+carCanvas.addEventListener("touchmove",(e)=>{
+  let x=e.touches[0].clientX;
+  if(x>startX) carX+=6;
+  else carX-=6;
+  startX=x;
+
+  if(carX<0) carX=0;
+  if(carX>280) carX=280;
+});
+
+/* TIC TAC TOE */
+let tttBoard=document.getElementById("tttBoard");
+let tttStatus=document.getElementById("tttStatus");
+let tttCells=[],currentPlayer="X";
+
+function createTTT(){
+  tttBoard.innerHTML="";
+  tttCells=new Array(9).fill("");
+  currentPlayer="X";
+  tttStatus.innerText="Player X turn";
+
+  for(let i=0;i<9;i++){
+    let btn=document.createElement("button");
+    btn.style.height="80px";
+    btn.style.fontSize="30px";
+    btn.style.borderRadius="15px";
+    btn.style.border="2px solid lime";
+    btn.style.cursor="pointer";
+    btn.style.background="#111";
+    btn.style.color="lime";
+    btn.innerText="";
+
+    btn.onclick=()=>playTTT(i,btn);
+    tttBoard.appendChild(btn);
+  }
+}
+createTTT();
+
+function playTTT(i,btn){
+  if(tttCells[i]!=="" ) return;
+
+  tttCells[i]=currentPlayer;
+  btn.innerText=currentPlayer;
+
+  if(checkWin()){
+    tttStatus.innerText="🏆 Player "+currentPlayer+" Wins!";
+    return;
+  }
+
+  if(tttCells.every(c=>c!=="")){
+    tttStatus.innerText="😐 Draw!";
+    return;
+  }
+
+  currentPlayer = currentPlayer==="X" ? "O" : "X";
+  tttStatus.innerText="Player "+currentPlayer+" turn";
+}
+
+function checkWin(){
+  let w=[
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  return w.some(p=>{
+    return tttCells[p[0]] && tttCells[p[0]]===tttCells[p[1]] && tttCells[p[1]]===tttCells[p[2]];
+  });
+}
+function resetTTT(){
+  createTTT();
 }
 </script>
 
